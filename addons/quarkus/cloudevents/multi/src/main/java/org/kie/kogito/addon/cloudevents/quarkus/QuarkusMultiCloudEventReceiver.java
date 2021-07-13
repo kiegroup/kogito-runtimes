@@ -35,7 +35,6 @@ import org.eclipse.microprofile.reactive.messaging.Acknowledgment.Strategy;
 import org.eclipse.microprofile.reactive.messaging.Message;
 import org.kie.kogito.event.EventReceiver;
 import org.kie.kogito.event.InputTriggerAware;
-import org.kie.kogito.event.KogitoEventStreams;
 import org.kie.kogito.event.SubscriptionInfo;
 
 import io.smallrye.reactive.messaging.ChannelRegistar;
@@ -44,7 +43,6 @@ import io.smallrye.reactive.messaging.MediatorConfiguration;
 import io.smallrye.reactive.messaging.Shape;
 import io.smallrye.reactive.messaging.annotations.Merge;
 import io.smallrye.reactive.messaging.annotations.Merge.Mode;
-import io.smallrye.reactive.messaging.connectors.WorkerPoolRegistry;
 import io.smallrye.reactive.messaging.extension.MediatorManager;
 
 @ApplicationScoped
@@ -54,9 +52,6 @@ public class QuarkusMultiCloudEventReceiver implements ChannelRegistar, EventRec
     private Instance<InputTriggerAware> channels;
     @Inject
     private MediatorManager mediatorManager;
-    @Inject
-    private WorkerPoolRegistry workerPoolRegistry;
-
     @Inject
     private BeanManager beanManager;
 
@@ -123,13 +118,12 @@ public class QuarkusMultiCloudEventReceiver implements ChannelRegistar, EventRec
         Collection<MediatorConfiguration> mediators = new ArrayList<>();
         channels.forEach(channel -> mediators.add(mediatorConf(channel)));
         if (!mediators.isEmpty()) {
-            workerPoolRegistry.defineWorker("QuarkusMultCloudEventPublisher", "initialize", KogitoEventStreams.WORKER_THREAD);
             mediatorManager.addAnalyzed(mediators);
         }
     }
 
     @Override
-    public <T> void subscribe(Function<T, CompletionStage<Void>> consumer, SubscriptionInfo<String, T> converter) {
+    public <T> void subscribe(Function<T, CompletionStage<?>> consumer, SubscriptionInfo<String, T> converter) {
         // Automatic subscription
     }
 

@@ -17,7 +17,6 @@ package $Package$;
 
 import java.util.concurrent.ExecutorService;
 
-import org.checkerframework.framework.qual.QualifierArgument;
 import org.kie.kogito.Application;
 import org.kie.kogito.conf.ConfigBean;
 import org.kie.kogito.event.impl.DefaultEventConsumerFactory;

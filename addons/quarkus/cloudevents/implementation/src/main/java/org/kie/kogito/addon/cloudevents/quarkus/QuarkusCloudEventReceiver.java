@@ -27,6 +27,7 @@ import javax.enterprise.context.ApplicationScoped;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Message;
+import org.kie.kogito.addon.cloudevents.Subscription;
 import org.kie.kogito.event.EventReceiver;
 import org.kie.kogito.event.KogitoEventStreams;
 import org.kie.kogito.event.SubscriptionInfo;
@@ -41,24 +42,6 @@ public class QuarkusCloudEventReceiver implements EventReceiver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(QuarkusCloudEventReceiver.class);
 
-    private static final class Subscription<T> {
-        private final Function<T, CompletionStage<Void>> consumer;
-        private final SubscriptionInfo<String, T> info;
-
-        public Subscription(Function<T, CompletionStage<Void>> consumer, SubscriptionInfo<String, T> info) {
-            this.consumer = consumer;
-            this.info = info;
-        }
-
-        public Function<T, CompletionStage<Void>> getConsumer() {
-            return consumer;
-        }
-
-        public SubscriptionInfo<String, T> getInfo() {
-            return info;
-        }
-    }
-
     private Collection<Subscription<Object>> consumers;
 
     @PostConstruct
@@ -72,7 +55,7 @@ public class QuarkusCloudEventReceiver implements EventReceiver {
      * @param message the given message in string format
      */
     @Incoming(KogitoEventStreams.INCOMING)
-    public CompletionStage<Void> onEvent(Message<String> message) {
+    public CompletionStage<?> onEvent(Message<String> message) {
         LOGGER.debug("Received message from channel {}: {}", KogitoEventStreams.INCOMING, message);
         return produce(message.getPayload(), (v, e) -> {
             LOGGER.debug("Acking message {}", message.getPayload());
@@ -83,13 +66,13 @@ public class QuarkusCloudEventReceiver implements EventReceiver {
         });
     }
 
-    public CompletionStage<Void> produce(final String message) {
+    public CompletionStage<?> produce(final String message) {
         return produce(message, null);
     }
 
-    public CompletionStage<Void> produce(final String message, BiConsumer<Object, Throwable> callback) {
-        CompletionStage<Void> result = CompletableFuture.completedFuture(null);
-        CompletionStage<Void> future = result;
+    public CompletionStage<?> produce(final String message, BiConsumer<Object, Throwable> callback) {
+        CompletionStage<?> result = CompletableFuture.completedFuture(null);
+        CompletionStage<?> future = result;
         for (Subscription<Object> subscription : consumers) {
             future = future.thenCompose(f -> subscription.getConsumer().apply(subscription.getInfo().getConverter().apply(message)));
         }
@@ -100,8 +83,8 @@ public class QuarkusCloudEventReceiver implements EventReceiver {
     }
 
     @Override
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public <T> void subscribe(Function<T, CompletionStage<Void>> consumer, SubscriptionInfo<String, T> info) {
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public <T> void subscribe(Function<T, CompletionStage<?>> consumer, SubscriptionInfo<String, T> info) {
         consumers.add(new Subscription(consumer, info));
     }
 }

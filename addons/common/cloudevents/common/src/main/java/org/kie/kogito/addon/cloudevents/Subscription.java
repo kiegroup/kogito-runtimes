@@ -13,15 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kie.kogito.services.event;
+package org.kie.kogito.addon.cloudevents;
 
 import java.util.concurrent.CompletionStage;
+import java.util.function.Function;
 
-import org.kie.kogito.Application;
-import org.kie.kogito.process.Process;
+import org.kie.kogito.event.SubscriptionInfo;
 
-public interface EventConsumer<M> {
+public class Subscription<T> {
+    private final Function<T, CompletionStage<?>> consumer;
+    private final SubscriptionInfo<String, T> info;
 
-    CompletionStage<?> consume(Application application, Process<M> process, Object payload, String trigger);
+    public Subscription(Function<T, CompletionStage<?>> consumer, SubscriptionInfo<String, T> info) {
+        this.consumer = consumer;
+        this.info = info;
+    }
 
+    public Function<T, CompletionStage<?>> getConsumer() {
+        return consumer;
+    }
+
+    public SubscriptionInfo<String, T> getInfo() {
+        return info;
+    }
 }

@@ -82,27 +82,30 @@ public abstract class AbstractMessageConsumer<M extends Model, D, T extends Abst
             eventReceiver.subscribe(this::consumeCloud, new SubscriptionInfo<>(cloudEventConverter, Optional.of(trigger)));
         } else {
             eventConverter = dataEventConverter;
-            eventReceiver.subscribe(this::consume, new SubscriptionInfo<>(dataEventConverter, Optional.of(trigger)));
+            eventReceiver.subscribe(this::consumeNotCloud, new SubscriptionInfo<>(dataEventConverter, Optional.of(trigger)));
         }
         logger.info("Consumer for {} started", trigger);
     }
 
-    protected CompletionStage<Void> consumeCloud(T payload) {
+    protected CompletionStage<?> consumeCloud(T payload) {
         return consume(payload);
     }
 
-    protected CompletionStage<Void> consumeNotCloud(D payload) {
+    protected CompletionStage<?> consumeNotCloud(D payload) {
         return consume(payload);
     }
 
-    private CompletionStage<Void> consume(Object payload) {
-        logger.debug("Received {} for trigger {}", payload, trigger);
-        CompletionStage<Void> result = eventConsumer.consume(application, process, payload, trigger);
-        logger.debug("Processed {} for trigger {}", payload, trigger);
+    private CompletionStage<?> consume(Object payload) {
+        logger.trace("Received {} for trigger {}", payload, trigger);
+        CompletionStage<?> result = eventConsumer.consume(application, process, payload, trigger);
+        if (logger.isTraceEnabled()) {
+            result = result.thenAccept(v -> logger.trace("Completed {} for trigger {}", payload, trigger));
+        }
+        logger.trace("Dispatched {} for trigger {}", payload, trigger);
         return result;
     }
 
-    protected CompletionStage<Void> consumePayload(String payload) {
+    protected CompletionStage<?> consumePayload(String payload) {
         return consume(eventConverter.apply(payload));
     }
 
