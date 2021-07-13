@@ -46,7 +46,7 @@ public class DataEventConsumer<D, M extends Model> implements EventConsumer<M> {
 
     @Override
     public CompletionStage<Void> consume(Application application, Process<M> process, Object eventData, String trigger) {
-        return CompletableFuture.runAsync(() -> processService.createProcessInstance(process, function.apply((D) eventData), trigger, null, null), executorService);
+        return CompletableFuture.runAsync(() -> processService.createProcessInstance(process, function.apply((D) eventData), null, trigger, null), executorService);
     }
 
 }

@@ -56,7 +56,7 @@ public abstract class AbstractQuarkusCloudEventResource {
         objectMapper.registerModule(JsonFormat.getCloudEventJacksonModule());
     }
 
-    @POST()
+    @POST
     @Consumes(MediaType.WILDCARD)
     @Produces(MediaType.APPLICATION_JSON)
     public CompletionStage<Response> cloudEventListener(CloudEvent event) {
