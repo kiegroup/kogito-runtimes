@@ -18,6 +18,8 @@ package org.kie.kogito.addon.cloudevents.quarkus.http;
 import javax.ws.rs.core.Response;
 
 import org.kie.kogito.cloudevents.Printer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.cloudevents.CloudEvent;
 
@@ -26,6 +28,8 @@ import io.cloudevents.CloudEvent;
  */
 public final class Responses {
 
+    private final static Logger logger = LoggerFactory.getLogger(Responses.class);
+
     private static final String ERROR_PROCESSING = "Failed to process HttpRequest into a CloudEvent format";
     private static final String ERROR_CHANNEL_NOT_BOUND = "Channel '%s' not bound, impossible to retransmit CloudEvent internally: %s";
 
@@ -33,6 +37,7 @@ public final class Responses {
     }
 
     public static Response errorProcessingCloudEvent(Throwable cause) {
+        logger.error("Error during rest invocation", cause);
         return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseError(ERROR_PROCESSING, cause)).build();
     }
 
