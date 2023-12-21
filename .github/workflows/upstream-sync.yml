@@ -37,5 +37,5 @@ jobs:
         run: git merge --no-edit upstream/main
 
       - name: Push changes
-        run: git push origin main-apache
+        run: git push
 
