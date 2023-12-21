@@ -3,7 +3,7 @@ name: Sync main-apache branch with upstream/main
 env:
   USERNAME: github-actions[bot]
   USEREMAIL: github-actions[bot]@users.noreply.github.com
-  UPSTREAM_REMOTE: https://github.com/kiegroup/kogito-runtimes-test.git
+  UPSTREAM_REMOTE: https://github.com/apache/incubator-kie-kogito-runtimes.git
 
 on:
   schedule:
