@@ -30,9 +30,12 @@ jobs:
       - name: Checkout main-apache branch
         run: git checkout --track origin/main-apache
 
+      - name: Pull main-apache branch
+        run: git pull
+
       - name: Merge upstream/main branch
         run: git merge --no-edit upstream/main
 
       - name: Push changes
-        run: git push origin main-apache
+        run: git push main-apache
 
