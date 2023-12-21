@@ -14,8 +14,8 @@ jobs:
   sync-main-apache:
     name: Sync main-apache branch
     runs-on: ubuntu-latest
-    permissions:
-      actions: write
+    permissions: write-all
+ 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
