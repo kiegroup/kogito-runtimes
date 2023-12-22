@@ -28,10 +28,10 @@ jobs:
       - name: Fetch all
         run: git fetch --all
 
-      - name: Checkout main-apache-test branch
-        run: git checkout --track origin/main-apache-test
+      - name: Checkout main-apache branch
+        run: git checkout --track origin/main-apache
 
-      - name: Pull main-apache-test branch
+      - name: Pull main-apache branch
         run: git pull
 
       - name: Merge upstream/main branch
