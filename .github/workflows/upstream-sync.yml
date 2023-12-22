@@ -2,6 +2,7 @@ name: Sync main-apache branch with upstream/main
 
 env:
   USERNAME: kie-ci
+  USEREMAIL: kie-ci0@redhat.com
   UPSTREAM_REMOTE: https://github.com/apache/incubator-kie-kogito-runtimes.git
 
 on:
@@ -21,6 +22,7 @@ jobs:
       - name: Setup git environment
         run: |
           git config --global user.name "$USERNAME"
+          git config --global user.email "$USEREMAIL"
           git remote add upstream $UPSTREAM_REMOTE
 
       - name: Fetch all
