@@ -24,7 +24,7 @@
   <parent>
     <artifactId>integration-tests-quarkus-processes-persistence</artifactId>
     <groupId>org.kie.kogito</groupId>
-    <version>9.99.0</version>
+    <version>9.99.1</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
