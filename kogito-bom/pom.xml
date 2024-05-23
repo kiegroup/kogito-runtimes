@@ -51,149 +51,6 @@
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-api-incubation-common-objectmapper</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-api-incubation-common-objectmapper</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-api-incubation-common</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-api-incubation-common</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-api-incubation-application</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-api-incubation-application</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-api-incubation-processes</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-api-incubation-processes</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-api-incubation-processes-services</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-api-incubation-processes-services</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-api-incubation-predictions</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-api-incubation-predictions</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-api-incubation-predictions-services</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-api-incubation-predictions-services</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-api-incubation-decisions</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-api-incubation-decisions</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-api-incubation-decisions-services</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-api-incubation-decisions-services</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-api-incubation-rules</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-api-incubation-rules</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-api-incubation-rules-services</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-api-incubation-rules-services</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-quarkus-incubation-common</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-quarkus-incubation-common</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
 
       <dependency>
         <groupId>org.kie.kogito</groupId>
@@ -525,18 +382,6 @@
         <classifier>sources</classifier>
       </dependency>
 
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-maven-plugin</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-maven-plugin</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-
       <!-- Codegen modules -->
       <dependency>
         <groupId>org.kie.kogito</groupId>
@@ -584,40 +429,6 @@
         <version>${project.version}</version>
         <type>test-jar</type>
         <scope>test</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-codegen-rules</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-codegen-rules</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-codegen-decisions</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-codegen-decisions</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-codegen-predictions</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-codegen-predictions</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
       </dependency>
 
       <!-- Monitoring addon     -->
@@ -1694,68 +1505,6 @@
         <scope>test</scope>
       </dependency>
 
-      <!-- PMML -->
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-pmml-api-dependencies</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-pmml-dependencies</artifactId>
-        <type>pom</type>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-pmml</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-pmml-openapi</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-pmml</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-pmml</artifactId>
-        <version>${project.version}</version>
-        <type>test-jar</type>
-        <scope>test</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-efesto-drl</artifactId>
-        <version>${project.version}</version>
-        <type>pom</type>
-      </dependency>
-
-      <!-- Scenario Simulation Runner -->
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-scenario-simulation</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-scenario-simulation</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-scenario-simulation</artifactId>
-        <version>${project.version}</version>
-        <type>test-jar</type>
-        <scope>test</scope>
-      </dependency>
 
       <!-- jbpm -->
       <dependency>
