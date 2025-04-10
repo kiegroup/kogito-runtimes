@@ -48,7 +48,6 @@
     <module>process-workitems</module>
     <module>jbpm-usertask</module>
     <module>jbpm-usertask-workitem</module>
-    <module>jbpm-tools</module>
     <module>jbpm-deps-groups</module>
   </modules>
 
@@ -61,7 +60,6 @@
         </property>
       </activation>
       <modules>
-        <module>jbpm-tests</module>
       </modules>
     </profile>
   </profiles>

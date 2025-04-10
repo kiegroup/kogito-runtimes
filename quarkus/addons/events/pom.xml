@@ -36,10 +36,6 @@
 
   <modules>
     <module>process</module>
-    <module>decisions</module>
-    <module>predictions</module>
-    <module>rules</module>
-    <module>mongodb</module>
   </modules>
 
 </project>
