@@ -25,13 +25,12 @@
   <parent>
     <groupId>org.kie.kogito</groupId>
     <artifactId>kogito-runtimes</artifactId>
-    <version>${project.version}</version>
+    <version>9.103.0</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>kogito-bom</artifactId>
   <packaging>pom</packaging>
-  <version>${project.version}</version>
 
   <name>Kogito :: BOM</name>
 
@@ -1335,7 +1334,7 @@
 
 
       <!-- Quarkus extension -->
-  
+
       <dependency>
         <groupId>org.kie.kogito</groupId>
         <artifactId>kogito-quarkus-common</artifactId>
