@@ -25,7 +25,7 @@
   <parent>
     <artifactId>kogito-quarkus-bom</artifactId>
     <groupId>org.kie.kogito</groupId>
-    <version>999-SNAPSHOT</version>
+    <version>9.104.0</version>
     <relativePath>../bom/pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -51,16 +51,8 @@
     <module>fabric8-kubernetes-service-catalog</module>
     <module>microprofile-config-service-catalog</module>
     <module>jobs</module>
-    <module>explainability</module>
-    <module>mail</module>
     <module>monitoring</module>
-    <module>process-svg</module>
-    <module>task-notification</module>
-    <module>task-management</module>
-    <module>marshallers</module>
-    <module>process-definitions</module>
     <module>dynamic</module>
-    <module>jbpm-usertask-storage-jpa</module>
     <module>token-exchange</module>
   </modules>
 

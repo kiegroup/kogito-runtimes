@@ -24,7 +24,7 @@
   <parent>
     <groupId>org.kie</groupId>
     <artifactId>kogito-addons-common-parent</artifactId>
-    <version>999-SNAPSHOT</version>
+    <version>9.104.0</version>
   </parent>
   <artifactId>kie-addons-persistence-parent</artifactId>
   <packaging>pom</packaging>
@@ -35,11 +35,6 @@
   <modules>
     <module>jdbc</module>
     <module>ddl</module>
-    <module>infinispan</module>
-    <module>filesystem</module>
-    <module>mongodb</module>
-    <module>postgresql</module>
-    <module>rocksdb</module>
   </modules>
 
 </project>

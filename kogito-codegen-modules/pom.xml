@@ -26,7 +26,7 @@
   <parent>
     <groupId>org.kie.kogito</groupId>
     <artifactId>kogito-build-parent</artifactId>
-    <version>999-SNAPSHOT</version>
+    <version>9.104.0</version>
     <relativePath>../kogito-build/kogito-build-parent/pom.xml</relativePath>
   </parent>
 
@@ -38,14 +38,8 @@
   <modules>
     <module>kogito-codegen-api</module>
     <module>kogito-codegen-core</module>
-    <module>kogito-codegen-decisions</module>
-    <module>kogito-codegen-integration-tests</module>
-    <module>kogito-codegen-manager</module>
-    <module>kogito-codegen-predictions</module>
     <module>kogito-codegen-processes</module>
     <module>kogito-codegen-processes-integration-tests</module>
-    <module>kogito-codegen-rules</module>
-    <module>kogito-codegen-sample</module>
   </modules>
 
 </project>

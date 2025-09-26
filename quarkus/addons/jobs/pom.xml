@@ -26,7 +26,7 @@
   <parent>
     <groupId>org.kie</groupId>
     <artifactId>kogito-addons-quarkus-parent</artifactId>
-    <version>999-SNAPSHOT</version>
+    <version>9.104.0</version>
   </parent>
 
   <artifactId>kogito-addons-quarkus-jobs-parent</artifactId>
@@ -36,7 +36,6 @@
   <modules>
     <module>common</module>
     <module>management</module>
-    <module>messaging</module>
     <module>knative-eventing</module>
   </modules>
 

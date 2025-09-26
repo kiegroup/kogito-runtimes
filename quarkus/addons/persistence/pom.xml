@@ -25,7 +25,7 @@
   <parent>
     <artifactId>kogito-addons-quarkus-parent</artifactId>
     <groupId>org.kie</groupId>
-    <version>999-SNAPSHOT</version>
+    <version>9.104.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -36,12 +36,6 @@
 
   <modules>
     <module>jdbc</module>
-    <module>infinispan</module>
-    <module>kafka</module>
-    <module>filesystem</module>
-    <module>mongodb</module>
-    <module>postgresql</module>
-    <module>rocksdb</module>
   </modules>
 
 </project>
