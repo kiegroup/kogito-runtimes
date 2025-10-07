@@ -1,3 +1,22 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import org.jenkinsci.plugins.workflow.libs.Library
 @Library('jenkins-pipeline-shared-libraries')_
 
@@ -6,7 +25,11 @@ pipelineProperties = [:]
 
 pipeline {
     agent {
-        label 'rhel8 && !built-in'
+        docker { 
+            image env.AGENT_DOCKER_BUILDER_IMAGE
+            args env.AGENT_DOCKER_BUILDER_ARGS
+            label util.avoidFaultyNodes()
+        }
     }
 
     options {
@@ -22,7 +45,7 @@ pipeline {
         stage('Initialization') {
             steps {
                 script {
-                    cleanWs()
+                    cleanWs(disableDeferredWipeout: true)
 
                     if (params.DISPLAY_NAME != '') {
                         currentBuild.displayName = params.DISPLAY_NAME
@@ -41,8 +64,8 @@ pipeline {
             steps {
                 script {
                     dir(getRepoName()) {
+                        approveAndMergePR(getDeployPrLink())
                         checkoutRepo()
-                        mergeAndPush(getDeployPrLink())
                         tagLatest()
                     }
                 }
@@ -54,11 +77,11 @@ pipeline {
                 script {
                     dir(getRepoName()) {
                         checkoutRepo()
-                        if(githubscm.isReleaseExist(getGitTag(), getGitAuthorCredsID())) {
-                            githubscm.deleteRelease(getGitTag(), getGitAuthorCredsID())
+                        if(githubscm.isReleaseExist(getGitTag(), getGitAuthorCredsId())) {
+                            githubscm.deleteRelease(getGitTag(), getGitAuthorPushCredsId())
                         }
-                        githubscm.createReleaseWithGeneratedReleaseNotes(getGitTag(), getBuildBranch(), githubscm.getPreviousTagFromVersion(getGitTag()), getGitAuthorCredsID())
-                        githubscm.updateReleaseBody(getGitTag(), getGitAuthorCredsID())
+                        githubscm.createReleaseWithGeneratedReleaseNotes(getGitTag(), getBuildBranch(), githubscm.getPreviousTagFromVersion(getGitTag()), getGitAuthorPushCredsId())
+                        githubscm.updateReleaseBody(getGitTag(), getGitAuthorPushCredsId())
                     }
                 }
             }
@@ -70,7 +93,7 @@ pipeline {
         }
         cleanup {
             script {
-                util.cleanNode('docker')
+                util.cleanNode()
             }
         }
     }
@@ -155,8 +178,12 @@ String getGitAuthor() {
     return env.GIT_AUTHOR
 }
 
-String getGitAuthorCredsID() {
-    return env.AUTHOR_CREDS_ID
+String getGitAuthorCredsId() {
+    return env.GIT_AUTHOR_CREDS_ID
+}
+
+String getGitAuthorPushCredsId() {
+    return env.GIT_AUTHOR_PUSH_CREDS_ID
 }
 
 String getDeployPrLink() {
@@ -169,20 +196,20 @@ String getDeployPrLink() {
 
 void checkoutRepo() {
     deleteDir()
-    checkout(githubscm.resolveRepository(getRepoName(), getGitAuthor(), getBuildBranch(), false))
+    checkout(githubscm.resolveRepository(getRepoName(), getGitAuthor(), getBuildBranch(), false, getGitAuthorCredsId()))
     // need to manually checkout branch since on a detached branch after checkout command
     sh "git checkout ${getBuildBranch()}"
 }
 
-void mergeAndPush(String prLink) {
-    if (prLink) {
-        githubscm.mergePR(prLink, getGitAuthorCredsID())
-        githubscm.pushObject('origin', getBuildBranch(), getGitAuthorCredsID())
+void approveAndMergePR(String prLink) {
+    if (prLink?.trim()) {
+        githubscm.approvePR(prLink, getGitAuthorPushCredsId())
+        githubscm.mergePR(prLink, getGitAuthorPushCredsId())
     }
 }
 
 void tagLatest() {
     if (getGitTag()) {
-        githubscm.tagLocalAndRemoteRepository('origin', getGitTag(), getGitAuthorCredsID(), env.BUILD_TAG, true)
+        githubscm.tagLocalAndRemoteRepository('origin', getGitTag(), getGitAuthorPushCredsId(), env.BUILD_TAG, true)
     }
 }
