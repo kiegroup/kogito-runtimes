@@ -44,7 +44,7 @@
     <SONATAFLOW_WORKFLOW_ENDPOINT_WEBAPP_TITLE>
       OSL SonataFlow Serverless Endpoint
     </SONATAFLOW_WORKFLOW_ENDPOINT_WEBAPP_TITLE>
-  </properties>;
+  </properties>
 
 
   <dependencies>
