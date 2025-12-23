@@ -97,6 +97,14 @@
       <scope>test</scope>
       <exclusions>
         <exclusion>
+          <groupId>org.jbpm</groupId>
+          <artifactId>jbpm-with-drools-quarkus</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.jbpm</groupId>
+          <artifactId>jbpm-with-drools-quarkus-deployment</artifactId>
+        </exclusion>
+        <exclusion>
           <groupId>*</groupId>
           <artifactId>*</artifactId>
         </exclusion>
