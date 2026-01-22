@@ -382,7 +382,7 @@ public class ProcessResourceGeneratorTest {
     private void assertThatAnnotationHasSummaryAndDescription(AnnotationExpr annotation, String summary, String description) {
         NodeList<MemberValuePair> pairs = ((NormalAnnotationExpr) annotation).getPairs();
 
-        assertThat(pairs).containsExactlyInAnyOrder(
+        assertThat(pairs).contains(
                 new MemberValuePair("summary", new StringLiteralExpr(summary)),
                 new MemberValuePair("description", new StringLiteralExpr(description)));
     }

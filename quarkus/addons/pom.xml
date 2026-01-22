@@ -55,6 +55,7 @@
     <module>dynamic</module>
     <module>jwt-parser</module>
     <module>token-exchange</module>
+    <module>opentelemetry</module>
   </modules>
 
   <profiles>
