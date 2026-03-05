@@ -1,5 +1,4 @@
 name: Kogito Downstream
-
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
@@ -11,7 +10,6 @@ on:
       - '*.txt'
       - 'docsimg/**'
       - '.ci/jenkins/**'
-
 jobs:
   kogito-downstream-build:
     concurrency:
@@ -20,13 +18,15 @@ jobs:
     timeout-minutes: 180
     strategy:
       matrix:
-        job_name: [ kogito-apps, serverless-workflow-examples ]
+        job_name: [kogito-apps, serverless-workflow-examples]
         os: [ubuntu-latest]
         java-version: [17]
         maven-version: ['3.9.11']
         include:
           - job_name: kogito-apps
             repository: kogito-apps
+            env:
+              env_BUILD_MVN_OPTS: " -Dproductized"
           - job_name: serverless-workflow-examples
             repository: kogito-examples
             env_KOGITO_EXAMPLES_SUBFOLDER_POM: serverless-workflow-examples/
@@ -53,7 +53,7 @@ jobs:
           starting-project: kiegroup/${{ matrix.repository }}
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           definition-file: https://raw.githubusercontent.com/${GROUP:kiegroup}/kogito-pipelines/${BRANCH:main}/.ci/pull-request-config.yaml
-        env: 
+        env:
           BUILD_MVN_OPTS: ${{ matrix.env_BUILD_MVN_OPTS }}
           KOGITO_EXAMPLES_SUBFOLDER_POM: ${{ matrix.env_KOGITO_EXAMPLES_SUBFOLDER_POM }}
       - name: Junit Report

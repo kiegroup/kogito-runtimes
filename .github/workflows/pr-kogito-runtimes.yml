@@ -1,5 +1,4 @@
 name: Kogito Runtimes
-
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
@@ -11,7 +10,6 @@ on:
       - '*.txt'
       - 'docsimg/**'
       - '.ci/jenkins/**'
-
 jobs:
   runtime-build:
     concurrency:
@@ -47,6 +45,7 @@ jobs:
           definition-file: https://raw.githubusercontent.com/${GROUP:kiegroup}/kogito-pipelines/${BRANCH:main}/.ci/pull-request-config.yaml
         env:
           BUILD_MVN_OPTS_CURRENT: '-Dvalidate-formatting'
+          BUILD_MVN_OPTS: " -Dproductized"
       - name: Junit Report
         uses: kiegroup/kogito-pipelines/.ci/actions/action-junit-report@main
         if: ${{ always() }}
