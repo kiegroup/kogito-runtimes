@@ -131,11 +131,6 @@
     <module>addons</module>
     <module>kogito-workitems</module>
     <module>kogito-serverless-workflow</module>
-    <module>kogito-maven-plugin</module>
-    <module>kogito-gradle-plugin</module>
-    <module>springboot</module>
-    <module>kogito-maven-plugin-test</module>
-    <module>kogito-gradle-plugin-test</module>
   </modules>
 
 </project>
