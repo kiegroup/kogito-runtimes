@@ -40,16 +40,16 @@
   <url>http://www.jbpm.org</url>
 
   <modules>
-    <module>jbpm-bpmn2</module>
-    <module>jbpm-deps-groups</module>
     <module>jbpm-flow</module>
     <module>jbpm-flow-builder</module>
+    <module>jbpm-bpmn2</module>
     <module>jbpm-flow-migration</module>
-    <module>jbpm-usertask</module>
-    <module>jbpm-usertask-workitem</module>
-    <module>jbpm-xsd-resources</module>
     <module>process-serialization-protobuf</module>
     <module>process-workitems</module>
+    <module>jbpm-usertask</module>
+    <module>jbpm-usertask-workitem</module>
+    <module>jbpm-tools</module>
+    <module>jbpm-deps-groups</module>
   </modules>
 
   <profiles>
