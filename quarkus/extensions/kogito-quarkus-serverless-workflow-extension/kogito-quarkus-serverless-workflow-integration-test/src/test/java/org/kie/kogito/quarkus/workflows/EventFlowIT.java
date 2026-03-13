@@ -44,7 +44,9 @@ import io.restassured.http.ContentType;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.kie.kogito.quarkus.workflows.AssuredTestUtils.*;
+import static org.kie.kogito.quarkus.workflows.AssuredTestUtils.buildCloudEvent;
+import static org.kie.kogito.quarkus.workflows.AssuredTestUtils.startProcess;
+import static org.kie.kogito.quarkus.workflows.AssuredTestUtils.waitForFinish;
 
 @QuarkusIntegrationTest
 class EventFlowIT {
@@ -128,6 +130,14 @@ class EventFlowIT {
         assertThrows(ConditionTimeoutException.class, () -> waitForFinish(flowName, id, Duration.ofSeconds(5)));
         sendEvents(id, "never");
         waitForFinish(flowName, id, Duration.ofSeconds(5));
+    }
+
+    @Test
+    void testWrongProcessIdNotProcessedRainy() throws IOException {
+        final String flowName = "nonStartEvent";
+        final String id = startProcess(flowName);
+        sendEvents(UUID.randomUUID().toString(), "move");
+        assertThrows(ConditionTimeoutException.class, () -> waitForFinish(flowName, id, Duration.ofSeconds(5)));
     }
 
     private void sendEvents(String id, String... eventTypes) throws IOException {

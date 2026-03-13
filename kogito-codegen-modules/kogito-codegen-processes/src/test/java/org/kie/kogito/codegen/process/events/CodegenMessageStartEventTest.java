@@ -22,12 +22,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 import org.drools.codegen.common.GeneratedFile;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.kie.kogito.codegen.api.context.KogitoBuildContext;
+import org.kie.kogito.codegen.api.utils.KogitoCodeGenConstants;
 import org.kie.kogito.codegen.core.io.CollectedResourceProducer;
 import org.kie.kogito.codegen.process.ProcessCodegen;
 
@@ -36,7 +38,10 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.kie.kogito.codegen.api.utils.KogitoContextTestUtils.mockClassAvailabilityResolver;
 
 public class CodegenMessageStartEventTest {
 
@@ -51,7 +56,8 @@ public class CodegenMessageStartEventTest {
     @ParameterizedTest
     @MethodSource("org.kie.kogito.codegen.api.utils.KogitoContextTestUtils#restContextBuilders")
     public void testRESTApiForMessageStartEvent(KogitoBuildContext.Builder contextBuilder) {
-
+        contextBuilder
+                .withClassAvailabilityResolver(mockClassAvailabilityResolver(singleton(KogitoCodeGenConstants.QUARKUS_TRANSACTION_MANAGER_CLASS), emptyList()));
         KogitoBuildContext context = contextBuilder.build();
         ProcessCodegen codeGenerator = ProcessCodegen.ofCollectedResources(
                 context,
@@ -82,7 +88,8 @@ public class CodegenMessageStartEventTest {
     @ParameterizedTest
     @MethodSource("org.kie.kogito.codegen.api.utils.KogitoContextTestUtils#restContextBuilders")
     public void testRESTApiForMessageEndEvent(KogitoBuildContext.Builder contextBuilder) {
-
+        contextBuilder
+                .withClassAvailabilityResolver(mockClassAvailabilityResolver(singleton(KogitoCodeGenConstants.QUARKUS_TRANSACTION_MANAGER_CLASS), emptyList()));
         KogitoBuildContext context = contextBuilder.build();
         ProcessCodegen codeGenerator = ProcessCodegen.ofCollectedResources(
                 context,
@@ -112,6 +119,10 @@ public class CodegenMessageStartEventTest {
     @ParameterizedTest
     @MethodSource("org.kie.kogito.codegen.api.utils.KogitoContextTestUtils#contextBuilders")
     public void testMessageProducerForMessageEndEvent(KogitoBuildContext.Builder contextBuilder) {
+        Properties properties = new Properties();
+        properties.put("kogito.addon.cloudevents.kafka.kogito_outgoing_stream", "test-out");
+        properties.put("kogito.addon.cloudevents.kafka.kogito_incoming_stream", "test-in");
+        contextBuilder.withApplicationProperties(properties);
 
         KogitoBuildContext context = contextBuilder.build();
         ProcessCodegen codeGenerator = ProcessCodegen.ofCollectedResources(

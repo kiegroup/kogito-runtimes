@@ -19,43 +19,46 @@
     under the License.
 
 -->
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
-         xmlns="http://maven.apache.org/POM/4.0.0">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <groupId>org.kie</groupId>
     <artifactId>kie-addons-quarkus-messaging-parent</artifactId>
+    <groupId>org.kie</groupId>
     <version>999-SNAPSHOT</version>
   </parent>
+  <modelVersion>4.0.0</modelVersion>
+
   <artifactId>kie-addons-quarkus-messaging-deployment</artifactId>
   <name>KIE Add-On Messaging - Deployment</name>
 
   <properties>
-     <java.module.name>org.kie.kogito.addon.cloudevents.quarkus.deployment</java.module.name>
+    <java.module.name>org.kie.kogito.addon.messaging.deployment</java.module.name>
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-arc-deployment</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-jackson-deployment</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-smallrye-health-deployment</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.kie</groupId>
       <artifactId>kie-addons-quarkus-messaging</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.kie.kogito</groupId>
-      <artifactId>kogito-quarkus-extension-spi</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.kie.kogito</groupId>
-      <artifactId>kogito-codegen-api</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.kie</groupId>
       <artifactId>kogito-addons-quarkus-common-deployment</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.kie.kogito</groupId>
-      <artifactId>kogito-quarkus-common-deployment</artifactId>
-    </dependency>
   </dependencies>
+
   <build>
     <plugins>
       <plugin>
@@ -72,4 +75,5 @@
       </plugin>
     </plugins>
   </build>
+
 </project>

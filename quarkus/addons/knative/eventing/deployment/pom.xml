@@ -71,7 +71,6 @@
     <dependency>
       <groupId>org.kie</groupId>
       <artifactId>kie-addons-quarkus-messaging-deployment</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.quarkiverse.reactivemessaging.http</groupId>
@@ -111,9 +110,6 @@
               <version>${version.io.quarkus}</version>
             </path>
           </annotationProcessorPaths>
-          <compilerArgs>
-            <arg>-AlegacyConfigRoot=true</arg>
-          </compilerArgs>
         </configuration>
       </plugin>
     </plugins>

@@ -27,65 +27,55 @@ import java.util.stream.Collectors;
 
 import org.drools.codegen.common.GeneratedFile;
 import org.drools.codegen.common.GeneratedFileType;
-import org.drools.codegen.common.GeneratedFileWriter;
 import org.drools.compiler.compiler.io.memory.MemoryFileSystem;
-import org.drools.util.PortablePath;
 import org.kie.memorycompiler.CompilationProblem;
 import org.kie.memorycompiler.CompilationResult;
 import org.kie.memorycompiler.JavaCompiler;
 import org.kie.memorycompiler.JavaCompilerFactory;
 import org.kie.memorycompiler.JavaCompilerSettings;
 import org.kie.memorycompiler.JavaConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class CompilerHelper {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CompilerHelper.class);
-
     private static final JavaCompiler JAVA_COMPILER = JavaCompilerFactory.loadCompiler(JavaConfiguration.CompilerType.NATIVE, "17");
-    private static final GeneratedFileWriter.Builder GENERATED_FILE_WRITER_BUILDER = GeneratedFileWriter.builder("kogito", "kogito.codegen.resources.directory", "kogito.codegen.sources.directory");
     public static final String SOURCES = "SOURCES";
     public static final String RESOURCES = "RESOURCES";
 
     private CompilerHelper() {
     }
 
-    public static void compileAndDumpGeneratedSources(Collection<GeneratedFile> generatedSources,
-            ClassLoader classLoader,
+    public record CompileInfo(Collection<GeneratedFile> generatedSources,
+            Collection<GeneratedFile> resources,
+            ClassLoader projectClassLoader,
             List<String> runtimeClassPathElements,
             File baseDir,
             String javaSourceEncoding,
-            String javaSourceVersion,
-            String javaTargetVersion) {
-        compileAndWriteClasses(generatedSources,
-                classLoader,
-                buildJavaCompilerSettings(runtimeClassPathElements,
-                        javaSourceEncoding,
-                        javaSourceVersion,
-                        javaTargetVersion),
-                getGeneratedFileWriter(baseDir));
-        writeFiles(generatedSources, baseDir);
+            String javaVersion) {
+
+        public CompileInfo(Collection<GeneratedFile> generatedSources, Collection<GeneratedFile> resources, GenerateModelHelper.GenerateModelInfo generateModelInfo) {
+            this(generatedSources,
+                    resources,
+                    generateModelInfo.projectClassLoader(),
+                    generateModelInfo.runtimeClassPathElements(),
+                    generateModelInfo.baseDir(),
+                    generateModelInfo.javaSourceEncoding(),
+                    generateModelInfo.javaVersion());
+        }
     }
 
-    public static void dumpResources(Collection<GeneratedFile> resources, File baseDir) {
-        writeFiles(resources, baseDir);
-    }
-
-    static void writeFiles(Collection<GeneratedFile> toWrite, File baseDir) {
-        GeneratedFileWriter writer = getGeneratedFileWriter(baseDir);
-        toWrite.forEach(generatedFile -> writeGeneratedFile(generatedFile, writer));
-    }
-
-    static void writeGeneratedFile(GeneratedFile generatedFile, GeneratedFileWriter writer) {
-        LOGGER.info("Writing compiled class: {}", generatedFile.relativePath());
-        writer.write(generatedFile);
+    public static void compileAndDump(CompileInfo compileInfo) {
+        compileAndWriteClasses(compileInfo.generatedSources(),
+                compileInfo.projectClassLoader,
+                buildJavaCompilerSettings(compileInfo.runtimeClassPathElements,
+                        compileInfo.javaSourceEncoding,
+                        compileInfo.javaVersion),
+                compileInfo.baseDir().toPath());
     }
 
     static void compileAndWriteClasses(Collection<GeneratedFile> generatedClasses,
             ClassLoader classLoader,
             JavaCompilerSettings javaCompilerSettings,
-            GeneratedFileWriter fileWriter) {
+            Path baseDir) {
         MemoryFileSystem srcMfs = new MemoryFileSystem();
         MemoryFileSystem trgMfs = new MemoryFileSystem();
 
@@ -106,28 +96,27 @@ public class CompilerHelper {
                         .collect(Collectors.joining(",")));
             }
 
-            for (PortablePath path : trgMfs.getFilePaths()) {
-                byte[] data = trgMfs.getBytes(path);
-                writeGeneratedFile(new GeneratedFile(GeneratedFileType.COMPILED_CLASS, path.asString(), data), fileWriter);
-            }
-        }
-    }
+            Collection<GeneratedFile> compiledClasses = trgMfs.getFilePaths().stream()
+                    .map(path -> new GeneratedFile(
+                            GeneratedFileType.COMPILED_CLASS,
+                            path.asString(),
+                            trgMfs.getBytes(path)))
+                    .toList();
 
-    static GeneratedFileWriter getGeneratedFileWriter(File baseDir) {
-        return GENERATED_FILE_WRITER_BUILDER.build(Path.of(baseDir.getAbsolutePath()));
+            GeneratedFileManager.dumpGeneratedFiles(compiledClasses, baseDir);
+        }
     }
 
     static JavaCompilerSettings buildJavaCompilerSettings(List<String> runtimeClassPathElements,
             String sourceEncoding,
-            String sourceVersion,
-            String targetVersion) {
+            String javaVersion) {
         JavaCompilerSettings settings = new JavaCompilerSettings();
         for (String path : runtimeClassPathElements) {
             settings.addClasspath(new File(path));
         }
         settings.setSourceEncoding(sourceEncoding);
-        settings.setSourceVersion(sourceVersion);
-        settings.setTargetVersion(targetVersion);
+        settings.setSourceVersion(javaVersion);
+        settings.setTargetVersion(javaVersion);
         return settings;
     }
 }

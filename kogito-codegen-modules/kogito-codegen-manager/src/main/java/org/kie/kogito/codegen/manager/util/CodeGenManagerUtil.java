@@ -18,18 +18,16 @@
  */
 package org.kie.kogito.codegen.manager.util;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.lang.reflect.Modifier;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.PathMatcher;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import org.drools.codegen.common.AppPaths;
 import org.drools.codegen.common.DroolsModelBuildContext;
@@ -53,12 +51,22 @@ import org.slf4j.LoggerFactory;
 public class CodeGenManagerUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CodeGenManagerUtil.class);
-    public static final PathMatcher DRL_FILE_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**.drl");
 
     public enum Framework {
-        QUARKUS,
-        SPRING,
-        NONE
+        QUARKUS("quarkus"),
+        SPRING("spring"),
+        NONE("");
+
+        private final String name;
+
+        Framework(String name) {
+            this.name = name;
+        }
+
+        public String toName() {
+            return name;
+        }
+
     }
 
     public record ProjectParameters(CodeGenManagerUtil.Framework framework,
@@ -67,6 +75,20 @@ public class CodeGenManagerUtil {
             String generateProcesses,
             String generateRules,
             boolean persistence) {
+    }
+
+    public static ClassLoader projectClassLoader(Set<URI> uris) throws MalformedURLException {
+        URL[] urlArray = convertURIsToURLs(uris);
+        return URLClassLoader.newInstance(urlArray, Thread.currentThread().getContextClassLoader());
+    }
+
+    public static URL[] convertURIsToURLs(final Set<URI> uris) throws MalformedURLException {
+        URL[] toReturn = new URL[uris.size()];
+        int counter = 0;
+        for (URI uri : uris) {
+            toReturn[counter++] = uri.toURL();
+        }
+        return toReturn;
     }
 
     public static KogitoBuildContext discoverKogitoRuntimeContext(ClassLoader projectClassLoader,
@@ -88,6 +110,16 @@ public class CodeGenManagerUtil {
 
         additionalProperties(context, projectParameters);
         return context;
+    }
+
+    public static void setSystemProperties(Map<String, String> properties) {
+        if (properties != null) {
+            LOGGER.debug("Additional system properties: {}", properties);
+            for (Map.Entry<String, String> property : properties.entrySet()) {
+                System.setProperty(property.getKey(), property.getValue());
+            }
+            LOGGER.debug("Configured system properties were successfully set.");
+        }
     }
 
     static KogitoBuildContext.Builder contextBuilder(CodeGenManagerUtil.Framework framework) {
@@ -158,31 +190,13 @@ public class CodeGenManagerUtil {
                 .anyMatch(c -> !c.isInterface() && !Modifier.isAbstract(c.getModifiers()));
     }
 
-    public static boolean isClassNameInUrlClassLoader(URL[] urls, String className) {
+    public static boolean isClassNameInUrlClassLoader(Set<URI> uris, String className) throws MalformedURLException {
+        URL[] urls = convertURIsToURLs(uris);
         try (URLClassLoader cl = new URLClassLoader(urls)) {
             cl.loadClass(className);
             return true;
         } catch (Exception e) {
             return false;
-        }
-    }
-
-    /**
-     * It deletes all DRL files in a given Path directory
-     */
-    public static void deleteDrlFiles(Path directory) {
-        try (final Stream<Path> drlFiles = Files.find(directory,
-                Integer.MAX_VALUE,
-                (p, f) -> DRL_FILE_MATCHER.matches(p))) {
-            drlFiles.forEach(p -> {
-                try {
-                    Files.delete(p);
-                } catch (IOException e) {
-                    throw new UncheckedIOException(e);
-                }
-            });
-        } catch (IOException e) {
-            throw new UncheckedIOException("Error during .drl files deletion", e);
         }
     }
 }
