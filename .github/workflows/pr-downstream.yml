@@ -25,8 +25,7 @@ jobs:
         include:
           - job_name: kogito-apps
             repository: kogito-apps
-            env:
-              env_BUILD_MVN_OPTS: " -Dproductized"
+            env_BUILD_MVN_OPTS: " -Dproductized"
           - job_name: serverless-workflow-examples
             repository: kogito-examples
             env_KOGITO_EXAMPLES_SUBFOLDER_POM: serverless-workflow-examples/
