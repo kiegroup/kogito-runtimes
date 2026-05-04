@@ -45,8 +45,6 @@ jobs:
           annotations-prefix: ${{ runner.os }}-${{ matrix.java-version }}/${{ matrix.maven-version }}
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           definition-file: https://raw.githubusercontent.com/${GROUP:kiegroup}/kogito-pipelines/${BRANCH:main}/.ci/pull-request-config.yaml
-        env:
-          BUILD_MVN_OPTS_CURRENT: '-Dvalidate-formatting'
       - name: Junit Report
         uses: kiegroup/kogito-pipelines/.ci/actions/action-junit-report@main
         if: ${{ always() }}
