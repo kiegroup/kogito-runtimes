@@ -79,7 +79,12 @@ public class KogitoQuarkusApplicationPropertiesProvider implements KogitoApplica
 
     @Override
     public <T> Optional<T> getApplicationProperty(String property, Class<T> clazz) {
-        return Optional.ofNullable(convert(properties.getProperty(property), clazz));
+        String value = properties.getProperty(property);
+        // Return empty for unresolved placeholders to avoid conversion errors during build time
+        if (value != null && value.contains("${")) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(convert(value, clazz));
     }
 
     @Override

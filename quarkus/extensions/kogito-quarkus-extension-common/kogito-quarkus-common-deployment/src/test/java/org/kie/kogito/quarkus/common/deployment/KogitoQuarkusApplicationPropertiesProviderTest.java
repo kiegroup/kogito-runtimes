@@ -82,4 +82,13 @@ class KogitoQuarkusApplicationPropertiesProviderTest {
         assertFalse(provider.getApplicationProperties().contains("test.key"));
     }
 
+    @Test
+    void testUnresolvedPlaceholderReturnsEmpty() {
+        // Test that unresolved placeholders return empty instead of throwing NumberFormatException
+        provider.setApplicationProperty("test.placeholder", "${quarkus.http.port:8080}");
+        assertFalse(provider.getApplicationProperty("test.placeholder", Integer.class).isPresent());
+        // String access should still work
+        assertEquals("${quarkus.http.port:8080}", provider.getApplicationProperty("test.placeholder").orElse(null));
+    }
+
 }
