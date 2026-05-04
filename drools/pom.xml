@@ -46,12 +46,6 @@
   <modules>
     <module>kogito-drools</module>
     <module>kogito-dmn</module>
-    <module>kogito-pmml-api-dependencies</module>
-    <module>kogito-efesto-drl</module>
-    <module>kogito-pmml-dependencies</module>
-    <module>kogito-pmml-openapi</module>
-    <module>kogito-pmml</module>
-    <module>kogito-scenario-simulation</module>
   </modules>
 
   <build>
