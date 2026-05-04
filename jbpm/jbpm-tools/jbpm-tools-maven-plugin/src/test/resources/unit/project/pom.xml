@@ -25,7 +25,7 @@
     <groupId>com.javaxp</groupId>
     <artifactId>project-name</artifactId>
     <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>111-SNAPSHOT</version>
     <name>project-name</name>
     <url>http://maven.apache.org</url>
 

@@ -4,7 +4,7 @@
     <groupId>org.kie.jenkins</groupId>
     <artifactId>jenkins-tests</artifactId>
     <name>Kogito :: Jenkins Spock Tests</name>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>111-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <repositories>
