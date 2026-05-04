@@ -37,7 +37,7 @@
   </description>
 
   <properties>
-    <version.org.kie>111-SNAPSHOT</version.org.kie>
+    <version.org.kie>${project.version}</version.org.kie>
   </properties>
 
   <dependencyManagement>
