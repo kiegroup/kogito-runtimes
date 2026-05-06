@@ -103,4 +103,4 @@ jobs:
         env:
           ECOSYSTEM_CI_TOKEN: ${{ secrets.ECOSYSTEM_CI_TOKEN }}
           ALTERNATIVE: lts
-          MAVEN_EXTRA_OPTS: -Dproductized -Ddata-index-ephemeral.image=quay.io/kiegroup/kogito-data-index-ephemeral
+          MAVEN_EXTRA_OPTS: -Ddata-index-ephemeral.image=quay.io/kiegroup/kogito-data-index-ephemeral
