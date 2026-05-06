@@ -45,31 +45,6 @@
     </dependency>
   </dependencies>
 
-  <profiles>
-    <profile>
-      <id>default</id>
-      <activation>
-        <property>
-          <name>!productized</name>
-        </property>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>org.drools</groupId>
-          <artifactId>drools-quarkus-rules</artifactId>
-        </dependency>
-        <dependency>
-          <groupId>org.drools</groupId>
-          <artifactId>drools-quarkus-decisions</artifactId>
-        </dependency>
-        <dependency>
-          <groupId>org.kie</groupId>
-          <artifactId>kie-quarkus-predictions</artifactId>
-        </dependency>
-      </dependencies>
-    </profile>
-  </profiles>
-
   <build>
     <plugins>
       <plugin>
