@@ -24,7 +24,7 @@
   <parent>
     <artifactId>sonataflow-quarkus-extension</artifactId>
     <groupId>org.apache.kie.sonataflow</groupId>
-    <version>999-SNAPSHOT</version>
+    <version>111-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -333,6 +333,9 @@
 
           All logging configuration for @QuarkusIntegrationTest is in application.properties.
           -->
+          <excludes>
+            <exclude>**/ServerlessWorkflowCodestartTest.java</exclude>
+          </excludes>
         </configuration>
       </plugin>
       <!-- Note, these resources must be copied in the generate-resources phase otherwise they won't be picked-up
@@ -381,51 +384,15 @@
           </filesets>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <testExcludes>
+            <testExclude>**/ServerlessWorkflowCodestartTest.java</testExclude>
+          </testExcludes>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
-
-  <profiles>
-    <profile>
-      <id>native</id>
-      <activation>
-        <property>
-          <name>native</name>
-        </property>
-      </activation>
-      <properties>
-        <quarkus.native.enabled>true</quarkus.native.enabled>
-      </properties>
-    </profile>
-    <profile>
-      <id>productized</id>
-      <activation>
-        <property>
-          <name>productized</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-              <testExcludes>
-                <testExclude>**/ServerlessWorkflowCodestartTest.java</testExclude>
-              </testExcludes>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <excludes>
-                <exclude>**/ServerlessWorkflowCodestartTest.java</exclude>
-              </excludes>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
-
 </project>

@@ -23,7 +23,7 @@
 
     <groupId>org.kie.kogito</groupId>
     <artifactId>integration-tests-kogito-plugin-it</artifactId>
-    <version>@project.version@</version>
+    <version>111-SNAPSHOT</version>
 
     <properties>
         <quarkus.version>@version.io.quarkus@</quarkus.version>

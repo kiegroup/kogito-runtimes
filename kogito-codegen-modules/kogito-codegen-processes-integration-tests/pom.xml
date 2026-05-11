@@ -25,7 +25,7 @@
   <parent>
     <groupId>org.kie.kogito</groupId>
     <artifactId>kogito-codegen-modules</artifactId>
-    <version>999-SNAPSHOT</version>
+    <version>111-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>kogito-codegen-processes-integration-tests</artifactId>
@@ -117,47 +117,17 @@
 
   </dependencies>
 
-  <profiles>
-    <profile>
-      <id>default</id>
-      <activation>
-        <property>
-          <name>!productized</name>
-        </property>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>org.kie.kogito</groupId>
-          <artifactId>kogito-codegen-decisions</artifactId>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.kie.kogito</groupId>
-          <artifactId>kogito-codegen-rules</artifactId>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>productized</id>
-      <activation>
-        <property>
-          <name>productized</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-              <testExcludes>
-                <exclude>org/kie/kogito/codegen/rules/*.java</exclude>
-              </testExcludes>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <testExcludes>
+            <exclude>org/kie/kogito/codegen/rules/*.java</exclude>
+          </testExcludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

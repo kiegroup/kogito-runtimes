@@ -27,7 +27,7 @@
   <parent>
     <groupId>org.jbpm</groupId>
     <artifactId>jbpm-with-drools-quarkus-extension</artifactId>
-    <version>999-SNAPSHOT</version>
+    <version>111-SNAPSHOT</version>
   </parent>
 
   <artifactId>jbpm-with-drools-quarkus-deployment</artifactId>
@@ -54,34 +54,6 @@
     </dependency>
 
   </dependencies>
-
-  <profiles>
-    <profile>
-      <id>default</id>
-      <activation>
-        <property>
-          <name>!productized</name>
-        </property>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>org.drools</groupId>
-          <artifactId>drools-quarkus-rules-deployment</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>org.drools</groupId>
-          <artifactId>drools-quarkus-decisions-deployment</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>org.kie</groupId>
-          <artifactId>kie-quarkus-predictions-deployment</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-      </dependencies>
-    </profile>
-  </profiles>
 
   <build>
     <plugins>
