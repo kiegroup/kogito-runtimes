@@ -24,7 +24,7 @@ package org.kie.kogito.quarkus.addons.common.deployment;
 public class RequireOneEngineAddonProcessor extends OneOfCapabilityKogitoAddOnProcessor {
 
     public RequireOneEngineAddonProcessor() {
-        super(KogitoCapability.SERVERLESS_WORKFLOW, KogitoCapability.PROCESSES);
+        super(KogitoCapability.SERVERLESS_WORKFLOW);
     }
 
 }

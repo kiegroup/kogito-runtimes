@@ -32,7 +32,7 @@ class KogitoAddOnPersistencePostgreSQLProcessor extends OneOfCapabilityKogitoAdd
     private static final String FEATURE = "kie-addon-persistence-postgresql-extension";
 
     KogitoAddOnPersistencePostgreSQLProcessor() {
-        super(KogitoCapability.PROCESSES, KogitoCapability.SERVERLESS_WORKFLOW);
+        super(KogitoCapability.SERVERLESS_WORKFLOW);
     }
 
     @BuildStep
