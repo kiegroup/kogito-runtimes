@@ -61,13 +61,7 @@ public class ProcessGenerationUtils {
         for (File processSourceFile : processFiles) {
             try {
                 FileSystemResource r = new FileSystemResource(processSourceFile);
-                if (SupportedExtensions.getBPMNExtensions().stream().anyMatch(processSourceFile.getPath()::endsWith)) {
-                    ProcessCodegen.parseProcessFile(r)
-                            .forEach(process -> {
-                                process.setResource(r);
-                                processes.add(process);
-                            });
-                } else if (SupportedExtensions.getSWFExtensions().stream().anyMatch(processSourceFile.getPath()::endsWith)) {
+                if (SupportedExtensions.getSWFExtensions().stream().anyMatch(processSourceFile.getPath()::endsWith)) {
                     KogitoWorkflowProcess swfWorkflow = ProcessCodegen.parseWorkflowFile(r, JavaKogitoBuildContext.builder().build()).info();
                     swfWorkflow.setResource(r);
                     processes.add(swfWorkflow);

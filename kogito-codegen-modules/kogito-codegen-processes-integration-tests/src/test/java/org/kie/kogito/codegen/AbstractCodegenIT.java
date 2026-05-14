@@ -47,7 +47,6 @@ import org.kie.kogito.codegen.api.io.CollectedResource;
 import org.kie.kogito.codegen.core.ApplicationGenerator;
 import org.kie.kogito.codegen.core.io.CollectedResourceProducer;
 import org.kie.kogito.codegen.process.ProcessCodegen;
-import org.kie.kogito.codegen.usertask.UserTaskCodegen;
 import org.kie.kogito.process.ProcessConfig;
 import org.kie.kogito.process.Processes;
 import org.kie.kogito.services.jobs.impl.InMemoryJobContext;
@@ -74,10 +73,7 @@ public abstract class AbstractCodegenIT {
      * {@link ApplicationGenerator#registerGeneratorIfEnabled(Generator) }
      */
     protected enum TYPE {
-        USER_TASK,
         PROCESS,
-        RULES,
-        DECISION,
         JAVA,
         OPENAPI
     }
@@ -138,7 +134,6 @@ public abstract class AbstractCodegenIT {
 
     static {
         generatorTypeMap.put(TYPE.PROCESS, (context, strings) -> ProcessCodegen.ofCollectedResources(context, toCollectedResources(TEST_RESOURCES, strings)));
-        generatorTypeMap.put(TYPE.USER_TASK, (context, strings) -> UserTaskCodegen.ofCollectedResources(context, toCollectedResources(TEST_RESOURCES, strings)));
     }
 
     public static Collection<CollectedResource> toCollectedResources(String basePath, List<String> strings) {
@@ -156,7 +151,6 @@ public abstract class AbstractCodegenIT {
     protected Application generateCodeProcessesOnly(String... processes) throws Exception {
         Map<TYPE, List<String>> resourcesTypeMap = new HashMap<>();
         resourcesTypeMap.put(TYPE.PROCESS, Arrays.asList(processes));
-        resourcesTypeMap.put(TYPE.USER_TASK, Arrays.asList(processes));
         return generateCode(resourcesTypeMap);
     }
 
@@ -189,7 +183,7 @@ public abstract class AbstractCodegenIT {
             log(new String(entry.contents()));
         }
 
-        if (!resourcesTypeMap.isEmpty() && resourcesTypeMap.containsKey(TYPE.PROCESS) && !resourcesTypeMap.containsKey(TYPE.RULES)) {
+        if (!resourcesTypeMap.isEmpty() && resourcesTypeMap.containsKey(TYPE.PROCESS)) {
             sources.add("org/drools/project/model/ProjectRuntime.java");
             srcMfs.write("org/drools/project/model/ProjectRuntime.java", DUMMY_PROCESS_RUNTIME.getBytes());
         }
