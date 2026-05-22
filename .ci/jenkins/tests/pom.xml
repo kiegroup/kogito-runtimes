@@ -38,8 +38,8 @@
         <!-- Do not deploy this artifact -->
         <maven.deploy.skip>true</maven.deploy.skip>
 
-        <groovy.core.version>2.4.11</groovy.core.version>
-        <groovy.gmaven.pluginVersion>1.6.1</groovy.gmaven.pluginVersion>
+        <groovy.core.version>3.0.15</groovy.core.version>
+        <groovy.gmaven.pluginVersion>3.0.2</groovy.gmaven.pluginVersion>
         <google.guava.version>32.0.0-jre</google.guava.version>
 
         <jenkins-spock.version>2.0.0</jenkins-spock.version>
@@ -59,8 +59,8 @@
         <log.slf4j.version>1.7.25</log.slf4j.version>
         <build-helper-maven-plugin.version>1.9.1</build-helper-maven-plugin.version>
 
-        <maven.compiler.source>1.6</maven.compiler.source>
-        <maven.compiler.target>1.6</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
     </properties>
     <dependencyManagement>
         <dependencies>
