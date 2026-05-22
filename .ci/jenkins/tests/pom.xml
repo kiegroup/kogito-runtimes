@@ -78,6 +78,7 @@
             <artifactId>jenkins-spock</artifactId>
             <version>${jenkins-spock.version}</version>
             <scope>test</scope>
+        </dependency>
         <!-- Needed for pipeline checks as we need some classes from it -->
         <dependency>
             <groupId>org.kie.jenkins</groupId>
