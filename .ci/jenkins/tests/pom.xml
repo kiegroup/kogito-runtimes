@@ -73,14 +73,6 @@
         </dependencies>
     </dependencyManagement>
     <dependencies>
-        <!-- Needed for pipeline checks as we need some classes from it -->
-        <dependency>
-            <groupId>org.kie</groupId>
-            <artifactId>jenkins-pipeline-shared-libraries</artifactId>
-            <version>1.0.1</version>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>com.homeaway.devtools.jenkins</groupId>
             <artifactId>jenkins-spock</artifactId>
