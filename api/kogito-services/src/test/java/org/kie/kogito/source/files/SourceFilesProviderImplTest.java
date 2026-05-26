@@ -70,16 +70,14 @@ class SourceFilesProviderImplTest {
         SourceFile petstoreJson = new SourceFile("petstore.json");
         SourceFile petstoreSwJson = new SourceFile("petstore.sw.json");
         SourceFile ymlgreetSwYml = new SourceFile("ymlgreet.sw.yml");
-        SourceFile hiringBpmn = new SourceFile("hiring.bpmn");
 
         sourceFilesProvider.addSourceFile("petstore_json_process", petstoreJson);
         sourceFilesProvider.addSourceFile("petstore_sw_json_process", petstoreSwJson);
         sourceFilesProvider.addSourceFile("ymlgreet.sw_process", ymlgreetSwYml);
-        sourceFilesProvider.addSourceFile("bpmn_process", hiringBpmn);
 
         assertThat(sourceFilesProvider.getProcessSourceFile("petstore_sw_json_process")).contains(petstoreSwJson);
         assertThat(sourceFilesProvider.getProcessSourceFile("ymlgreet.sw_process")).contains(ymlgreetSwYml);
-        assertThat(sourceFilesProvider.getProcessSourceFile("bpmn_process")).contains(hiringBpmn);
+
     }
 
     @Test

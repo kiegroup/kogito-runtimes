@@ -40,8 +40,7 @@
   <dependencies>
     <dependency>
       <groupId>org.kie.kogito</groupId>
-      <artifactId>jbpm-deps-group-compiler</artifactId>
-      <type>pom</type>
+      <artifactId>jbpm-flow-builder</artifactId>
     </dependency>
     <dependency>
       <groupId>org.kie.kogito</groupId>

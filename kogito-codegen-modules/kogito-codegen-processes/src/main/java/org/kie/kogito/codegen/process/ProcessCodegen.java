@@ -36,17 +36,12 @@ import java.util.stream.Stream;
 import org.drools.codegen.common.GeneratedFile;
 import org.drools.codegen.common.GeneratedFileType;
 import org.drools.io.InternalResource;
-import org.jbpm.bpmn2.xml.BPMNDISemanticModule;
-import org.jbpm.bpmn2.xml.BPMNExtensionsSemanticModule;
-import org.jbpm.bpmn2.xml.BPMNSemanticModule;
 import org.jbpm.compiler.canonical.ModelMetaData;
 import org.jbpm.compiler.canonical.ProcessMetaData;
 import org.jbpm.compiler.canonical.ProcessToExecModelGenerator;
 import org.jbpm.compiler.canonical.TriggerMetaData;
 import org.jbpm.compiler.canonical.TriggerMetaData.TriggerType;
 import org.jbpm.compiler.canonical.WorkItemModelMetaData;
-import org.jbpm.compiler.xml.XmlProcessReader;
-import org.jbpm.compiler.xml.core.SemanticModules;
 import org.jbpm.process.core.impl.ProcessImpl;
 import org.jbpm.process.core.validation.ProcessValidatorRegistry;
 import org.jbpm.workflow.core.impl.WorkflowProcessImpl;
@@ -79,7 +74,6 @@ import org.kie.kogito.serverless.workflow.parser.ServerlessWorkflowParser;
 import org.kie.kogito.serverless.workflow.utils.WorkflowFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
@@ -112,7 +106,6 @@ public class ProcessCodegen extends AbstractGenerator {
     private static final GeneratedFileType MESSAGE_PRODUCER_TYPE = GeneratedFileType.of("MESSAGE_PRODUCER", GeneratedFileType.Category.SOURCE);
     private static final GeneratedFileType MESSAGE_CONSUMER_TYPE = GeneratedFileType.of("MESSAGE_CONSUMER", GeneratedFileType.Category.SOURCE);
     private static final GeneratedFileType PRODUCER_TYPE = GeneratedFileType.of("PRODUCER", GeneratedFileType.Category.SOURCE);
-    private static final SemanticModules BPMN_SEMANTIC_MODULES = new SemanticModules();
     public static final String SVG_EXPORT_NAME_EXPRESION = "%s-svg.svg";
     public static final String CUSTOM_BUSINESS_CALENDAR_PROPERTY = "businessCalendar";
 
@@ -125,9 +118,6 @@ public class ProcessCodegen extends AbstractGenerator {
 
     static {
         ProcessValidatorRegistry.getInstance().registerAdditonalValidator(JavaRuleFlowProcessValidator.getInstance());
-        BPMN_SEMANTIC_MODULES.addSemanticModule(new BPMNSemanticModule());
-        BPMN_SEMANTIC_MODULES.addSemanticModule(new BPMNExtensionsSemanticModule());
-        BPMN_SEMANTIC_MODULES.addSemanticModule(new BPMNDISemanticModule());
     }
 
     private final List<ProcessGenerator> processGenerators = new ArrayList<>();
@@ -161,14 +151,7 @@ public class ProcessCodegen extends AbstractGenerator {
                 .map(CollectedResource::resource)
                 .flatMap(resource -> {
                     try {
-                        if (SupportedExtensions.getBPMNExtensions().stream().anyMatch(resource.getSourcePath()::endsWith)) {
-                            Collection<Process> p = parseProcessFile(resource);
-                            notifySourceFileCodegenBindListeners(context, resource, p);
-                            if (useSvgAddon) {
-                                processSVG(resource, resources, p, processSVGMap);
-                            }
-                            return p.stream().map(KogitoWorkflowProcess.class::cast).map(GeneratedInfo::new).map(info -> addResource(info, resource));
-                        } else if (SupportedExtensions.getSWFExtensions().stream().anyMatch(resource.getSourcePath()::endsWith)) {
+                        if (SupportedExtensions.getSWFExtensions().stream().anyMatch(resource.getSourcePath()::endsWith)) {
                             GeneratedInfo<KogitoWorkflowProcess> generatedInfo = parseWorkflowFile(resource, context);
                             notifySourceFileCodegenBindListeners(context, resource, Collections.singletonList(generatedInfo.info()));
                             return Stream.of(addResource(generatedInfo, resource));
@@ -264,17 +247,6 @@ public class ProcessCodegen extends AbstractGenerator {
             }
             return parser.getProcessInfo();
         } catch (Exception e) {
-            throw new ProcessParsingException(e);
-        }
-    }
-
-    protected static Collection<Process> parseProcessFile(Resource r) {
-        try (Reader reader = r.getReader()) {
-            XmlProcessReader xmlReader = new XmlProcessReader(
-                    BPMN_SEMANTIC_MODULES,
-                    Thread.currentThread().getContextClassLoader());
-            return xmlReader.read(reader);
-        } catch (SAXException | IOException e) {
             throw new ProcessParsingException(e);
         }
     }

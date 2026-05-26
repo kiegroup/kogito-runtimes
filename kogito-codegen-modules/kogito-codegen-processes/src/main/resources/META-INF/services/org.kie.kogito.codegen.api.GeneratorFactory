@@ -18,4 +18,3 @@
 #
 
 org.kie.kogito.codegen.process.ProcessCodegenFactory
-org.kie.kogito.codegen.usertask.UserTaskCodegenFactory
