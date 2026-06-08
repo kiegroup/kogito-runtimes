@@ -34,7 +34,6 @@ class TemplatedGeneratorTest {
 
     static final String JAVA = "Java";
     static final String QUARKUS = "Quarkus";
-    static final String SPRING = "Spring";
     static final KogitoBuildContext context = mock(KogitoBuildContext.class);
     static final String templateName = "TestResource";
 
@@ -116,19 +115,6 @@ class TemplatedGeneratorTest {
     }
 
     @Test
-    public void fallbackContext() {
-        String fallbackContext = SPRING;
-        TemplatedGenerator generator = TemplatedGenerator.builder()
-                .withFallbackContext(fallbackContext)
-                .build(context, templateName);
-
-        assertThat(generator).isNotNull();
-
-        assertThat(fallbackContext).isNotEqualTo(context.name());
-        assertThat(generator.fallbackContext).isEqualTo(fallbackContext);
-    }
-
-    @Test
     public void templatePath() {
         // no fallback but resource exist
         String existingTemplate = "Test";
@@ -144,25 +130,6 @@ class TemplatedGeneratorTest {
                 .endsWith(TEMPLATE_SUFFIX)
                 .contains(context.name())
                 .contains(existingTemplate)
-                .startsWith(TemplatedGenerator.builder().templateBasePath);
-
-        // with fallback
-        String fallbackContext = SPRING;
-        TemplatedGenerator generatorWithFallback = TemplatedGenerator.builder()
-                .withFallbackContext(fallbackContext)
-                .build(context, templateName);
-
-        assertThat(generatorWithFallback).isNotNull();
-        assertThat(context.name()).isNotEqualTo(fallbackContext);
-
-        String selectResourceWithFallback = generatorWithFallback.templatePath();
-
-        assertThat(selectResourceWithFallback)
-                .isNotNull()
-                .endsWith(TEMPLATE_SUFFIX)
-                .doesNotContain(context.name())
-                .contains(fallbackContext)
-                .contains(templateName)
                 .startsWith(TemplatedGenerator.builder().templateBasePath);
 
         // no fallback no resource
@@ -188,17 +155,6 @@ class TemplatedGeneratorTest {
         assertThatThrownBy(() -> generator.compilationUnitOrThrow(errorMessage))
                 .isInstanceOf(InvalidTemplateException.class)
                 .hasMessageContaining(errorMessage);
-
-        // template valid
-        TemplatedGenerator generatorTemplateValid = TemplatedGenerator.builder()
-                .withFallbackContext(SPRING)
-                .build(context, templateName);
-
-        assertThat(context.name()).isNotEqualTo(SPRING);
-
-        assertThat(generatorTemplateValid.compilationUnit()).isNotEmpty();
-        assertThat(generatorTemplateValid.compilationUnitOrThrow()).isNotNull();
-        assertThat(generatorTemplateValid.compilationUnitOrThrow(errorMessage)).isNotNull();
 
         // template not valid
         TemplatedGenerator generatorTemplateNotValid = TemplatedGenerator.builder()

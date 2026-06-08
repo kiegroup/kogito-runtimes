@@ -119,7 +119,7 @@ public interface KogitoBuildContext extends DroolsModelBuildContext {
     }
 
     default boolean isTransactionSupported() {
-        return hasClassAvailable(KogitoCodeGenConstants.QUARKUS_TRANSACTION_MANAGER_CLASS) || hasClassAvailable(KogitoCodeGenConstants.SPRING_TRANSACTION_MANAGER_CLASS);
+        return hasClassAvailable(KogitoCodeGenConstants.QUARKUS_TRANSACTION_MANAGER_CLASS);
     }
 
     /**

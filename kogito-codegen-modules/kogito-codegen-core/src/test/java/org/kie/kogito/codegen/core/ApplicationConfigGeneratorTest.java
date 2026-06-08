@@ -27,7 +27,6 @@ import org.kie.kogito.codegen.api.ConfigGenerator;
 import org.kie.kogito.codegen.api.context.KogitoBuildContext;
 import org.kie.kogito.codegen.api.context.impl.JavaKogitoBuildContext;
 import org.kie.kogito.codegen.api.context.impl.QuarkusKogitoBuildContext;
-import org.kie.kogito.codegen.api.context.impl.SpringBootKogitoBuildContext;
 import org.mockito.Mockito;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -60,18 +59,6 @@ public class ApplicationConfigGeneratorTest {
 
     @Test
     public void configBeanGenerationInJavaContextTest() {
-        final ApplicationConfigGenerator generator = new ApplicationConfigGenerator(context);
-        Collection<GeneratedFile> files = generator.generate();
-        assertThat(containsGeneratedFile("ConfigBean", files)).isTrue();
-        assertThat(containsGeneratedFile("ApplicationConfig", files)).isTrue();
-    }
-
-    @Test
-    public void configBeanGenerationInSpringContextTest() {
-        KogitoBuildContext context = SpringBootKogitoBuildContext.builder()
-                .withPackageName("org.kie.kogito.test")
-                .withAddonsConfig(AddonsConfig.DEFAULT)
-                .build();
         final ApplicationConfigGenerator generator = new ApplicationConfigGenerator(context);
         Collection<GeneratedFile> files = generator.generate();
         assertThat(containsGeneratedFile("ConfigBean", files)).isTrue();
