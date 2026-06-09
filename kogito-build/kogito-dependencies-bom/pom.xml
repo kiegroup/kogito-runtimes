@@ -40,7 +40,7 @@
     <!-- End of various transitive overrides. -->
 
     <!-- this version property is used in plugins but also in dependencies too -->
-    <version.io.quarkus>3.27.3</version.io.quarkus>
+    <version.io.quarkus>3.27.4</version.io.quarkus>
     <version.io.quarkus.quarkus-test>${version.io.quarkus}</version.io.quarkus.quarkus-test>
     <version.org.springframework>6.2.18</version.org.springframework>
     <version.org.springframework.boot>3.5.12</version.org.springframework.boot>
@@ -50,8 +50,8 @@
 
     <!-- dependencies versions -->
     <version.com.networknt>1.0.86</version.com.networknt>
-    <version.com.fasterxml.jackson>2.21.1</version.com.fasterxml.jackson>
-    <version.com.fasterxml.jackson.databind>2.21.1</version.com.fasterxml.jackson.databind>
+    <version.com.fasterxml.jackson>2.21.2</version.com.fasterxml.jackson>
+    <version.com.fasterxml.jackson.databind>2.21.2</version.com.fasterxml.jackson.databind>
     <version.com.fasterxml.jackson.annotations>2.21</version.com.fasterxml.jackson.annotations>
     <version.com.jayway.jsonpath>2.9.0</version.com.jayway.jsonpath>
     <version.com.ongres.scram>3.2</version.com.ongres.scram>
@@ -80,7 +80,7 @@
     <version.jakarta.validation-api>3.1.1</version.jakarta.validation-api>
     <version.jakarta.xml.bind-api>4.0.4</version.jakarta.xml.bind-api>
 
-    <version.io.netty>4.1.132.Final</version.io.netty>
+    <version.io.netty>4.1.135.Final</version.io.netty>
 
     <version.io.cloudevents>3.0.0</version.io.cloudevents>
     <!--
@@ -102,7 +102,7 @@
 
     <version.io.smallrye.reactive.mutiny-vertx-web-client>3.21.3</version.io.smallrye.reactive.mutiny-vertx-web-client>
 
-    <version.io.vertx>4.5.25</version.io.vertx>
+    <version.io.vertx>4.5.27</version.io.vertx>
     <version.io.grpc>1.76.0</version.io.grpc>
 
     <version.io.quarkus.camel>3.27.3</version.io.quarkus.camel>
