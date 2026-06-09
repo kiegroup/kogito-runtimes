@@ -222,7 +222,6 @@ public class ProcessResourceGenerator {
         template.findAll(ClassOrInterfaceType.class).forEach(cls -> interpolateTypes(cls, typeInterpolations));
 
         // Tags are managed in the templates. This could be restored if:
-        // - Support spring-boot based projects is added
         // - Support all models types (it is now bound with process only
         //TagResourceGenerator.addTags(toReturn, process, context);
 

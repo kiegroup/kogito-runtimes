@@ -21,9 +21,7 @@ package org.kie.kogito.codegen.faultTolerance;
 
 import org.kie.kogito.codegen.api.context.KogitoBuildContext;
 import org.kie.kogito.codegen.api.context.impl.QuarkusKogitoBuildContext;
-import org.kie.kogito.codegen.api.context.impl.SpringBootKogitoBuildContext;
 import org.kie.kogito.codegen.faultTolerance.impl.QuarkusFaultToleranceAnnotator;
-import org.kie.kogito.codegen.faultTolerance.impl.SpringBootFaultToleranceAnnotator;
 import org.kie.kogito.codegen.process.ProcessCodegenException;
 
 public class FaultToleranceUtil {
@@ -35,11 +33,8 @@ public class FaultToleranceUtil {
     public static FaultToleranceAnnotator lookFaultToleranceAnnotatorForContext(KogitoBuildContext context) {
         if (QuarkusKogitoBuildContext.CONTEXT_NAME.equals(context.name())) {
             return new QuarkusFaultToleranceAnnotator(context);
-        } else if (SpringBootKogitoBuildContext.CONTEXT_NAME.equals(context.name())) {
-            return new SpringBootFaultToleranceAnnotator(context);
         } else {
             throw new ProcessCodegenException("Kogito Fault Tolerance not allowed for context: " + context.name());
         }
     }
-
 }

@@ -37,7 +37,6 @@ import static com.github.javaparser.StaticJavaParser.parse;
  *
  * e.g.:
  * ApplicationConfigQuarkusTemplate.java
- * PredictionModelsSpringTemplate.java
  * ApplicationJavaTemplate.java
  *
  * By default targetTypeName value is ''templateName''
