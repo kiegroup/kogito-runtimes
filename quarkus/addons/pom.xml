@@ -59,6 +59,7 @@
     <module>opentelemetry</module>
     <module>grpc</module>
     <module>asyncapi</module>
+    <module>startup-validation</module>
   </modules>
 
   <profiles>
