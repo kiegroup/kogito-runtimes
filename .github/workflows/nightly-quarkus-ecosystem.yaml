@@ -37,20 +37,20 @@ jobs:
           check-latest: true
       
       - name: Checkout Drools repository on integration branch
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: kiegroup/drools
           path: drools
           ref: ${{ env.INTEGRATION_BRANCH }}
       
       - name: Checkout current repository on integration branch
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           path: current-repo
           ref: ${{ env.INTEGRATION_BRANCH }}
 
       - name: Checkout Ecosystem
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: ${{ env.ECOSYSTEM_CI_REPO }}
           ref: main
@@ -79,20 +79,20 @@ jobs:
           check-latest: true
 
       - name: Checkout drools repository on integration branch
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: kiegroup/drools
           path: drools
           ref: ${{ env.INTEGRATION_BRANCH }}
 
       - name: Checkout current repository on integration branch
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           path: current-repo
           ref: ${{ env.INTEGRATION_BRANCH }}
 
       - name: Checkout Ecosystem
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: ${{ env.ECOSYSTEM_CI_REPO }}
           ref: main
