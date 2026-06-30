@@ -51,7 +51,7 @@
     <!-- dependencies versions -->
     <version.com.networknt>1.0.86</version.com.networknt>
     <version.com.fasterxml.jackson>2.21.2</version.com.fasterxml.jackson>
-    <version.com.fasterxml.jackson.databind>2.21.2</version.com.fasterxml.jackson.databind>
+    <version.com.fasterxml.jackson.databind>2.22.0</version.com.fasterxml.jackson.databind>
     <version.com.fasterxml.jackson.annotations>2.21</version.com.fasterxml.jackson.annotations>
     <version.com.jayway.jsonpath>2.9.0</version.com.jayway.jsonpath>
     <version.com.ongres.scram>3.2</version.com.ongres.scram>
