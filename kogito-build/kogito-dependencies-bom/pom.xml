@@ -54,7 +54,7 @@
     <version.com.fasterxml.jackson.databind>2.22.0</version.com.fasterxml.jackson.databind>
     <version.com.fasterxml.jackson.annotations>2.21</version.com.fasterxml.jackson.annotations>
     <version.com.jayway.jsonpath>2.9.0</version.com.jayway.jsonpath>
-    <version.com.ongres.scram>3.2</version.com.ongres.scram>
+    <version.com.ongres.scram>3.3</version.com.ongres.scram>
     <version.net.minidev.jsonsmart>2.4.10</version.net.minidev.jsonsmart>
     <version.net.thisptr.jackson-jq>1.0.0-preview.20240207</version.net.thisptr.jackson-jq>
     <version.io.quarkiverse.jackson-jq>2.4.0</version.io.quarkiverse.jackson-jq>
