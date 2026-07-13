@@ -18,11 +18,13 @@ public class SensitiveDataFilterTest {
 
     private final static Logger logger = LoggerFactory.getLogger(SensitiveDataFilterTest.class);
 
-    private final static InMemoryLogHandler logHandler = new InMemoryLogHandler(r -> true);
-    private final static org.jboss.logmanager.Logger logContext = org.jboss.logmanager.LogContext.getLogContext().getLogger(logger.getName());
+    private InMemoryLogHandler logHandler;
+    private org.jboss.logmanager.Logger logContext;
 
     @BeforeEach
     void setup() {
+        logHandler = new InMemoryLogHandler(r -> true);
+        logContext = org.jboss.logmanager.LogContext.getLogContext().getLogger(logger.getName());
         logContext.addHandler(logHandler);
     }
 
@@ -33,8 +35,8 @@ public class SensitiveDataFilterTest {
 
     @Test
     void testLogger() {
-        logger.info("Fulanito es un mierda, cabron y bastardo sevillista");
-        assertThat(logHandler.getRecords()).singleElement().extracting(LogRecord::getMessage).isEqualTo("Fulanito es un ..., ... y ... sevillista");
+        logger.info("The culprits are Fulanito and Menganito");
+        assertThat(logHandler.getRecords()).singleElement().extracting(LogRecord::getMessage).isEqualTo("The culprits are ... and ...");
     }
 
 }
