@@ -284,6 +284,7 @@ public abstract class ProcessInstanceImpl implements ProcessInstance,
             setState(KogitoProcessInstance.STATE_ACTIVE);
             internalStart(trigger);
         }
+        MDCHelper.fillMDC(this);
     }
 
     protected abstract void internalStart(String trigger);
@@ -291,11 +292,13 @@ public abstract class ProcessInstanceImpl implements ProcessInstance,
     @Override
     public void disconnect() {
         ((InternalProcessRuntime) kruntime.getProcessRuntime()).getProcessInstanceManager().internalRemoveProcessInstance(this);
+        MDCHelper.clearMDC(this);
     }
 
     @Override
     public void reconnect() {
         ((InternalProcessRuntime) kruntime.getProcessRuntime()).getProcessInstanceManager().internalAddProcessInstance(this);
+        MDCHelper.fillMDC(this);
     }
 
     @Override
