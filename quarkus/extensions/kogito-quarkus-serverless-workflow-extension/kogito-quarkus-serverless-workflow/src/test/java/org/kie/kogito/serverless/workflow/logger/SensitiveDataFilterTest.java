@@ -1,42 +1,31 @@
 package org.kie.kogito.serverless.workflow.logger;
 
+import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import io.quarkus.test.InMemoryLogHandler;
-import io.quarkus.test.junit.QuarkusTest;
+import io.smallrye.config.common.utils.StringUtil;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@QuarkusTest
 public class SensitiveDataFilterTest {
 
-    private final static Logger logger = LoggerFactory.getLogger(SensitiveDataFilterTest.class);
-
-    private InMemoryLogHandler logHandler;
-    private org.jboss.logmanager.Logger logContext;
-
-    @BeforeEach
-    void setup() {
-        logHandler = new InMemoryLogHandler(r -> true);
-        logContext = org.jboss.logmanager.LogContext.getLogContext().getLogger(logger.getName());
-        logContext.addHandler(logHandler);
-    }
-
-    @AfterEach
-    void close() {
-        logContext.removeHandler(logHandler);
+    @Test
+    void testMask() {
+        SensitiveDataFilter filter = new SensitiveDataFilter(Set.of("Javierito", "Fulanito"), "...");
+        LogRecord record = new LogRecord(Level.INFO, "Javierito and Fulanito are uncommon names");
+        filter.isLoggable(record);
+        assertThat(record.getMessage()).isEqualTo("... and ... are uncommon names");
     }
 
     @Test
-    void testLogger() {
-        logger.info("The culprits are Fulanito and Menganito");
-        assertThat(logHandler.getRecords()).singleElement().extracting(LogRecord::getMessage).isEqualTo("The culprits are ... and ...");
+    void testDefaultPattern() {
+        SensitiveDataFilter filter = new SensitiveDataFilter(Set.of(StringUtil.split(SensitiveDataFilter.DEFAULT_PATTERNS)), "****");
+        LogRecord record = new LogRecord(Level.INFO,
+                "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
+        filter.isLoggable(record);
+        assertThat(record.getMessage()).isEqualTo("Authorization: Bearer ****");
     }
-
 }
