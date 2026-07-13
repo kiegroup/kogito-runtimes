@@ -20,8 +20,8 @@ package org.kie.kogito.quarkus.serverless.workflow.startup.validation;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.kie.kogito.quarkus.serverless.workflow.startup.validation.StartupValidationConfig.StartupValidationConfigGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,43 +40,41 @@ public class StartupValidationRecorder {
     }
 
     public void executeValidation(Map<String, List<String>> generatedWorkflowVersions) {
-        AtomicBoolean halt = new AtomicBoolean();
         StartupValidationConfig config = configRuntimeValue.getValue();
-        outerLoop: if (config.swf() != null) {
-            for (Map.Entry<String, StartupValidationConfig.StartupValidationConfigGroup> entry : config.swf().entrySet()) {
+        Map<String, StartupValidationConfigGroup> swf = config.swf();
+        if (swf != null) {
+            for (Map.Entry<String, StartupValidationConfigGroup> entry : swf.entrySet()) {
                 List<String> generatedVersions = generatedWorkflowVersions.get(entry.getKey());
                 if (generatedVersions == null) {
                     System.err.println(">>> [FATAL] Runtime Startup Validation failed: workflow: '" + entry.getKey() + "' is not present in current runtime.");
-                    halt.set(true);
-                    break outerLoop;
+                    abort(generatedWorkflowVersions);
                 } else {
                     for (String configuredVersion : entry.getValue().versions()) {
                         if (!generatedVersions.contains(configuredVersion)) {
                             System.err.println(
                                     ">>> [FATAL] Runtime Startup Validation failed: version: '" + configuredVersion + "' of workflow: '" + entry.getKey() + "' is not present in current runtime.");
-                            halt.set(true);
-                            break outerLoop;
+                            abort(generatedWorkflowVersions);
                         }
                     }
                 }
             }
-        }
-        if (halt.get()) {
-            if (generatedWorkflowVersions.isEmpty()) {
-                System.err.println(">>> [FATAL] There are no workflows in current runtime.");
-            } else {
-                System.err.println(">>> [FATAL] You must execute any of the available workflow versions:");
-                for (Map.Entry<String, List<String>> entry : generatedWorkflowVersions.entrySet()) {
-                    System.out.println(" - > workflow: '" + entry.getKey() + "', versions: " + entry.getValue().stream().map(version -> "'" + version + "'").toList());
-                }
-            }
-            System.err.println(">>> [FATAL] Halting JVM before runtime starts!.");
-            doHalt();
-        } else {
-            for (Map.Entry<String, StartupValidationConfig.StartupValidationConfigGroup> entry : config.swf().entrySet()) {
+            for (Map.Entry<String, StartupValidationConfigGroup> entry : swf.entrySet()) {
                 LOGGER.debug("Workflow: " + entry.getKey() + " is available to execute the configured versions in current runtime: " + entry.getValue().versions());
             }
         }
+    }
+
+    private void abort(Map<String, List<String>> generatedWorkflowVersions) {
+        if (generatedWorkflowVersions.isEmpty()) {
+            System.err.println(">>> [FATAL] There are no workflows in current runtime.");
+        } else {
+            System.err.println(">>> [FATAL] You must execute any of the available workflow versions:");
+            for (Map.Entry<String, List<String>> entry : generatedWorkflowVersions.entrySet()) {
+                System.out.println(" - > workflow: '" + entry.getKey() + "', versions: " + entry.getValue().stream().map(version -> "'" + version + "'").toList());
+            }
+        }
+        System.err.println(">>> [FATAL] Halting JVM before runtime starts!.");
+        doHalt();
     }
 
     /**
