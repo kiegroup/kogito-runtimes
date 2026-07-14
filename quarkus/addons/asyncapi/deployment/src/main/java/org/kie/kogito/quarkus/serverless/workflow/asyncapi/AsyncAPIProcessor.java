@@ -18,6 +18,7 @@
  */
 package org.kie.kogito.quarkus.serverless.workflow.asyncapi;
 
+import java.util.Optional;
 import java.util.ServiceLoader;
 
 import org.kie.kogito.quarkus.common.deployment.KogitoAddonsPreGeneratedSourcesBuildItem;
@@ -33,8 +34,9 @@ import io.quarkus.deployment.annotations.BuildStep;
 public class AsyncAPIProcessor {
 
     @BuildStep
-    void asyncAPIContext(LiveReloadExecutionBuildItem reload, KogitoBuildContextBuildItem context, BuildProducer<KogitoAddonsPreGeneratedSourcesBuildItem> sources) {
+    void asyncAPIContext(Optional<LiveReloadExecutionBuildItem> reload, KogitoBuildContextBuildItem context, BuildProducer<KogitoAddonsPreGeneratedSourcesBuildItem> sources) {
         context.getKogitoBuildContext().addContextAttribute(ParserContext.ASYNC_CONVERTER_KEY, new AsyncAPIInfoConverter(
-                new MapAsyncAPIRegistry(ServiceLoader.load(AsyncAPISupplier.class, reload.getClassLoader().orElse(Thread.currentThread().getContextClassLoader())))));
+                new MapAsyncAPIRegistry(
+                        ServiceLoader.load(AsyncAPISupplier.class, reload.flatMap(LiveReloadExecutionBuildItem::getClassLoader).orElse(Thread.currentThread().getContextClassLoader())))));
     }
 }
