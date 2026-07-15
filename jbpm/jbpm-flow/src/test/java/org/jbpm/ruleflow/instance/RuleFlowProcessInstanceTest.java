@@ -49,7 +49,7 @@ public class RuleFlowProcessInstanceTest extends AbstractBaseTest {
         process.setPackageName("org.mycomp.myprocess");
 
         KogitoProcessRuntime kruntime = createKogitoProcessRuntime(process);
-        assertThatThrownBy(() -> kruntime.startProcess(PROCESS_ID))
+        assertThatThrownBy(() -> kruntime.startProcess(process.getProcessId()))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -62,7 +62,7 @@ public class RuleFlowProcessInstanceTest extends AbstractBaseTest {
         process.setDynamic(true);
 
         KogitoProcessRuntime kruntime = createKogitoProcessRuntime(process);
-        KogitoProcessInstance instance = kruntime.startProcess(PROCESS_ID);
+        KogitoProcessInstance instance = kruntime.startProcess(process.getProcessId());
         assertThat(instance).isNotNull();
     }
 

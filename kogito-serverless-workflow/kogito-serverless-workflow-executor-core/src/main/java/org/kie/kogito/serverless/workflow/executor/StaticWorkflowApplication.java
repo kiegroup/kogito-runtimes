@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
@@ -38,10 +39,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.Stream;
 
 import org.jbpm.workflow.core.impl.WorkflowProcessImpl;
 import org.jbpm.workflow.core.node.SubProcessNode;
 import org.jbpm.workflow.instance.WorkflowProcessInstance;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.event.process.ProcessCompletedEvent;
 import org.kie.api.event.process.ProcessStartedEvent;
 import org.kie.kogito.Addons;
@@ -291,7 +294,7 @@ public class StaticWorkflowApplication extends StaticApplication implements Auto
     }
 
     private Process<JsonNodeModel> findOrCreate(Workflow workflow) {
-        return findProcessById(workflow.getId()).orElseGet(() -> process(workflow));
+        return findProcessById(new KogitoProcessId(workflow.getId(), workflow.getVersion())).orElseGet(() -> process(workflow));
     }
 
     /**
@@ -340,7 +343,7 @@ public class StaticWorkflowApplication extends StaticApplication implements Auto
      */
     public Process<JsonNodeModel> process(Workflow workflow) {
         Process<JsonNodeModel> process = createProcess(workflow);
-        processes.map.put(workflow.getId(), process);
+        processes.map.put(new KogitoProcessId(workflow.getId(),workflow.getVersion()), process);
         return process;
     }
 
@@ -352,18 +355,13 @@ public class StaticWorkflowApplication extends StaticApplication implements Auto
         closeables.add(closeable);
     }
 
-    public Optional<Process<JsonNodeModel>> findProcessById(String id) {
+    public Optional<Process<JsonNodeModel>> findProcessById(KogitoProcessId id) {
         return Optional.ofNullable((Process<JsonNodeModel>) processes.processById(id));
     }
 
     private Optional<ProcessInstance<JsonNodeModel>> findProcessInstance(String id) {
-        for (Process<JsonNodeModel> process : processes.map.values()) {
-            Optional<ProcessInstance<JsonNodeModel>> pi = process.instances().findById(id);
-            if (pi.isPresent()) {
-                return pi;
-            }
-        }
-        return Optional.empty();
+    	return processes.processByProcessInstanceId(id).map(v -> (ProcessInstance<JsonNodeModel>)v);
+        
     }
 
     public Optional<JsonNodeModel> variables(String id) {
@@ -408,17 +406,23 @@ public class StaticWorkflowApplication extends StaticApplication implements Auto
     }
 
     private class StaticWorkflowProcesses implements Processes {
-        private Map<String, Process<JsonNodeModel>> map = new ConcurrentHashMap<>();
+        private Map<KogitoProcessId, Process<? extends Model>> map = new ConcurrentHashMap<>();
 
         @Override
-        public Process<? extends Model> processById(String processId) {
+        public Process<? extends Model> processById(KogitoProcessId processId) {
             return map.get(processId);
         }
 
-        @Override
-        public Collection<String> processIds() {
-            return map.keySet();
-        }
+		@Override
+		public Iterator<Process<? extends Model>> iterator() {
+			return map.values().iterator();
+		}
+		
+		@Override
+	    public Stream<Process<? extends Model>> stream() {
+	    	return map.values().stream();
+	    }
+
     }
 
     ExecutorService executorService() {

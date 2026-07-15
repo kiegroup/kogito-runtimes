@@ -20,6 +20,7 @@ package org.kie.kogito.source.files;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.kie.api.definition.process.KogitoProcessId;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,26 +35,29 @@ class SourceFilesProviderImplTest {
 
     @Test
     void addSourceFile() {
-        sourceFilesProvider.addSourceFile("a_process", new SourceFile("myworkflow.sw.json"));
+        KogitoProcessId id = new KogitoProcessId("a_process");
+        sourceFilesProvider.addSourceFile(id, new SourceFile("myworkflow.sw.json"));
 
-        assertThat(sourceFilesProvider.getProcessSourceFiles("a_process"))
+        assertThat(sourceFilesProvider.getProcessSourceFiles(id))
                 .contains(new SourceFile("myworkflow.sw.json"));
     }
 
     @Test
     void getSourceFilesByProcessId() {
-        sourceFilesProvider.addSourceFile("a_process", new SourceFile("myworkflow.sw.json"));
-        sourceFilesProvider.addSourceFile("a_process", new SourceFile("myworkflow.sw.yaml"));
+        KogitoProcessId id = new KogitoProcessId("a_process");
+        KogitoProcessId anotherId = new KogitoProcessId("a_process", "1.0.0");
+        sourceFilesProvider.addSourceFile(id, new SourceFile("myworkflow.sw.json"));
+        sourceFilesProvider.addSourceFile(id, new SourceFile("myworkflow.sw.yaml"));
 
-        sourceFilesProvider.addSourceFile("another_process", new SourceFile("myanotherworkflow.sw.json"));
-        sourceFilesProvider.addSourceFile("another_process", new SourceFile("myanotherworkflow.sw.yaml"));
+        sourceFilesProvider.addSourceFile(anotherId, new SourceFile("myanotherworkflow.sw.json"));
+        sourceFilesProvider.addSourceFile(anotherId, new SourceFile("myanotherworkflow.sw.yaml"));
 
-        assertThat(sourceFilesProvider.getProcessSourceFiles("a_process"))
+        assertThat(sourceFilesProvider.getProcessSourceFiles(id))
                 .containsExactlyInAnyOrder(
                         new SourceFile("myworkflow.sw.json"),
                         new SourceFile("myworkflow.sw.yaml"));
 
-        assertThat(sourceFilesProvider.getProcessSourceFiles("another_process"))
+        assertThat(sourceFilesProvider.getProcessSourceFiles(anotherId))
                 .containsExactlyInAnyOrder(
                         new SourceFile("myanotherworkflow.sw.json"),
                         new SourceFile("myanotherworkflow.sw.yaml"));
@@ -61,32 +65,37 @@ class SourceFilesProviderImplTest {
 
     @Test
     void getSourceFilesByProcessIdShouldNotReturnNull() {
-        assertThat(sourceFilesProvider.getProcessSourceFiles("a_process"))
+        assertThat(sourceFilesProvider.getProcessSourceFiles(new KogitoProcessId("a_process")))
                 .isEmpty();
     }
 
     @Test
     void getValidSourceFileDefinitionByProcessIdTest() {
+        KogitoProcessId petStoreJson = new KogitoProcessId("petstore_json_process");
+        KogitoProcessId petStoreYaml = new KogitoProcessId("petstore_yaml_process");
+        KogitoProcessId petStoreSWJson = new KogitoProcessId("petstore_sw_json_process");
         SourceFile petstoreJson = new SourceFile("petstore.json");
         SourceFile petstoreSwJson = new SourceFile("petstore.sw.json");
         SourceFile ymlgreetSwYml = new SourceFile("ymlgreet.sw.yml");
 
-        sourceFilesProvider.addSourceFile("petstore_json_process", petstoreJson);
-        sourceFilesProvider.addSourceFile("petstore_sw_json_process", petstoreSwJson);
-        sourceFilesProvider.addSourceFile("ymlgreet.sw_process", ymlgreetSwYml);
+        sourceFilesProvider.addSourceFile(petStoreJson, petstoreJson);
+        sourceFilesProvider.addSourceFile(petStoreSWJson, petstoreSwJson);
+        sourceFilesProvider.addSourceFile(petStoreYaml, ymlgreetSwYml);
 
-        assertThat(sourceFilesProvider.getProcessSourceFile("petstore_sw_json_process")).contains(petstoreSwJson);
-        assertThat(sourceFilesProvider.getProcessSourceFile("ymlgreet.sw_process")).contains(ymlgreetSwYml);
+        assertThat(sourceFilesProvider.getProcessSourceFile(petStoreSWJson)).contains(petstoreSwJson);
+        assertThat(sourceFilesProvider.getProcessSourceFile(petStoreYaml)).contains(ymlgreetSwYml);
 
     }
 
     @Test
     void getInvalidSourceFileDefinitionByProcessIdTest() {
-        sourceFilesProvider.addSourceFile("petstore_json_process", new SourceFile("petstore.json"));
+        KogitoProcessId petStoreJson = new KogitoProcessId("petstore_json_process");
+        KogitoProcessId invalid = new KogitoProcessId("invalid_process");
+        sourceFilesProvider.addSourceFile(petStoreJson, new SourceFile("petstore.json"));
 
         //invalid extension
-        assertThat(sourceFilesProvider.getProcessSourceFile("petstore_json_process")).isEmpty();
+        assertThat(sourceFilesProvider.getProcessSourceFile(petStoreJson)).isEmpty();
         //invalid process
-        assertThat(sourceFilesProvider.getProcessSourceFile("invalidProcess")).isEmpty();
+        assertThat(sourceFilesProvider.getProcessSourceFile(invalid)).isEmpty();
     }
 }

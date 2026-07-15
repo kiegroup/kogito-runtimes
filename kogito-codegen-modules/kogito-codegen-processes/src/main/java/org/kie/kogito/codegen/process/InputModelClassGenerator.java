@@ -35,8 +35,7 @@ public class InputModelClassGenerator {
     private String modelClassName;
 
     public InputModelClassGenerator(KogitoBuildContext context, WorkflowProcess workFlowProcess) {
-        String pid = workFlowProcess.getId();
-        className = sanitizeClassName(ProcessToExecModelGenerator.extractProcessId(pid) + "ModelInput");
+        className = sanitizeClassName(ProcessToExecModelGenerator.extractProcessId(workFlowProcess.getProcessId()) + "ModelInput");
         this.modelClassName = workFlowProcess.getPackageName() + "." + className;
 
         this.context = context;

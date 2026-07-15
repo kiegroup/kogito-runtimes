@@ -49,5 +49,34 @@ public interface ProcessInstanceManagement<T> {
     T updateNodeInstanceSla(String processId, String processInstanceId, String nodeInstanceId, SlaPayload SLAPayload);
 
     T updateProcessInstanceSla(String processId, String processInstanceId, SlaPayload SLAPayload);
+    
+    T getProcessInfo(String processId, String version);
+
+    T getProcessNodes(String processId, String version);
+
+    T getInstanceInError(String processId, String version, String processInstanceId);
+
+    T getWorkItemsInProcessInstance(String processId, String version, String processInstanceId);
+
+    T getProcessInstanceTimers(String processId, String version, String processInstanceId);
+
+    T retriggerInstanceInError(String processId, String version, String processInstanceId);
+
+    T skipInstanceInError(String processId, String version, String processInstanceId);
+
+    T triggerNodeInstanceId(String processId, String version, String processInstanceId, String nodeId);
+
+    T retriggerNodeInstanceId(String processId, String version, String processInstanceId, String nodeInstanceId);
+
+    T cancelNodeInstanceId(String processId, String version, String processInstanceId, String nodeInstanceId);
+
+    T getNodeInstanceTimers(String processId, String version, String processInstanceId, String nodeInstanceId);
+
+    T cancelProcessInstanceId(String processId, String version, String processInstanceId);
+
+    T updateNodeInstanceSla(String processId, String version, String processInstanceId, String nodeInstanceId, SlaPayload SLAPayload);
+
+    T updateProcessInstanceSla(String processId, String version, String processInstanceId, SlaPayload SLAPayload);
+
 
 }

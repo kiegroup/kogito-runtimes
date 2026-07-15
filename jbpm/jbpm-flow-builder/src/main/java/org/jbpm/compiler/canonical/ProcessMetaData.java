@@ -23,9 +23,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.kie.api.definition.process.KogitoProcessId;
 
 import com.github.javaparser.ast.CompilationUnit;
 
@@ -46,7 +49,7 @@ public class ProcessMetaData {
     private CompilationUnit generatedClassModel;
 
     private Set<String> workItems = new HashSet<>();
-    private Map<String, String> subProcesses = new HashMap<>();
+    private Set<KogitoProcessId> subProcesses = new LinkedHashSet<>();
 
     private Map<String, String> signals = new HashMap<>();
 
@@ -139,12 +142,12 @@ public class ProcessMetaData {
         this.workItems = workItems;
     }
 
-    public Map<String, String> getSubProcesses() {
+    public Set<KogitoProcessId> getSubProcesses() {
         return subProcesses;
     }
 
-    public ProcessMetaData addSubProcess(String processId, String subProcessId) {
-        subProcesses.put(processId, subProcessId);
+    public ProcessMetaData addSubProcess(KogitoProcessId subProcessId) {
+        subProcesses.add(subProcessId);
         return this;
     }
 

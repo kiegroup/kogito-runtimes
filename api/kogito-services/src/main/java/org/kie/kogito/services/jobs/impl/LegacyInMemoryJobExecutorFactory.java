@@ -21,6 +21,7 @@ package org.kie.kogito.services.jobs.impl;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.runtime.process.ProcessInstance;
 import org.kie.kogito.internal.process.runtime.KogitoProcessInstance;
 import org.kie.kogito.jobs.JobDescription;
@@ -110,7 +111,7 @@ public class LegacyInMemoryJobExecutorFactory implements JobExecutorFactory {
 
         String id = description.id();
         AtomicInteger counter = new AtomicInteger(description.expirationTime().repeatLimit());
-        String processId = description.processId();
+        KogitoProcessId processId = description.processId();
         return () -> {
             try {
                 LOGGER.debug("Job {} started", id);

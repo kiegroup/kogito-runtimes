@@ -37,16 +37,11 @@ public class QuarkusProcessesLivenessHealthCheck implements HealthCheck {
 
     @Override
     public HealthCheckResponse call() {
-        HealthCheckResponseBuilder reponse = HealthCheckResponse.builder().name("Processes").up();
-
+        HealthCheckResponseBuilder response = HealthCheckResponse.builder().name("Processes").up();
         if (processes.isResolvable()) {
-            for (String processId : processes.get().processIds()) {
-                org.kie.kogito.process.Process<?> process = processes.get().processById(processId);
-                reponse.withData(processId, process.version());
-            }
+            processes.get().forEach(p -> response.withData(p.id(), p.version()));
         }
-
-        return reponse.build();
+        return response.build();
     }
 
 }

@@ -23,11 +23,14 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Map;
 
+import org.jbpm.compiler.canonical.descriptors.ExpressionUtils;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.io.Resource;
 import org.kie.kogito.codegen.api.context.KogitoBuildContext;
 import org.kie.kogito.codegen.process.DummyProcess;
 import org.kie.kogito.codegen.process.ProcessCodegenException;
 import org.kie.kogito.internal.process.runtime.KogitoWorkflowProcess;
+import org.kie.kogito.source.files.SourceFile;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
@@ -35,7 +38,6 @@ import com.github.javaparser.ast.body.InitializerDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.stmt.BlockStmt;
-import com.github.javaparser.ast.stmt.Statement;
 
 public class SourceFilesProviderProducerUtil {
 
@@ -43,7 +45,7 @@ public class SourceFilesProviderProducerUtil {
         // utility class, shouldn't be initialized
     }
 
-    public static void addSourceFilesToProvider(CompilationUnit compilationUnit, Map<String, KogitoWorkflowProcess> workflows, KogitoBuildContext context) {
+    public static void addSourceFilesToProvider(CompilationUnit compilationUnit, Map<KogitoProcessId, KogitoWorkflowProcess> workflows, KogitoBuildContext context) {
 
         ClassOrInterfaceDeclaration producerClass = compilationUnit.findFirst(ClassOrInterfaceDeclaration.class)
                 .orElseThrow(() -> new ProcessCodegenException("SourceFileProviderProducerTemplate does not contain a class declaration"));
@@ -69,28 +71,10 @@ public class SourceFilesProviderProducerUtil {
         }
     }
 
-    private static void registerWorkflows(InitializerDeclaration staticInit, Map<String, KogitoWorkflowProcess> workflows, KogitoBuildContext context) {
-
+    private static void registerWorkflows(InitializerDeclaration staticInit, Map<KogitoProcessId, KogitoWorkflowProcess> workflows, KogitoBuildContext context) {
         BlockStmt initBody = staticInit.getBody();
-
-        Statement statementTemplate = initBody.getStatement(0);
-
-        initBody.remove(statementTemplate);
-
-        workflows.forEach((id, workflowProcess) -> {
-            Statement newProcessSourceStatement = statementTemplate.clone();
-            String resourcePath = getResourceRelativePath(context, workflowProcess.getResource());
-            newProcessSourceStatement.findAll(StringLiteralExpr.class)
-                    .forEach(stringLiteralExpr -> interpolateStrings(stringLiteralExpr, id, resourcePath));
-            initBody.addStatement(newProcessSourceStatement);
-        });
-    }
-
-    private static void interpolateStrings(StringLiteralExpr stringLiteral, String id, String resourcePath) {
-        String stringValue = stringLiteral.getValue();
-        String interpolated = stringValue.replace("$processId$", id);
-        interpolated = interpolated.replace("$sourcePath$", resourcePath);
-        stringLiteral.setString(interpolated);
+        workflows.forEach((id, workflowProcess) -> initBody.addStatement(new MethodCallExpr(new NameExpr("INSTANCE"), "addSourceFile").addArgument(ExpressionUtils.buildKogitoProcessId(id))
+                .addArgument(ExpressionUtils.getObjectCreationExpr(SourceFile.class, getResourceRelativePath(context, workflowProcess.getResource())))));
     }
 
     static String getResourceRelativePath(KogitoBuildContext context, Resource resource) {

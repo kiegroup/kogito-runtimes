@@ -170,6 +170,7 @@
     <version.tomcat.embed.core>10.1.55</version.tomcat.embed.core>
     <version.org.hibernate>7.2.19.Final</version.org.hibernate>
     <version.com.graphql-java>24.3</version.com.graphql-java>
+    <version.com.github.zafarkhaja>0.10.2</version.com.github.zafarkhaja>
   </properties>
 
   <dependencyManagement>
@@ -1371,6 +1372,11 @@
         <groupId>io.quarkus.qute</groupId>
         <artifactId>qute-debug</artifactId>
         <version>${version.io.quarkus}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.github.zafarkhaja</groupId>
+        <artifactId>java-semver</artifactId>
+        <version>${version.com.github.zafarkhaja}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

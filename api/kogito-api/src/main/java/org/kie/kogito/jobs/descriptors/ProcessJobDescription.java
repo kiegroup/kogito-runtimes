@@ -20,6 +20,7 @@ package org.kie.kogito.jobs.descriptors;
 
 import java.util.UUID;
 
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.jobs.ExpirationTime;
 import org.kie.kogito.jobs.JobDescription;
 import org.kie.kogito.process.Process;
@@ -36,18 +37,18 @@ public class ProcessJobDescription implements JobDescription {
 
     private final Integer priority;
 
-    private String processId;
+    private KogitoProcessId processId;
 
     private Process<?> process;
 
-    private ProcessJobDescription(ExpirationTime expirationTime, Integer priority, String processId) {
+    private ProcessJobDescription(ExpirationTime expirationTime, Integer priority, KogitoProcessId processId) {
         this.id = UUID.randomUUID().toString();
         this.expirationTime = requireNonNull(expirationTime);
         this.priority = requireNonNull(priority);
         this.processId = requireNonNull(processId);
     }
 
-    private ProcessJobDescription(ExpirationTime expirationTime, Integer priority, String processId, String id) {
+    private ProcessJobDescription(ExpirationTime expirationTime, Integer priority, KogitoProcessId processId, String id) {
         this.id = id;
         this.expirationTime = requireNonNull(expirationTime);
         this.priority = requireNonNull(priority);
@@ -65,16 +66,16 @@ public class ProcessJobDescription implements JobDescription {
         return new ProcessJobDescription(expirationTime, DEFAULT_PRIORITY, process);
     }
 
-    public static ProcessJobDescription of(ExpirationTime expirationTime, String processId) {
+    public static ProcessJobDescription of(ExpirationTime expirationTime, KogitoProcessId processId) {
         return of(expirationTime, DEFAULT_PRIORITY, processId);
     }
 
-    public static ProcessJobDescription of(ExpirationTime expirationTime, Integer priority, String processId) {
+    public static ProcessJobDescription of(ExpirationTime expirationTime, Integer priority, KogitoProcessId processId) {
 
         return new ProcessJobDescription(expirationTime, priority, processId);
     }
 
-    public static ProcessJobDescription of(ExpirationTime expirationTime, Integer priority, String processId, String id) {
+    public static ProcessJobDescription of(ExpirationTime expirationTime, Integer priority, KogitoProcessId processId, String id) {
 
         return new ProcessJobDescription(expirationTime, priority, processId, id);
     }
@@ -94,7 +95,7 @@ public class ProcessJobDescription implements JobDescription {
         return priority;
     }
 
-    public String processId() {
+    public KogitoProcessId processId() {
         return processId;
     }
 

@@ -69,7 +69,7 @@ public class ProcessExecutableModelGenerator {
     }
 
     public String extractedProcessId() {
-        return execModelGenerator.extractProcessId(workFlowProcess.getId());
+        return ProcessToExecModelGenerator.extractProcessId(workFlowProcess.getProcessId());
     }
 
     public String getProcessId() {

@@ -27,6 +27,7 @@ import org.jbpm.workflow.core.node.EndNode;
 import org.jbpm.workflow.core.node.StartNode;
 import org.jbpm.workflow.core.node.SubProcessNode;
 import org.junit.jupiter.api.Test;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.definition.process.WorkflowElementIdentifier;
 import org.kie.kogito.internal.process.runtime.KogitoProcessInstance;
 import org.kie.kogito.internal.process.runtime.KogitoProcessRuntime;
@@ -46,7 +47,7 @@ public class SubProcessTest extends AbstractBaseTest {
 
     @Test
     public void testNonExistentSubProcess() {
-        String nonExistentSubProcessName = "nonexistent.process";
+        KogitoProcessId nonExistentSubProcessName = new KogitoProcessId("nonexistent.process", "1.0.0");
         RuleFlowProcess process = new RuleFlowProcess();
         process.setId("org.drools.core.process.process");
         process.setName("Process");
@@ -70,7 +71,7 @@ public class SubProcessTest extends AbstractBaseTest {
 
         KogitoProcessRuntime kruntime = createKogitoProcessRuntime(process);
 
-        KogitoProcessInstance pi = kruntime.startProcess("org.drools.core.process.process");
+        KogitoProcessInstance pi = kruntime.startProcess(new KogitoProcessId("org.drools.core.process.process"));
         assertThat(pi.getState()).isEqualTo(KogitoProcessInstance.STATE_ERROR);
     }
 

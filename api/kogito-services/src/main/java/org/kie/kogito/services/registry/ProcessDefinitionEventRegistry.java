@@ -28,6 +28,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.Application;
 import org.kie.kogito.event.EventBatch;
 import org.kie.kogito.event.impl.ProcessEventBatch;
@@ -66,8 +67,7 @@ public class ProcessDefinitionEventRegistry {
 
     public void register(Processes processes) {
         EventBatch eventBatch = new ProcessEventBatch();
-        processes.processIds().stream()
-                .map(processes::processById)
+        processes.stream()
                 .map(mapProcessDefinition(app.config().addons().availableAddons(), serviceUrl))
                 .forEach(process -> {
                     LOGGER.debug("Registering process definition with id: {}", process.getId());
@@ -100,7 +100,7 @@ public class ProcessDefinitionEventRegistry {
                     .setAnnotations(annotations)
                     .setDescription(description)
                     .setMetadata(metadata);
-            sourceFilesProvider.flatMap(provider -> provider.getProcessSourceFile(p.id())).map(this::readSourceFile).ifPresentOrElse(builder::setSource,
+            sourceFilesProvider.flatMap(provider -> provider.getProcessSourceFile(new KogitoProcessId(p.id(), p.version()))).map(this::readSourceFile).ifPresentOrElse(builder::setSource,
                     () -> LOGGER.warn("Not source found for process id {}", p.id()));
             return new ProcessDefinitionDataEvent(builder.build());
         };

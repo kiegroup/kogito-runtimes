@@ -41,11 +41,11 @@ import org.jbpm.compiler.canonical.ProcessMetaData;
 import org.jbpm.compiler.canonical.ProcessToExecModelGenerator;
 import org.jbpm.compiler.canonical.TriggerMetaData;
 import org.jbpm.compiler.canonical.TriggerMetaData.TriggerType;
-import org.jbpm.compiler.canonical.WorkItemModelMetaData;
 import org.jbpm.process.core.impl.ProcessImpl;
 import org.jbpm.process.core.validation.ProcessValidatorRegistry;
 import org.jbpm.workflow.core.impl.WorkflowProcessImpl;
 import org.jbpm.workflow.instance.WorkflowProcessParameters;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.definition.process.Process;
 import org.kie.api.definition.process.WorkflowProcess;
 import org.kie.api.io.Resource;
@@ -251,21 +251,21 @@ public class ProcessCodegen extends AbstractGenerator {
         }
     }
 
-    private final Map<String, KogitoWorkflowProcess> processes;
+    private final Map<KogitoProcessId, KogitoWorkflowProcess> processes;
     private final Set<GeneratedFile> generatedFiles = new HashSet<>();
 
     protected ProcessCodegen(KogitoBuildContext context, Collection<GeneratedInfo<KogitoWorkflowProcess>> processes) {
         super(context, GENERATOR_NAME, new ProcessConfigGenerator(context));
         this.processes = new HashMap<>();
         for (GeneratedInfo<KogitoWorkflowProcess> process : processes) {
-            if (this.processes.containsKey(process.info().getId())) {
+            if (this.processes.containsKey(process.info().getProcessId())) {
                 throw new ProcessCodegenException(
                         format("Duplicated item found with id %s. Please review the .%s files",
                                 process.info().getId(),
                                 process.info().getType().toLowerCase()));
             }
             generatedFiles.addAll(process.files());
-            this.processes.put(process.info().getId(), process.info());
+            this.processes.put(process.info().getProcessId(), process.info());
         }
     }
 
@@ -295,7 +295,6 @@ public class ProcessCodegen extends AbstractGenerator {
         Map<String, InputModelClassGenerator> processIdToInputModelGenerator = new HashMap<>();
         Map<String, OutputModelClassGenerator> processIdToOutputModelGenerator = new HashMap<>();
 
-        Map<String, List<WorkItemModelMetaData>> processIdToWorkItemModel = new HashMap<>();
         Map<String, ProcessMetaData> processIdToMetadata = new HashMap<>();
 
         // first we generate all the data classes from variable declarations
@@ -330,8 +329,6 @@ public class ProcessCodegen extends AbstractGenerator {
             if (KogitoWorkflowProcess.SW_TYPE.equals(workFlowProcess.getType())) {
                 continue;
             }
-            WorkItemModelClassGenerator utcg = new WorkItemModelClassGenerator(workFlowProcess);
-            processIdToWorkItemModel.put(workFlowProcess.getId(), utcg.generate());
         }
 
         // then we can instantiate the exec model generator
@@ -395,7 +392,6 @@ public class ProcessCodegen extends AbstractGenerator {
                         applicationCanonicalName());
 
                 processResourceGenerator
-                        .withWorkItems(processIdToWorkItemModel.get(workFlowProcess.getId()))
                         .withSignals(metaData.getSignals())
                         .withTriggers(metaData.isStartable(), metaData.isDynamic(), metaData.getTriggers())
                         .withTransaction(isTransactionEnabled(this, context()))
@@ -455,17 +451,6 @@ public class ProcessCodegen extends AbstractGenerator {
                     mmd.generate());
         }
 
-        for (List<WorkItemModelMetaData> utmd : processIdToWorkItemModel.values()) {
-
-            for (WorkItemModelMetaData ut : utmd) {
-                storeFile(MODEL_TYPE, WorkItemModelClassGenerator.generatedFilePath(ut.getInputModelClassName()), ut.generateInput());
-
-                storeFile(MODEL_TYPE, WorkItemModelClassGenerator.generatedFilePath(ut.getOutputModelClassName()), ut.generateOutput());
-
-                storeFile(MODEL_TYPE, WorkItemModelClassGenerator.generatedFilePath(ut.getTaskModelClassName()), ut.generateModel());
-            }
-        }
-
         //Generating the Producer classes for Dependency Injection
         StaticDependencyInjectionProducerGenerator staticDependencyInjectionProducerGenerator = StaticDependencyInjectionProducerGenerator.of(context());
 
@@ -503,7 +488,6 @@ public class ProcessCodegen extends AbstractGenerator {
             for (ProcessResourceGenerator resourceGenerator : rgs) {
                 storeFile(REST, resourceGenerator.generatedFilePath(),
                         resourceGenerator.generate());
-                storeFile(MODEL_TYPE, WorkItemModelClassGenerator.generatedFilePath(resourceGenerator.getTaskModelFactoryClassName()), resourceGenerator.getTaskModelFactory());
             }
         }
 

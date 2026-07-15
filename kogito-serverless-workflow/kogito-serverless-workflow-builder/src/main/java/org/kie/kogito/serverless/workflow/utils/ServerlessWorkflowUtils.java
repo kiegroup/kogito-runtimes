@@ -258,7 +258,7 @@ public class ServerlessWorkflowUtils {
     }
 
     private static ModelMetaData getModelMetadata(WorkflowProcess process, Class<?> modelClass) {
-        return new ModelMetaData(process.getId(), modelClass.getPackage().getName(), modelClass.getSimpleName(), KogitoWorkflowProcess.PUBLIC_VISIBILITY,
+        return new ModelMetaData(process.getProcessId(), modelClass.getPackage().getName(), modelClass.getSimpleName(), KogitoWorkflowProcess.PUBLIC_VISIBILITY,
                 VariableDeclarations.of(Collections.emptyMap()), false);
     }
 

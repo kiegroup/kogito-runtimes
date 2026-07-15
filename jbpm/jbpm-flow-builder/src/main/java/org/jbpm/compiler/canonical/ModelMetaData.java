@@ -28,6 +28,7 @@ import java.util.function.Consumer;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jbpm.process.core.context.variable.Variable;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.codegen.Generated;
 import org.kie.kogito.codegen.VariableInfo;
 import org.kie.kogito.internal.process.runtime.KogitoWorkflowProcess;
@@ -67,7 +68,7 @@ import static org.kie.kogito.internal.utils.ConversionUtils.sanitizeClassName;
 
 public class ModelMetaData {
 
-    private final String processId;
+    private final KogitoProcessId processId;
     private final String packageName;
     private final String modelClassSimpleName;
     private final VariableDeclarations variableScope;
@@ -82,16 +83,16 @@ public class ModelMetaData {
 
     private String modelSchemaRef;
 
-    public ModelMetaData(String processId, String packageName, String modelClassSimpleName, String visibility, VariableDeclarations variableScope, boolean hidden) {
+    public ModelMetaData(KogitoProcessId processId, String packageName, String modelClassSimpleName, String visibility, VariableDeclarations variableScope, boolean hidden) {
         this(processId, packageName, modelClassSimpleName, visibility, variableScope, hidden, "/class-templates/ModelTemplate.java");
     }
 
-    public ModelMetaData(String processId, String packageName, String modelClassSimpleName, String visibility, VariableDeclarations variableScope, boolean hidden, String templateName) {
+    public ModelMetaData(KogitoProcessId processId, String packageName, String modelClassSimpleName, String visibility, VariableDeclarations variableScope, boolean hidden, String templateName) {
         this(processId, packageName, modelClassSimpleName, visibility, variableScope, hidden, templateName, c -> {
         });
     }
 
-    public ModelMetaData(String processId, String packageName, String modelClassSimpleName, String visibility, VariableDeclarations variableScope, boolean hidden, String templateName,
+    public ModelMetaData(KogitoProcessId processId, String packageName, String modelClassSimpleName, String visibility, VariableDeclarations variableScope, boolean hidden, String templateName,
             Consumer<CompilationUnit>... customGenerator) {
         this.processId = processId;
         this.packageName = packageName;
@@ -184,7 +185,8 @@ public class ModelMetaData {
 
         if (!KogitoWorkflowProcess.PRIVATE_VISIBILITY.equals(visibility)) {
             modelClass.addAnnotation(new NormalAnnotationExpr(new Name(Generated.class.getCanonicalName()), NodeList.nodeList(new MemberValuePair("value", new StringLiteralExpr("kogito-codegen")),
-                    new MemberValuePair("reference", new StringLiteralExpr(processId)),
+                    // TODO review this
+                    new MemberValuePair("reference", new StringLiteralExpr(processId.id())),
                     new MemberValuePair("name", new StringLiteralExpr(sanitizeClassName(ProcessToExecModelGenerator.extractProcessId(processId)))),
                     new MemberValuePair("hidden", new BooleanLiteralExpr(hidden)))));
         }

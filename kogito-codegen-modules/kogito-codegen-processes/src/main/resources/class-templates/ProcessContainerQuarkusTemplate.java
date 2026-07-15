@@ -18,6 +18,13 @@
  */
 package $Package$;
 
+import java.util.Iterator;
+import java.util.stream.Stream;
+
+import org.kie.api.definition.process.KogitoProcessId;
+import org.kie.kogito.Model;
+import org.kie.kogito.process.Process;
+
 @jakarta.enterprise.context.ApplicationScoped
 public class Processes implements org.kie.kogito.process.Processes {
 
@@ -32,12 +39,19 @@ public class Processes implements org.kie.kogito.process.Processes {
             mappedProcesses.put(process.id(), process);
         }
     }
-
-    public org.kie.kogito.process.Process<? extends org.kie.kogito.Model> processById(String processId) {
-        return mappedProcesses.get(processId);
+    
+    @Override
+    public Stream<Process<? extends Model>> stream() {
+    	return mappedProcesses.values().stream();
     }
 
-    public java.util.Collection<String> processIds() {
-        return mappedProcesses.keySet();
+    @Override
+    public Iterator<Process<? extends Model>> iterator() {
+        return mappedProcesses.values().iterator();
+	}
+
+    @Override
+    public Process<? extends Model> processById(KogitoProcessId processId) {
+        return mappedProcesses.get(processId);
     }
 }

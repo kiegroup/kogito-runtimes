@@ -24,11 +24,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.jbpm.compiler.canonical.descriptors.ExpressionUtils;
 import org.jbpm.process.core.context.variable.VariableScope;
 import org.jbpm.ruleflow.core.factory.SubProcessNodeFactory;
 import org.jbpm.workflow.core.impl.DataDefinition;
 import org.jbpm.workflow.core.node.SubProcessNode;
 import org.jbpm.workflow.instance.impl.NodeInstanceImpl;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.internal.process.runtime.KogitoWorkflowProcess;
 import org.kie.kogito.process.ProcessInstance;
 import org.kie.kogito.process.Processes;
@@ -79,15 +81,15 @@ public class LambdaSubProcessNodeVisitor extends AbstractNodeVisitor<SubProcessN
             throw new RuntimeException(e);
         }
         String name = node.getName();
-        String subProcessId = node.getProcessId();
+        KogitoProcessId subProcessId = node.getProcessId();
 
         NodeValidator.of(getNodeKey(), name)
-                .notEmpty("subProcessId", subProcessId)
+                .notEmpty("subProcessId", subProcessId.id())
                 .validate();
 
         body.addStatement(getAssignedFactoryMethod(factoryField, SubProcessNodeFactory.class, getNodeId(node), getNodeKey(), getWorkflowElementConstructor(node.getId())))
                 .addStatement(getNameMethod(node, "Call Activity"))
-                .addStatement(getFactoryMethod(getNodeId(node), METHOD_PROCESS_ID, new StringLiteralExpr(subProcessId)))
+                .addStatement(getFactoryMethod(getNodeId(node), METHOD_PROCESS_ID, ExpressionUtils.buildKogitoProcessId(subProcessId)))
                 .addStatement(getFactoryMethod(getNodeId(node), METHOD_PROCESS_NAME, new StringLiteralExpr(getOrDefault(node.getProcessName(), ""))))
                 .addStatement(getFactoryMethod(getNodeId(node), METHOD_WAIT_FOR_COMPLETION, new BooleanLiteralExpr(node.isWaitForCompletion())))
                 .addStatement(getFactoryMethod(getNodeId(node), METHOD_INDEPENDENT, new BooleanLiteralExpr(node.isIndependent())));
@@ -153,19 +155,17 @@ public class LambdaSubProcessNodeVisitor extends AbstractNodeVisitor<SubProcessN
     }
 
     private BlockStmt createInstance(SubProcessNode subProcessNode, ProcessMetaData metadata) {
-        String processId = ProcessToExecModelGenerator.extractProcessId(subProcessNode.getProcessId());
-        String subProcessModelClassName = metadata.getModelClassName() != null ? metadata.getModelClassName() : ProcessToExecModelGenerator.extractModelClassName(processId);
+        String subProcessModelClassName = metadata.getModelClassName() != null ? metadata.getModelClassName() : ProcessToExecModelGenerator.extractModelClassName(subProcessNode.getProcessId());
         String processFieldName = "app";
         Expression expr = new NameExpr(processFieldName);
         ClassOrInterfaceType processesType = new ClassOrInterfaceType(null, Processes.class.getCanonicalName());
         expr = new MethodCallExpr(expr, "get", NodeList.nodeList(new ClassExpr(processesType)));
-        expr = new MethodCallExpr(expr, "processById", NodeList.nodeList(new StringLiteralExpr(subProcessNode.getProcessId())));
+        expr = new MethodCallExpr(expr, "processById", NodeList.nodeList(ExpressionUtils.buildKogitoProcessId(subProcessNode.getProcessId())));
         expr = new MethodCallExpr(expr, "createInstance").addArgument("model");
         ClassOrInterfaceType subProcessType = new ClassOrInterfaceType(null, ProcessInstance.class.getCanonicalName());
         subProcessType.setTypeArguments(new ClassOrInterfaceType(null, subProcessModelClassName));
         expr = new CastExpr(subProcessType, expr);
-
-        metadata.addSubProcess(processId, subProcessNode.getProcessId());
+        metadata.addSubProcess(subProcessNode.getProcessId());
 
         return new BlockStmt().addStatement(new ReturnStmt(expr));
     }

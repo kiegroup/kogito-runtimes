@@ -27,6 +27,7 @@ import org.jbpm.process.core.ContextContainer;
 import org.jbpm.process.core.context.variable.VariableScope;
 import org.jbpm.process.instance.context.variable.VariableScopeInstance;
 import org.jbpm.ruleflow.instance.RuleFlowProcessInstance;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.definition.process.Process;
 import org.kie.api.event.rule.DefaultAgendaEventListener;
 import org.kie.internal.process.CorrelationKey;
@@ -45,8 +46,8 @@ public class LightProcessRuntimeContext implements ProcessRuntimeContext {
     }
 
     @Override
-    public Optional<Process> findProcess(String id) {
-        return processes.stream().filter(p -> p.getId().equals(id)).findAny();
+    public Optional<Process> findProcess(KogitoProcessId id) {
+        return processes.stream().filter(p -> p.getProcessId().equals(id)).findAny();
     }
 
     @Override
