@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.drools.core.common.WorkingMemoryAction;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.definition.process.Process;
 import org.kie.api.event.rule.DefaultAgendaEventListener;
 import org.kie.internal.process.CorrelationKey;
@@ -31,7 +32,7 @@ public interface ProcessRuntimeContext {
 
     Collection<Process> getProcesses();
 
-    Optional<Process> findProcess(String id);
+    Optional<Process> findProcess(KogitoProcessId id);
 
     void startOperation();
 

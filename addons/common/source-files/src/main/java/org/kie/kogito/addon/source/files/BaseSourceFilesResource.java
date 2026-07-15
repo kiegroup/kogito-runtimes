@@ -19,9 +19,11 @@
 
 package org.kie.kogito.addon.source.files;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Optional;
 
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.source.files.SourceFile;
 import org.kie.kogito.source.files.SourceFilesProvider;
 
@@ -36,7 +38,7 @@ public abstract class BaseSourceFilesResource<T> implements SourceFiles<T> {
     }
 
     @Override
-    public T getSourceFileByUri(String uri) throws Exception {
+    public T getSourceFileByUri(String uri) throws IOException {
         Optional<SourceFile> sourceFile = sourceFilesProvider.getSourceFilesByUri(uri);
 
         if (sourceFile.isEmpty()) {
@@ -47,12 +49,12 @@ public abstract class BaseSourceFilesResource<T> implements SourceFiles<T> {
     }
 
     @Override
-    public Collection<SourceFile> getSourceFilesByProcessId(String processId) {
+    public Collection<SourceFile> getSourceFilesByProcessId(KogitoProcessId processId) {
         return sourceFilesProvider.getProcessSourceFiles(processId);
     }
 
     @Override
-    public T getSourceFileByProcessId(String processId) throws Exception {
+    public T getSourceFileByProcessId(KogitoProcessId processId) throws IOException {
         Optional<SourceFile> sourceFile = sourceFilesProvider.getProcessSourceFile(processId);
 
         if (sourceFile.isEmpty()) {

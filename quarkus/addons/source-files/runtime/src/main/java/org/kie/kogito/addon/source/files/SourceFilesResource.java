@@ -19,8 +19,10 @@
 package org.kie.kogito.addon.source.files;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.Collection;
 
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.source.files.SourceFile;
 import org.kie.kogito.source.files.SourceFilesProvider;
 
@@ -45,7 +47,7 @@ public class SourceFilesResource extends BaseSourceFilesResource<Response> {
     @GET
     @Path("sources")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public Response getSourceFileByUri(@QueryParam("uri") String uri) throws Exception {
+    public Response getSourceFileByUri(@QueryParam("uri") String uri) throws IOException {
         return super.getSourceFileByUri(uri);
     }
 
@@ -53,14 +55,29 @@ public class SourceFilesResource extends BaseSourceFilesResource<Response> {
     @Path("{processId}/sources")
     @Produces(MediaType.APPLICATION_JSON)
     public Collection<SourceFile> getSourceFilesByProcessId(@PathParam("processId") String processId) {
-        return super.getSourceFilesByProcessId(processId);
+        return super.getSourceFilesByProcessId(new KogitoProcessId(processId));
     }
+    
+    @GET
+    @Path("{processId}/{version}/sources")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Collection<SourceFile> getSourceFilesByProcessId(@PathParam("processId") String processId, @PathParam("version") String version) {
+        return super.getSourceFilesByProcessId(new KogitoProcessId(processId, version));
+    }
+
 
     @GET
     @Path("{processId}/source")
     @Produces(MediaType.TEXT_PLAIN)
     public Response getSourceFileByProcessId(@PathParam("processId") String processId) throws Exception {
-        return super.getSourceFileByProcessId(processId);
+     return super.getSourceFileByProcessId(new KogitoProcessId(processId));
+    }
+    
+    @GET
+    @Path("{processId}/{version}/source")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response getSourceFileByProcessId(@PathParam("processId") String processId, @PathParam("version") String version) throws Exception {
+        return super.getSourceFileByProcessId(new KogitoProcessId(processId, version));
     }
 
     @Override

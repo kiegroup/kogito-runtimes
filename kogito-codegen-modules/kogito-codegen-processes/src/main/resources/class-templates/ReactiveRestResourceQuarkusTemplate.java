@@ -54,7 +54,7 @@ import org.kie.kogito.auth.IdentityProvider;
 import org.kie.kogito.auth.IdentityProviders;
 import org.kie.kogito.auth.SecurityPolicy;
 
-@Path("/$name$")
+@Path("$name$")
 public class $Type$ReactiveResource {
 
     Process<$Type$> process;
@@ -106,19 +106,5 @@ public class $Type$ReactiveResource {
     @Produces(MediaType.APPLICATION_JSON)
     public CompletionStage<$Type$Output> updateModel_$name$(@PathParam("id") String id, $Type$ resource) {
         return CompletableFuture.supplyAsync(() -> processService.update(process, id, resource).orElseThrow(NotFoundException::new));
-    }
-
-    @GET()
-    @Path("/{id}/tasks")
-    @Produces(MediaType.APPLICATION_JSON)
-    public CompletionStage<List<TaskModel>> getTasks_$name$(@PathParam("id") String id,
-                                                           @QueryParam("user") final String user,
-                                                           @QueryParam("group") final List<String> groups) {
-        return CompletableFuture.supplyAsync(
-                () -> processService.getTasks(process, id, user, groups)
-                        .orElseThrow(NotFoundException::new)
-                        .stream()
-                        .map($TaskModelFactory$::from)
-                        .collect(Collectors.toList()));
     }
 }

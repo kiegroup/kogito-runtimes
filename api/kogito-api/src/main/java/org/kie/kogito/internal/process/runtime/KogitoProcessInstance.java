@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.runtime.process.ProcessInstance;
 import org.kie.kogito.internal.process.event.KogitoEventListener;
 
@@ -41,6 +42,8 @@ public interface KogitoProcessInstance extends ProcessInstance, KogitoEventListe
     int SLA_ABORTED = 4;
 
     String getStringId();
+
+    KogitoProcessId getWorkflowId();
 
     /**
      * Returns root process instance id if this process instance has a root process instance

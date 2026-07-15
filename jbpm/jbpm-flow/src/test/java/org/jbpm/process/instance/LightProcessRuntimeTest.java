@@ -81,7 +81,7 @@ class LightProcessRuntimeTest {
         when(application.get(Processes.class)).thenReturn(mock(Processes.class));
         LightProcessRuntime rt = new LightProcessRuntime(rtc, services, application);
 
-        rt.startProcess(myProcess.process.getId());
+        rt.startProcess(myProcess.process.getProcessId());
 
         assertThat(myProcess.result).isEqualTo("Hello!");
 

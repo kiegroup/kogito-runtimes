@@ -37,6 +37,7 @@ import org.jbpm.process.instance.LightProcessRuntime;
 import org.jbpm.process.instance.LightProcessRuntimeServiceProvider;
 import org.jbpm.process.instance.ProcessRuntimeServiceProvider;
 import org.jbpm.ruleflow.core.RuleFlowProcess;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.runtime.process.EventListener;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
 import org.kie.kogito.Application;
@@ -141,6 +142,11 @@ public abstract class AbstractProcess<T extends Model> implements Process<T>, Pr
     @Override
     public String name() {
         return get().getName();
+    }
+
+    @Override
+    public KogitoProcessId processId() {
+        return get().getProcessId();
     }
 
     @Override

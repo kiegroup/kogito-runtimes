@@ -35,8 +35,7 @@ public class OutputModelClassGenerator {
     private String modelClassName;
 
     public OutputModelClassGenerator(KogitoBuildContext context, WorkflowProcess workFlowProcess) {
-        String pid = workFlowProcess.getId();
-        className = sanitizeClassName(ProcessToExecModelGenerator.extractProcessId(pid) + "ModelOutput");
+        className = sanitizeClassName(ProcessToExecModelGenerator.extractProcessId(workFlowProcess.getProcessId()) + "ModelOutput");
         this.modelClassName = workFlowProcess.getPackageName() + "." + className;
 
         this.context = context;

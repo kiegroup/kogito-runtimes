@@ -27,11 +27,13 @@ import org.jbpm.ruleflow.core.RuleFlowProcess;
 import org.jbpm.workflow.core.impl.NodeImpl;
 import org.jbpm.workflow.instance.impl.NodeInstanceImpl;
 import org.jbpm.workflow.instance.impl.WorkflowProcessInstanceImpl;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.definition.process.NodeContainer;
 import org.kie.api.definition.process.Process;
 import org.kie.api.definition.process.WorkflowElementIdentifier;
 import org.kie.api.definition.process.WorkflowProcess;
 import org.kie.api.runtime.process.NodeInstance;
+import org.kie.kogito.internal.process.runtime.KogitoProcessInstance;
 import org.kie.kogito.internal.process.runtime.KogitoProcessRuntime;
 
 public class WorkflowProcessInstanceUpgrader {
@@ -40,7 +42,7 @@ public class WorkflowProcessInstanceUpgrader {
 
     }
 
-    public static void upgradeProcessInstance(KogitoProcessRuntime kruntime, String processInstanceId, String processId,
+    public static void upgradeProcessInstance(KogitoProcessRuntime kruntime, String processInstanceId, KogitoProcessId processId,
             Map<WorkflowElementIdentifier, WorkflowElementIdentifier> nodeMapping) {
         if (nodeMapping == null) {
             nodeMapping = new HashMap<>();
@@ -76,12 +78,12 @@ public class WorkflowProcessInstanceUpgrader {
     public static void upgradeProcessInstanceByNodeNames(
             KogitoProcessRuntime kruntime,
             String fromProcessId,
-            String toProcessId,
+            KogitoProcessId toProcessId,
             Map<String, String> nodeNamesMapping) {
 
         Map<WorkflowElementIdentifier, WorkflowElementIdentifier> nodeIdMapping = new HashMap<>();
-
-        String fromProcessIdString = kruntime.getProcessInstance(fromProcessId).getProcessId();
+        KogitoProcessInstance pi = kruntime.getProcessInstance(fromProcessId);
+        KogitoProcessId fromProcessIdString = new KogitoProcessId(pi.getProcessId(), pi.getProcessVersion());
         Process processFrom = kruntime.getKieBase().getProcess(fromProcessIdString);
         Process processTo = kruntime.getKieBase().getProcess(toProcessId);
 

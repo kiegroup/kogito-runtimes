@@ -62,6 +62,7 @@ public class ProcessInstanceManagementResourceTest {
 
     public static final String MESSAGE = "message";
     public static final String PROCESS_ID = "test";
+    public static final String VERSION = "1.0.0";
     public static final String PROCESS_INSTANCE_ID = "xxxxx";
     public static final String NODE_ID = "abc-def";
     private static RuntimeDelegate runtimeDelegate;
@@ -100,7 +101,7 @@ public class ProcessInstanceManagementResourceTest {
         error = mock(ProcessError.class);
 
         Instance<Processes> processesInstance = mock(Instance.class);
-        lenient().when(processes.processById(anyString())).thenReturn(process);
+        lenient().when(processes.processById(any())).thenReturn(process);
         lenient().when(processesInstance.get()).thenReturn(processes);
         lenient().when(process.instances()).thenReturn(instances);
         lenient().when(instances.findById(anyString())).thenReturn(Optional.of(processInstance));
@@ -128,7 +129,7 @@ public class ProcessInstanceManagementResourceTest {
         verify(error, times(0)).retrigger();
         verify(error, times(0)).skip();
 
-        verify(resource).doGetInstanceInError(PROCESS_ID, PROCESS_INSTANCE_ID);
+        verify(resource).doGetInstanceInError(PROCESS_ID, VERSION, PROCESS_INSTANCE_ID);
     }
 
     @Test
@@ -143,7 +144,7 @@ public class ProcessInstanceManagementResourceTest {
             }
         }).when(error).retrigger();
 
-        Response response = resource.retriggerInstanceInError(PROCESS_ID, PROCESS_INSTANCE_ID);
+        Response response = resource.retriggerInstanceInError(PROCESS_ID, VERSION, PROCESS_INSTANCE_ID);
         assertThat(response).isNotNull();
 
         verify(responseBuilder, times(1)).status((StatusType) Status.OK);
@@ -153,7 +154,7 @@ public class ProcessInstanceManagementResourceTest {
         verify(error, times(1)).retrigger();
         verify(error, times(0)).skip();
 
-        verify(resource).doRetriggerInstanceInError(PROCESS_ID, PROCESS_INSTANCE_ID);
+        verify(resource).doRetriggerInstanceInError(PROCESS_ID, VERSION, PROCESS_INSTANCE_ID);
     }
 
     @Test
@@ -165,54 +166,54 @@ public class ProcessInstanceManagementResourceTest {
     @Test
     public void testGetProcessInfo() {
         resource.getProcessInfo(PROCESS_ID);
-        verify(resource).doGetProcessInfo(PROCESS_ID);
+        verify(resource).doGetProcessInfo(PROCESS_ID, VERSION);
     }
 
     @Test
     public void testGetProcessNodes() {
         resource.getProcessNodes(PROCESS_ID);
-        verify(resource).doGetProcessNodes(PROCESS_ID);
+        verify(resource).doGetProcessNodes(PROCESS_ID, VERSION);
     }
 
     @Test
     public void testGetWorkItemsInProcessInstance() {
         resource.getWorkItemsInProcessInstance(PROCESS_ID, PROCESS_INSTANCE_ID);
-        verify(resource).doGetWorkItemsInProcessInstance(PROCESS_ID, PROCESS_INSTANCE_ID);
+        verify(resource).doGetWorkItemsInProcessInstance(PROCESS_ID, VERSION, PROCESS_INSTANCE_ID);
     }
 
     @Test
     public void testSkipInstanceInError() {
         resource.skipInstanceInError(PROCESS_ID, PROCESS_INSTANCE_ID);
-        verify(resource).doSkipInstanceInError(PROCESS_ID, PROCESS_INSTANCE_ID);
+        verify(resource).doSkipInstanceInError(PROCESS_ID, VERSION, PROCESS_INSTANCE_ID);
     }
 
     @Test
     public void testTriggerNodeInstanceId() {
         resource.triggerNodeInstanceId(PROCESS_ID, PROCESS_INSTANCE_ID, NODE_ID);
-        verify(resource).doTriggerNodeInstanceId(PROCESS_ID, PROCESS_INSTANCE_ID, NODE_ID);
+        verify(resource).doTriggerNodeInstanceId(PROCESS_ID, VERSION, PROCESS_INSTANCE_ID, NODE_ID);
     }
 
     @Test
     public void testRetriggerNodeInstanceId() {
         resource.retriggerNodeInstanceId(PROCESS_ID, PROCESS_INSTANCE_ID, NODE_ID);
-        verify(resource).doRetriggerNodeInstanceId(PROCESS_ID, PROCESS_INSTANCE_ID, NODE_ID);
+        verify(resource).doRetriggerNodeInstanceId(PROCESS_ID, VERSION, PROCESS_INSTANCE_ID, NODE_ID);
     }
 
     @Test
     public void testCancelNodeInstanceId() {
         resource.cancelNodeInstanceId(PROCESS_ID, PROCESS_INSTANCE_ID, NODE_ID);
-        verify(resource).doCancelNodeInstanceId(PROCESS_ID, PROCESS_INSTANCE_ID, NODE_ID);
+        verify(resource).doCancelNodeInstanceId(PROCESS_ID, VERSION, PROCESS_INSTANCE_ID, NODE_ID);
     }
 
     @Test
     public void testCancelProcessInstanceId() {
         resource.cancelProcessInstanceId(PROCESS_ID, PROCESS_INSTANCE_ID);
-        verify(resource).doCancelProcessInstanceId(PROCESS_ID, PROCESS_INSTANCE_ID);
+        verify(resource).doCancelProcessInstanceId(PROCESS_ID, VERSION, PROCESS_INSTANCE_ID);
     }
 
     @Test
     public void testBubildOkResponse(@Mock Object body) {
-        Response response = resource.buildOkResponse(body);
+        resource.buildOkResponse(body);
         assertResponse(body, Status.OK);
     }
 
@@ -223,13 +224,13 @@ public class ProcessInstanceManagementResourceTest {
 
     @Test
     public void testBadRequestResponse() {
-        Response response = resource.badRequestResponse(MESSAGE);
+        resource.badRequestResponse(MESSAGE);
         assertResponse(MESSAGE, Status.BAD_REQUEST);
     }
 
     @Test
     public void testNotFoundResponse() {
-        Response response = resource.notFoundResponse(MESSAGE);
+        resource.notFoundResponse(MESSAGE);
         assertResponse(MESSAGE, Status.NOT_FOUND);
     }
 }

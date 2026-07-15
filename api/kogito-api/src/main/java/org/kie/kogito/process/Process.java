@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.function.Predicate;
 
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.Model;
 import org.kie.kogito.correlation.CompositeCorrelation;
 import org.kie.kogito.correlation.CorrelationService;
@@ -57,6 +58,10 @@ public interface Process<T> {
     String name();
 
     String version();
+
+    default KogitoProcessId processId() {
+        return new KogitoProcessId(id(), version());
+    }
 
     String type();
 

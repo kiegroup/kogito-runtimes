@@ -18,17 +18,18 @@
  */
 package org.kie.kogito.process;
 
-import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.KogitoEngine;
 import org.kie.kogito.Model;
 
-public interface Processes extends KogitoEngine {
+public interface Processes extends KogitoEngine, Iterable<Process<? extends Model>> {
 
     default Optional<Process<? extends Model>> processByProcessInstanceId(String processInstanceId) {
-        for (String processId : processIds()) {
-            Process<? extends Model> process = processById(processId);
+        for (Process<? extends Model> process : this) {
             if (process.instances().findById(processInstanceId, ProcessInstanceReadMode.READ_ONLY).isPresent()) {
                 return Optional.of(process);
             }
@@ -36,9 +37,18 @@ public interface Processes extends KogitoEngine {
         return Optional.empty();
     }
 
-    Process<? extends Model> processById(String processId);
+    default Stream<Process<? extends Model>> stream() {
+        return StreamSupport.stream(this.spliterator(), false);
+    }
 
-    Collection<String> processIds();
+    default Process<? extends Model> processById(KogitoProcessId processId) {
+        for (Process<? extends Model> process : this) {
+            if (processId.equals(new KogitoProcessId(process.id(), process.version()))) {
+                return process;
+            }
+        }
+        return null;
+    }
 
     default void activate() {
 

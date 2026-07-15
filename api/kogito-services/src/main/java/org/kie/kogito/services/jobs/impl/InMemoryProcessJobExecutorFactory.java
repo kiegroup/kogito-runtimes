@@ -21,6 +21,7 @@ package org.kie.kogito.services.jobs.impl;
 import java.util.Optional;
 import java.util.Set;
 
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.Model;
 import org.kie.kogito.jobs.JobDescription;
 import org.kie.kogito.jobs.JobsService;
@@ -147,15 +148,14 @@ class StartProcessOnExpiredTimer implements Runnable {
     private final String id;
 
     private boolean removeAtExecution;
-    @SuppressWarnings("rawtypes")
-    private String processId;
+    private KogitoProcessId processId;
 
     private Integer limit;
 
     private JobsService jobService;
     private InMemoryJobContext jobsConfiguration;
 
-    public StartProcessOnExpiredTimer(JobsService jobService, InMemoryJobContext jobsConfiguration, String id, String processId, boolean removeAtExecution, Integer limit) {
+    public StartProcessOnExpiredTimer(JobsService jobService, InMemoryJobContext jobsConfiguration, String id, KogitoProcessId processId, boolean removeAtExecution, Integer limit) {
         this.id = id;
         this.processId = processId;
         this.removeAtExecution = removeAtExecution;

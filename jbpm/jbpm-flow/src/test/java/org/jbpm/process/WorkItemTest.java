@@ -46,6 +46,7 @@ import org.jbpm.workflow.core.node.StartNode;
 import org.jbpm.workflow.core.node.WorkItemNode;
 import org.jbpm.workflow.instance.WorkflowProcessInstance;
 import org.junit.jupiter.api.Test;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.definition.process.WorkflowElementIdentifier;
 import org.kie.kogito.internal.process.runtime.KogitoProcessInstance;
 import org.kie.kogito.internal.process.runtime.KogitoProcessRuntime;
@@ -79,7 +80,7 @@ public class WorkItemTest extends AbstractBaseTest {
                 new Person("John Doe"));
 
         KogitoProcessInstance processInstance = null;
-        processInstance = kruntime.startProcess("org.drools.actions", parameters);
+        processInstance = kruntime.startProcess(new KogitoProcessId("org.drools.actions"), parameters);
         assertThat(processInstance.getState()).isEqualTo(KogitoProcessInstance.STATE_ERROR);
     }
 
@@ -101,7 +102,7 @@ public class WorkItemTest extends AbstractBaseTest {
         parameters.put("Person",
                 new Person("John Doe"));
 
-        KogitoProcessInstance processInstance = kruntime.startProcess("org.drools.actions", parameters);
+        KogitoProcessInstance processInstance = kruntime.startProcess(new KogitoProcessId("org.drools.actions"), parameters);
         String processInstanceId = processInstance.getStringId();
         assertThat(processInstance.getState()).isEqualTo(KogitoProcessInstance.STATE_ACTIVE);
         kruntime.getKogitoWorkItemManager().registerWorkItemHandler(workName,
@@ -131,7 +132,7 @@ public class WorkItemTest extends AbstractBaseTest {
         parameters.put("Person",
                 new Person("John Doe"));
 
-        KogitoProcessInstance processInstance = kruntime.startProcess("org.drools.actions",
+        KogitoProcessInstance processInstance = kruntime.startProcess(new KogitoProcessId("org.drools.actions"),
                 parameters);
 
         Object numberVariable = ((WorkflowProcessInstance) processInstance).getVariable("MyObject");
@@ -167,7 +168,7 @@ public class WorkItemTest extends AbstractBaseTest {
         parameters.put("Person",
                 new Person("John Doe"));
 
-        KogitoProcessInstance processInstance = kruntime.startProcess("org.drools.actions",
+        KogitoProcessInstance processInstance = kruntime.startProcess(new KogitoProcessId("org.drools.actions"),
                 parameters);
 
         Object numberVariable = ((WorkflowProcessInstance) processInstance).getVariable("MyObject");
@@ -180,7 +181,7 @@ public class WorkItemTest extends AbstractBaseTest {
         parameters.put("Person",
                 new Person("John Deen"));
 
-        processInstance = kruntime.startProcess("org.drools.actions",
+        processInstance = kruntime.startProcess(new KogitoProcessId("org.drools.actions"),
                 parameters);
 
         numberVariable = ((WorkflowProcessInstance) processInstance).getVariable("MyObject");

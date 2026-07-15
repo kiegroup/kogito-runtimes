@@ -18,8 +18,6 @@
  */
 package org.jbpm.flow.migration;
 
-import java.util.Collections;
-
 import org.jbpm.ruleflow.instance.RuleFlowProcessInstance;
 import org.jbpm.workflow.instance.impl.ExtendedNodeInstanceImpl;
 import org.jbpm.workflow.instance.impl.WorkflowProcessInstanceImpl;
@@ -27,6 +25,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.process.Processes;
 import org.mockito.Mockito;
 
@@ -43,10 +42,10 @@ public class MigrationPlanServiceTest {
     @BeforeAll
     public void init() {
         processes = Mockito.mock(Processes.class);
-        when(processes.processIds()).thenReturn(Collections.singletonList("process_B"));
 
         processB = Mockito.mock(org.kie.kogito.process.Process.class);
-        when(processes.processById("process_B")).thenReturn(processB);
+        when(processes.stream()).thenAnswer(i -> java.util.stream.Stream.of(processB));
+        when(processes.processById(new KogitoProcessId("process_B", "2"))).thenReturn(processB);
         when(processB.id()).thenReturn("process_B");
         when(processB.version()).thenReturn("2");
     }

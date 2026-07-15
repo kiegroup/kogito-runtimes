@@ -26,13 +26,14 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.internal.SupportedExtensions;
 
 public final class SourceFilesProviderImpl implements SourceFilesProvider {
 
-    private final Map<String, Collection<SourceFile>> sourceFiles = new HashMap<>();
+    private final Map<KogitoProcessId, Collection<SourceFile>> sourceFiles = new HashMap<>();
 
-    public void addSourceFile(String id, SourceFile sourceFile) {
+    public void addSourceFile(KogitoProcessId id, SourceFile sourceFile) {
         sourceFiles.computeIfAbsent(id, k -> new HashSet<>()).add(sourceFile);
     }
 
@@ -45,12 +46,12 @@ public final class SourceFilesProviderImpl implements SourceFilesProvider {
     }
 
     @Override
-    public Collection<SourceFile> getProcessSourceFiles(String processId) {
+    public Collection<SourceFile> getProcessSourceFiles(KogitoProcessId processId) {
         return sourceFiles.getOrDefault(processId, Set.of());
     }
 
     @Override
-    public Optional<SourceFile> getProcessSourceFile(String processId) {
+    public Optional<SourceFile> getProcessSourceFile(KogitoProcessId processId) {
         return getProcessSourceFiles(processId).stream()
                 .filter(this::isValidDefinitionSource)
                 .findFirst();

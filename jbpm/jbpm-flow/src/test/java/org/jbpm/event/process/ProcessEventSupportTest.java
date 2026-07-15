@@ -37,6 +37,7 @@ import org.jbpm.workflow.core.node.EventNode;
 import org.jbpm.workflow.core.node.EventTrigger;
 import org.jbpm.workflow.core.node.StartNode;
 import org.junit.jupiter.api.Test;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.definition.process.WorkflowElementIdentifier;
 import org.kie.api.event.process.ProcessCompletedEvent;
 import org.kie.api.event.process.ProcessEvent;
@@ -141,7 +142,7 @@ public class ProcessEventSupportTest extends AbstractBaseTest {
         kruntime.getProcessEventManager().addEventListener(processEventListener);
 
         // execute the process
-        kruntime.startProcess("org.drools.core.process.event");
+        kruntime.startProcess(new KogitoProcessId("org.drools.core.process.event"));
         assertThat(processEventList).hasSize(16);
         assertThat(processEventList.get(0).getProcessInstance().getProcessId()).isEqualTo("org.drools.core.process.event");
         assertThat(((ProcessNodeTriggeredEvent) processEventList.get(1)).getNodeInstance().getNodeName()).isEqualTo("Start");
@@ -228,7 +229,7 @@ public class ProcessEventSupportTest extends AbstractBaseTest {
         kruntime.getProcessEventManager().addEventListener(processEventListener);
 
         // execute the process
-        kruntime.startProcess("org.drools.core.process.event");
+        kruntime.startProcess(new KogitoProcessId("org.drools.core.process.event"));
         assertThat(processEventStatusList).hasSize(2);
         assertThat(processEventStatusList.get(0)).isEqualTo(Integer.valueOf(KogitoProcessInstance.STATE_ACTIVE));
         assertThat(processEventStatusList.get(1)).isEqualTo(Integer.valueOf(KogitoProcessInstance.STATE_COMPLETED));
@@ -326,7 +327,7 @@ public class ProcessEventSupportTest extends AbstractBaseTest {
         kruntime.getProcessEventManager().addEventListener(processEventListener);
 
         // execute the process
-        KogitoProcessInstance pi = kruntime.startProcess("org.drools.core.process.event");
+        KogitoProcessInstance pi = kruntime.startProcess(new KogitoProcessId("org.drools.core.process.event"));
         pi.signalEvent("signal", null);
         assertThat(processEventList).hasSize(20);
         assertThat(processEventList.get(0).getProcessInstance().getProcessId()).isEqualTo("org.drools.core.process.event");
@@ -431,7 +432,7 @@ public class ProcessEventSupportTest extends AbstractBaseTest {
         kruntime.getProcessEventManager().addEventListener(processEventListener);
 
         // execute the process
-        kruntime.startProcess("org.drools.core.process.event");
+        kruntime.startProcess(new KogitoProcessId("org.drools.core.process.event"));
         assertThat(processEventList).hasSize(14);
         assertThat(processEventList.get(0).getProcessInstance().getProcessId()).isEqualTo("org.drools.core.process.event");
         assertThat(((ProcessNodeTriggeredEvent) processEventList.get(1)).getNodeInstance().getNodeName()).isEqualTo("Start");

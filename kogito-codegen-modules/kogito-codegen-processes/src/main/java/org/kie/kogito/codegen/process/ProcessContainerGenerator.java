@@ -19,10 +19,8 @@
 package org.kie.kogito.codegen.process;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.kie.kogito.codegen.api.context.KogitoBuildContext;
 import org.kie.kogito.codegen.api.template.InvalidTemplateException;
@@ -30,31 +28,17 @@ import org.kie.kogito.codegen.api.template.TemplatedGenerator;
 import org.kie.kogito.codegen.core.AbstractApplicationSection;
 
 import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.NodeList;
-import com.github.javaparser.ast.body.MethodDeclaration;
-import com.github.javaparser.ast.body.Parameter;
-import com.github.javaparser.ast.expr.Expression;
-import com.github.javaparser.ast.expr.LambdaExpr;
+import com.github.javaparser.ast.body.ConstructorDeclaration;
 import com.github.javaparser.ast.expr.MethodCallExpr;
-import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.NullLiteralExpr;
 import com.github.javaparser.ast.expr.ObjectCreationExpr;
-import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
-import com.github.javaparser.ast.stmt.IfStmt;
-import com.github.javaparser.ast.stmt.ReturnStmt;
-import com.github.javaparser.ast.type.UnknownType;
-
-import static com.github.javaparser.ast.NodeList.nodeList;
 
 public class ProcessContainerGenerator extends AbstractApplicationSection {
 
     public static final String SECTION_CLASS_NAME = "Processes";
 
     private final List<ProcessGenerator> processes;
-
-    private BlockStmt byProcessIdBody = new BlockStmt();
-    private BlockStmt processesBody = new BlockStmt();
     private final TemplatedGenerator templatedGenerator;
 
     public ProcessContainerGenerator(KogitoBuildContext context) {
@@ -67,64 +51,30 @@ public class ProcessContainerGenerator extends AbstractApplicationSection {
 
     public void addProcess(ProcessGenerator p) {
         processes.add(p);
-        addProcessToApplication(p);
     }
 
     public List<ProcessGenerator> getProcesses() {
         return Collections.unmodifiableList(this.processes);
     }
 
-    public void addProcessToApplication(ProcessGenerator r) {
-        ObjectCreationExpr newProcess = new ObjectCreationExpr()
-                .setType(r.targetCanonicalName())
-                .addArgument("application")
-                .addArgument(new NullLiteralExpr());
-        MethodCallExpr expr = new MethodCallExpr(newProcess, "configure");
-        MethodCallExpr method = new MethodCallExpr(new NameExpr("mappedProcesses"), "computeIfAbsent",
-                nodeList(new StringLiteralExpr(r.processId()),
-                        new LambdaExpr(new Parameter(new UnknownType(), "k"), expr)));
-        IfStmt byProcessId = new IfStmt(new MethodCallExpr(new StringLiteralExpr(r.processId()), "equals", nodeList(new NameExpr("processId"))),
-                new ReturnStmt(method),
-                null);
-
-        byProcessIdBody.addStatement(byProcessId);
-    }
-
     @Override
     public CompilationUnit compilationUnit() {
         CompilationUnit compilationUnit = templatedGenerator.compilationUnitOrThrow("Invalid Template: No CompilationUnit");
-
-        registerProcessesExplicitly(compilationUnit);
+        if (!context.hasDI()) {
+            BlockStmt body = compilationUnit.findFirst(ConstructorDeclaration.class).map(ConstructorDeclaration::getBody)
+                    .orElseThrow(() -> new InvalidTemplateException(
+                            templatedGenerator,
+                            "Cannot find consctructor method body"));
+            for (ProcessGenerator process : processes) {
+                ObjectCreationExpr newProcess = new ObjectCreationExpr()
+                        .setType(process.targetCanonicalName())
+                        .addArgument("application")
+                        .addArgument(new NullLiteralExpr());
+                MethodCallExpr method = new MethodCallExpr(null, "registerProcess").addArgument(new MethodCallExpr(newProcess, "configure"));
+                body.addStatement(method);
+            }
+        }
         return compilationUnit;
     }
 
-    private void registerProcessesExplicitly(CompilationUnit compilationUnit) {
-        // only for non-DI cases
-        if (!context.hasDI()) {
-            setupProcessById(compilationUnit);
-            setupProcessIds(compilationUnit);
-        }
-    }
-
-    private void setupProcessIds(CompilationUnit compilationUnit) {
-        NodeList<Expression> processIds = nodeList(processes.stream().map(p -> new StringLiteralExpr(p.processId())).collect(Collectors.toList()));
-        processesBody
-                .addStatement(new ReturnStmt(new MethodCallExpr(new NameExpr(Arrays.class.getCanonicalName()), "asList", processIds)));
-
-        compilationUnit.findFirst(MethodDeclaration.class, m -> m.getNameAsString().equals("processIds"))
-                .orElseThrow(() -> new InvalidTemplateException(
-                        templatedGenerator,
-                        "Cannot find 'processIds' method body"))
-                .setBody(this.processesBody);
-    }
-
-    private void setupProcessById(CompilationUnit compilationUnit) {
-        byProcessIdBody
-                .addStatement(new ReturnStmt(new NullLiteralExpr()));
-        compilationUnit.findFirst(MethodDeclaration.class, m -> m.getNameAsString().equals("processById"))
-                .orElseThrow(() -> new InvalidTemplateException(
-                        templatedGenerator,
-                        "Cannot find 'processById' method body"))
-                .setBody(this.byProcessIdBody);
-    }
 }
