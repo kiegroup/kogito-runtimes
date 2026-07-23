@@ -32,6 +32,7 @@ import org.jbpm.ruleflow.core.factory.SplitFactory;
 import org.jbpm.ruleflow.core.factory.SubProcessNodeFactory;
 import org.jbpm.ruleflow.core.factory.TimerNodeFactory;
 import org.jbpm.workflow.core.node.Join;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.serverless.workflow.SWFConstants;
 import org.kie.kogito.serverless.workflow.parser.FunctionNamespaceFactory;
 import org.kie.kogito.serverless.workflow.parser.FunctionTypeHandlerFactory;
@@ -186,7 +187,7 @@ public abstract class CompositeContextNodeHandler<S extends State> extends State
             String inputVar,
             String outputVar) {
         SubProcessNodeFactory<?> subProcessNode = subprocessNode(
-                factory.subProcessNode(parserContext.newId()).name(subFlowRef.getWorkflowId()).processId(subFlowRef.getWorkflowId()).waitForCompletion(true),
+                factory.subProcessNode(parserContext.newId()).name(subFlowRef.getWorkflowId()).processId(subFlowRef.getWorkflowId(),subFlowRef.getVersion()).waitForCompletion(true),
                 inputVar,
                 outputVar);
         VariablesHelper.getEvalVariables(factory.getNode()).forEach(v -> subProcessNode.inMapping(v.getName(), v.getName()));
