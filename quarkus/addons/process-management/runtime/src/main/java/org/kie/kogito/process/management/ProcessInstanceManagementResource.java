@@ -133,7 +133,8 @@ public class ProcessInstanceManagementResource extends BaseProcessInstanceManage
     @POST
     @Path("{processId}/{version}/instances/{processInstanceId}/nodes/{nodeId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response triggerNodeInstanceId(@PathParam("processId") String processId, @PathParam("version") String version, @PathParam("processInstanceId") String processInstanceId, @PathParam("nodeId") String nodeId) {
+    public Response triggerNodeInstanceId(@PathParam("processId") String processId, @PathParam("version") String version, @PathParam("processInstanceId") String processInstanceId,
+            @PathParam("nodeId") String nodeId) {
         return doTriggerNodeInstanceId(processId, version, processInstanceId, nodeId);
     }
 
@@ -141,7 +142,8 @@ public class ProcessInstanceManagementResource extends BaseProcessInstanceManage
     @POST
     @Path("{processId}/{version}/instances/{processInstanceId}/nodeInstances/{nodeInstanceId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retriggerNodeInstanceId(@PathParam("processId") String processId, @PathParam("version") String version, @PathParam("processInstanceId") String processInstanceId, @PathParam("nodeInstanceId") String nodeInstanceId) {
+    public Response retriggerNodeInstanceId(@PathParam("processId") String processId, @PathParam("version") String version, @PathParam("processInstanceId") String processInstanceId,
+            @PathParam("nodeInstanceId") String nodeInstanceId) {
         return doRetriggerNodeInstanceId(processId, version, processInstanceId, nodeInstanceId);
     }
 
@@ -149,7 +151,8 @@ public class ProcessInstanceManagementResource extends BaseProcessInstanceManage
     @DELETE
     @Path("{processId}/{version}/instances/{processInstanceId}/nodeInstances/{nodeInstanceId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response cancelNodeInstanceId(@PathParam("processId") String processId, @PathParam("version") String version, @PathParam("processInstanceId") String processInstanceId, @PathParam("nodeInstanceId") String nodeInstanceId) {
+    public Response cancelNodeInstanceId(@PathParam("processId") String processId, @PathParam("version") String version, @PathParam("processInstanceId") String processInstanceId,
+            @PathParam("nodeInstanceId") String nodeInstanceId) {
         return doCancelNodeInstanceId(processId, version, processInstanceId, nodeInstanceId);
     }
 
@@ -157,7 +160,8 @@ public class ProcessInstanceManagementResource extends BaseProcessInstanceManage
     @GET
     @Path("{processId}/{version}/instances/{processInstanceId}/nodeInstances/{nodeInstanceId}/timers")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getNodeInstanceTimers(@PathParam("processId") String processId, @PathParam("version") String version, @PathParam("processInstanceId") String processInstanceId, @PathParam("nodeInstanceId") String nodeInstanceId) {
+    public Response getNodeInstanceTimers(@PathParam("processId") String processId, @PathParam("version") String version, @PathParam("processInstanceId") String processInstanceId,
+            @PathParam("nodeInstanceId") String nodeInstanceId) {
         return doGetNodeInstanceTimers(processId, version, processInstanceId, nodeInstanceId);
     }
 
@@ -173,7 +177,8 @@ public class ProcessInstanceManagementResource extends BaseProcessInstanceManage
     @PATCH
     @Path("{processId}/{version}/instances/{processInstanceId}/nodeInstances/{nodeInstanceId}/sla")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateNodeInstanceSla(@PathParam("processId") String processId, @PathParam("version") String version, @PathParam("processInstanceId") String processInstanceId, @PathParam("nodeInstanceId") String nodeInstanceId,
+    public Response updateNodeInstanceSla(@PathParam("processId") String processId, @PathParam("version") String version, @PathParam("processInstanceId") String processInstanceId,
+            @PathParam("nodeInstanceId") String nodeInstanceId,
             SlaPayload slaPayload) {
         return doUpdateNodeInstanceSla(processId, version, processInstanceId, nodeInstanceId, slaPayload);
     }
@@ -182,10 +187,11 @@ public class ProcessInstanceManagementResource extends BaseProcessInstanceManage
     @PATCH
     @Path("{processId}/{version}/instances/{processInstanceId}/sla")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateProcessInstanceSla(@PathParam("processId") String processId, @PathParam("version") String version, @PathParam("processInstanceId") String processInstanceId, SlaPayload slaPayload) {
+    public Response updateProcessInstanceSla(@PathParam("processId") String processId, @PathParam("version") String version, @PathParam("processInstanceId") String processInstanceId,
+            SlaPayload slaPayload) {
         return doUpdateProcessInstanceSla(processId, version, processInstanceId, slaPayload);
     }
-    
+
     @Override
     @GET
     @Path("/{processId}")
@@ -298,6 +304,5 @@ public class ProcessInstanceManagementResource extends BaseProcessInstanceManage
     public Response updateProcessInstanceSla(@PathParam("processId") String processId, @PathParam("processInstanceId") String processInstanceId, SlaPayload slaPayload) {
         return doUpdateProcessInstanceSla(processId, null, processInstanceId, slaPayload);
     }
-
 
 }
