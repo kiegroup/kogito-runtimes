@@ -22,17 +22,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.codegen.api.context.KogitoBuildContext;
-import org.kie.kogito.codegen.api.template.InvalidTemplateException;
 import org.kie.kogito.codegen.api.template.TemplatedGenerator;
 import org.kie.kogito.codegen.core.AbstractApplicationSection;
 
 import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.body.ConstructorDeclaration;
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.body.Parameter;
+import com.github.javaparser.ast.expr.LambdaExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
+import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.NullLiteralExpr;
 import com.github.javaparser.ast.expr.ObjectCreationExpr;
+import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
+import com.github.javaparser.ast.type.UnknownType;
 
 public class ProcessContainerGenerator extends AbstractApplicationSection {
 
@@ -61,17 +66,18 @@ public class ProcessContainerGenerator extends AbstractApplicationSection {
     public CompilationUnit compilationUnit() {
         CompilationUnit compilationUnit = templatedGenerator.compilationUnitOrThrow("Invalid Template: No CompilationUnit");
         if (!context.hasDI()) {
-            BlockStmt body = compilationUnit.findFirst(ConstructorDeclaration.class).map(ConstructorDeclaration::getBody)
-                    .orElseThrow(() -> new InvalidTemplateException(
-                            templatedGenerator,
-                            "Cannot find consctructor method body"));
+            BlockStmt body = new BlockStmt();
+            ClassOrInterfaceDeclaration clazz = compilationUnit.findFirst(ClassOrInterfaceDeclaration.class).orElseThrow();
+            clazz.addMethod("registerProcesses").setBody(body).setName("registerProcesses").setPrivate(true);
             for (ProcessGenerator process : processes) {
-                ObjectCreationExpr newProcess = new ObjectCreationExpr()
+                MethodCallExpr newProcess = new MethodCallExpr(new ObjectCreationExpr()
                         .setType(process.targetCanonicalName())
                         .addArgument("application")
-                        .addArgument(new NullLiteralExpr());
-                MethodCallExpr method = new MethodCallExpr(null, "registerProcess").addArgument(new MethodCallExpr(newProcess, "configure"));
-                body.addStatement(method);
+                        .addArgument(new NullLiteralExpr()), "configure");
+                body.addStatement(new MethodCallExpr(new NameExpr("mappedProcesses"), "computeIfAbsent").addArgument(
+                        new ObjectCreationExpr().setType(KogitoProcessId.class).addArgument(new StringLiteralExpr(process.processId()))
+                                .addArgument(new StringLiteralExpr(process.getProcess().getVersion())))
+                        .addArgument(new LambdaExpr(new Parameter(new UnknownType(), "k"), newProcess)));
             }
         }
         return compilationUnit;

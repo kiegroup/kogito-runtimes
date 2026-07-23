@@ -313,7 +313,7 @@ public class ServerlessWorkflowIT extends AbstractCodegenIT {
         Application app = generateCodeProcessesOnly("serverless/single-subflow.sw.json", "serverless/called-subflow.sw.json");
         assertThat(app).isNotNull();
 
-        Process<? extends Model> p = app.get(Processes.class).processById(new KogitoProcessId("singlesubflow"));
+        Process<? extends Model> p = app.get(Processes.class).processById(new KogitoProcessId("singlesubflow", "1.0"));
 
         Model m = p.createModel();
         Map<String, Object> parameters = new HashMap<>();
@@ -351,7 +351,7 @@ public class ServerlessWorkflowIT extends AbstractCodegenIT {
         Application app = generateCodeProcessesOnly(processLocation);
         assertThat(app).isNotNull();
 
-        Process<? extends Model> p = app.get(Processes.class).processById(new KogitoProcessId("prchecker"));
+        Process<? extends Model> p = app.get(Processes.class).processById(new KogitoProcessId("prchecker", "1.0"));
 
         Model m = p.createModel();
         Map<String, Object> parameters = new HashMap<>();

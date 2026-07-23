@@ -19,7 +19,6 @@
 package org.jbpm.process.instance;
 
 import org.drools.core.common.InternalKnowledgeRuntime;
-import org.drools.core.common.InternalWorkingMemory;
 import org.kie.api.runtime.process.ProcessRuntime;
 import org.kie.kogito.Application;
 import org.kie.kogito.internal.process.event.KogitoProcessEventSupport;
@@ -45,13 +44,15 @@ public interface InternalProcessRuntime extends org.drools.core.runtime.process.
     Application getApplication();
 
     static KogitoProcessRuntime asKogitoProcessRuntime(ProcessRuntime kogitoProcessRuntimeProvider) {
-        if (kogitoProcessRuntimeProvider instanceof KogitoProcessRuntime) {
-            return (KogitoProcessRuntime) kogitoProcessRuntimeProvider;
+        if (kogitoProcessRuntimeProvider instanceof InternalKnowledgeRuntime provider) {
+            kogitoProcessRuntimeProvider = provider.getProcessRuntime();
         }
-        if (kogitoProcessRuntimeProvider instanceof KogitoProcessRuntime.Provider) {
-            return ((KogitoProcessRuntime.Provider) kogitoProcessRuntimeProvider).getKogitoProcessRuntime();
+        if (kogitoProcessRuntimeProvider instanceof KogitoProcessRuntime provider) {
+            return provider;
         }
-        // this line is used only for legacy tests
-        return ((KogitoProcessRuntime.Provider) ((InternalWorkingMemory) kogitoProcessRuntimeProvider).getProcessRuntime()).getKogitoProcessRuntime();
+        if (kogitoProcessRuntimeProvider instanceof KogitoProcessRuntime.Provider provider) {
+            return provider.getKogitoProcessRuntime();
+        }
+        throw new IllegalStateException("Cannot connvert process runtime " + kogitoProcessRuntimeProvider + " to KogitoProcessRuntime");
     }
 }
