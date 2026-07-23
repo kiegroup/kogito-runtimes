@@ -20,7 +20,7 @@ package org.kie.kogito.process.management;
 
 public interface ProcessInstanceManagement<T> {
 
-    T getProcesses();
+    T getProcesses(boolean includeVersion);
 
     T getProcessInfo(String processId);
 
@@ -49,7 +49,7 @@ public interface ProcessInstanceManagement<T> {
     T updateNodeInstanceSla(String processId, String processInstanceId, String nodeInstanceId, SlaPayload SLAPayload);
 
     T updateProcessInstanceSla(String processId, String processInstanceId, SlaPayload SLAPayload);
-    
+
     T getProcessInfo(String processId, String version);
 
     T getProcessNodes(String processId, String version);
@@ -77,6 +77,5 @@ public interface ProcessInstanceManagement<T> {
     T updateNodeInstanceSla(String processId, String version, String processInstanceId, String nodeInstanceId, SlaPayload SLAPayload);
 
     T updateProcessInstanceSla(String processId, String version, String processInstanceId, SlaPayload SLAPayload);
-
 
 }

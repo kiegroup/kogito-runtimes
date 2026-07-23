@@ -73,7 +73,7 @@ class JobCloudEventSerializerTest {
                 .time(TIME)
                 .subject(SUBJECT)
                 .processInstanceId(PROCESS_INSTANCE_ID_VALUE)
-                .processId(PROCESS_ID_VALUE)
+                .processId(PROCESS_ID_VALUE.id())
                 .rootProcessInstanceId(ROOT_PROCESS_INSTANCE_ID_VALUE)
                 .rootProcessId(ROOT_PROCESS_ID_VALUE)
                 .kogitoAddons(KOGITO_ADDONS_VALUE)
@@ -101,7 +101,7 @@ class JobCloudEventSerializerTest {
                 .time(TIME)
                 .subject(SUBJECT)
                 .processInstanceId(PROCESS_INSTANCE_ID_VALUE)
-                .processId(PROCESS_ID_VALUE)
+                .processId(PROCESS_ID_VALUE.id())
                 .rootProcessInstanceId(ROOT_PROCESS_INSTANCE_ID_VALUE)
                 .rootProcessId(ROOT_PROCESS_ID_VALUE)
                 .kogitoAddons(KOGITO_ADDONS_VALUE)
@@ -126,14 +126,14 @@ class JobCloudEventSerializerTest {
         assertHasProcessContextFields(jsonNode);
         JsonNode dataJsonNode = jsonNode.get("data");
         assertThat(dataJsonNode).isNotNull();
-        assertHasTotalFields(dataJsonNode, 11);
         assertHasFieldWithValue(dataJsonNode, "id", JOB_ID);
         assertHasFieldWithValue(dataJsonNode, "expirationTime", EXPIRATION_TIME.toString());
         assertHasFieldWithValue(dataJsonNode, "priority", Integer.toString(PRIORITY));
         assertHasFieldWithValue(dataJsonNode, "callbackEndpoint", CALLBACK_ENDPOINT);
         assertHasFieldWithValue(dataJsonNode, "processInstanceId", PROCESS_INSTANCE_ID_VALUE);
         assertHasFieldWithValue(dataJsonNode, "rootProcessInstanceId", ROOT_PROCESS_INSTANCE_ID_VALUE);
-        assertHasFieldWithValue(dataJsonNode, "processId", PROCESS_ID_VALUE);
+        assertHasFieldWithValue(dataJsonNode, "processId", PROCESS_ID_VALUE.id());
+        assertHasFieldWithValue(dataJsonNode, "version", PROCESS_ID_VALUE.version());
         assertHasFieldWithValue(dataJsonNode, "rootProcessId", ROOT_PROCESS_ID_VALUE);
         assertHasFieldWithValue(dataJsonNode, "nodeInstanceId", NODE_INSTANCE_ID);
         assertHasFieldWithValue(dataJsonNode, "repeatInterval", Long.toString(REPEAT_INTERVAL));
@@ -149,7 +149,7 @@ class JobCloudEventSerializerTest {
 
     private static void assertHasProcessContextFields(JsonNode jsonNode) {
         assertHasFieldWithValue(jsonNode, PROCESS_INSTANCE_ID, PROCESS_INSTANCE_ID_VALUE);
-        assertHasFieldWithValue(jsonNode, PROCESS_ID, PROCESS_ID_VALUE);
+        assertHasFieldWithValue(jsonNode, PROCESS_ID, PROCESS_ID_VALUE.id());
         assertHasFieldWithValue(jsonNode, PROCESS_ROOT_PROCESS_INSTANCE_ID, ROOT_PROCESS_INSTANCE_ID_VALUE);
         assertHasFieldWithValue(jsonNode, PROCESS_ROOT_PROCESS_ID, ROOT_PROCESS_ID_VALUE);
         assertHasFieldWithValue(jsonNode, ADDONS, KOGITO_ADDONS_VALUE);

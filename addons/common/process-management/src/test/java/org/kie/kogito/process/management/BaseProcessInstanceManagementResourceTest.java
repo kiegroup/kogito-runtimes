@@ -33,6 +33,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.Application;
+import org.kie.kogito.Model;
 import org.kie.kogito.process.ProcessError;
 import org.kie.kogito.process.ProcessInstance;
 import org.kie.kogito.process.ProcessInstances;
@@ -104,14 +105,18 @@ class BaseProcessInstanceManagementResourceTest {
 
     @BeforeEach
     void setUp() {
+
         lenient().when(node.getId()).thenReturn(WorkflowElementIdentifierFactory.fromExternalFormat("one"));
         lenient().when(node.getName()).thenReturn("node");
         lenient().when(node.getUniqueId()).thenReturn(NODE_ID);
         lenient().when(node.getMetaData()).thenReturn(singletonMap(UNIQUE_ID, NODE_UNIQUE_ID));
         lenient().when(workflowProcess.getNodesRecursively()).thenReturn(singletonList(node));
+        List<org.kie.kogito.process.Process<? extends Model>> list = List.of(process);
         lenient().when(process.get()).thenReturn(workflowProcess);
         lenient().when(process.id()).thenReturn(PROCESS_ID);
         lenient().when(processes.processById(any())).thenReturn(process);
+        lenient().when(processes.iterator()).thenReturn(list.iterator());
+        lenient().when(processes.stream()).thenReturn(list.stream());
         lenient().when(process.instances()).thenReturn(instances);
         lenient().when(process.name()).thenReturn("Javierito");
         lenient().when(process.version()).thenReturn("1_0");
@@ -204,7 +209,7 @@ class BaseProcessInstanceManagementResourceTest {
             }
 
             @Override
-            public Object getProcesses() {
+            public Object getProcesses(boolean includeVersion) {
                 return null;
             }
 
@@ -223,87 +228,87 @@ class BaseProcessInstanceManagementResourceTest {
                 return null;
             }
 
-			@Override
-			public Object getProcessInfo(String processId, String version) {
-				return null;
-			}
+            @Override
+            public Object getProcessInfo(String processId, String version) {
+                return null;
+            }
 
-			@Override
-			public Object getProcessNodes(String processId, String version) {
-				return null;
-			}
+            @Override
+            public Object getProcessNodes(String processId, String version) {
+                return null;
+            }
 
-			@Override
-			public Object getInstanceInError(String processId, String version, String processInstanceId) {
-				return null;
-			}
+            @Override
+            public Object getInstanceInError(String processId, String version, String processInstanceId) {
+                return null;
+            }
 
-			@Override
-			public Object getWorkItemsInProcessInstance(String processId, String version, String processInstanceId) {
-				return null;
-			}
+            @Override
+            public Object getWorkItemsInProcessInstance(String processId, String version, String processInstanceId) {
+                return null;
+            }
 
-			@Override
-			public Object getProcessInstanceTimers(String processId, String version, String processInstanceId) {
-				return null;
-			}
+            @Override
+            public Object getProcessInstanceTimers(String processId, String version, String processInstanceId) {
+                return null;
+            }
 
-			@Override
-			public Object retriggerInstanceInError(String processId, String version, String processInstanceId) {
-				return null;
-			}
+            @Override
+            public Object retriggerInstanceInError(String processId, String version, String processInstanceId) {
+                return null;
+            }
 
-			@Override
-			public Object skipInstanceInError(String processId, String version, String processInstanceId) {
-				return null;
-			}
+            @Override
+            public Object skipInstanceInError(String processId, String version, String processInstanceId) {
+                return null;
+            }
 
-			@Override
-			public Object triggerNodeInstanceId(String processId, String version, String processInstanceId,
-					String nodeId) {
-				return null;
-			}
+            @Override
+            public Object triggerNodeInstanceId(String processId, String version, String processInstanceId,
+                    String nodeId) {
+                return null;
+            }
 
-			@Override
-			public Object retriggerNodeInstanceId(String processId, String version, String processInstanceId,
-					String nodeInstanceId) {
-				return null;
-			}
+            @Override
+            public Object retriggerNodeInstanceId(String processId, String version, String processInstanceId,
+                    String nodeInstanceId) {
+                return null;
+            }
 
-			@Override
-			public Object cancelNodeInstanceId(String processId, String version, String processInstanceId,
-					String nodeInstanceId) {
-				return null;
-			}
+            @Override
+            public Object cancelNodeInstanceId(String processId, String version, String processInstanceId,
+                    String nodeInstanceId) {
+                return null;
+            }
 
-			@Override
-			public Object getNodeInstanceTimers(String processId, String version, String processInstanceId,
-					String nodeInstanceId) {
-				return null;
-			}
+            @Override
+            public Object getNodeInstanceTimers(String processId, String version, String processInstanceId,
+                    String nodeInstanceId) {
+                return null;
+            }
 
-			@Override
-			public Object cancelProcessInstanceId(String processId, String version, String processInstanceId) {
-				return null;
-			}
+            @Override
+            public Object cancelProcessInstanceId(String processId, String version, String processInstanceId) {
+                return null;
+            }
 
-			@Override
-			public Object updateNodeInstanceSla(String processId, String version, String processInstanceId,
-					String nodeInstanceId, SlaPayload SLAPayload) {
-				return null;
-			}
+            @Override
+            public Object updateNodeInstanceSla(String processId, String version, String processInstanceId,
+                    String nodeInstanceId, SlaPayload SLAPayload) {
+                return null;
+            }
 
-			@Override
-			public Object updateProcessInstanceSla(String processId, String version, String processInstanceId,
-					SlaPayload SLAPayload) {
-				return null;
-			}
+            @Override
+            public Object updateProcessInstanceSla(String processId, String version, String processInstanceId,
+                    SlaPayload SLAPayload) {
+                return null;
+            }
         });
     }
 
     @Test
     void testDoGetProcessess() {
-        assertThat(tested.doGetProcesses()).isInstanceOf(List.class).asList().hasSize(1);
+        assertThat(tested.doGetProcesses(true)).isInstanceOf(List.class).asList().hasSize(1);
     }
 
     @Test

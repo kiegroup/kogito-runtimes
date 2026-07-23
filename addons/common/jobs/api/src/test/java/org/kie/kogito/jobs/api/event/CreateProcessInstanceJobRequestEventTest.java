@@ -49,7 +49,7 @@ class CreateProcessInstanceJobRequestEventTest extends AbstractProcessInstanceCo
                 .dataContentType(DATA_CONTENT_TYPE)
                 .dataSchema(DATA_SCHEMA)
                 .processInstanceId(PROCESS_INSTANCE_ID)
-                .processId(PROCESS_ID)
+                .processId(PROCESS_ID.id())
                 .rootProcessInstanceId(ROOT_PROCESS_INSTANCE_ID)
                 .rootProcessId(ROOT_PROCESS_ID)
                 .kogitoAddons(ADDONS)

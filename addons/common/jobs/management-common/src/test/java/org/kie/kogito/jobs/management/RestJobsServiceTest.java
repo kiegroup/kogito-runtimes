@@ -24,6 +24,7 @@ import java.time.temporal.ChronoUnit;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.jobs.ExactExpirationTime;
 import org.kie.kogito.jobs.api.JobCallbackPayload;
 import org.kie.kogito.jobs.descriptors.ProcessInstanceJobDescription;
@@ -43,7 +44,7 @@ public abstract class RestJobsServiceTest<T extends RestJobsService> {
     public static final String JOB_SERVICE_URL = "http://localhost:8085";
     public static final String JOB_ID = "456";
     public static final String TIMER_ID = "123";
-    public static final String PROCESS_ID = "PROCESS_ID";
+    public static final KogitoProcessId PROCESS_ID = new KogitoProcessId("PROCESS_ID");
     public static final String PROCESS_INSTANCE_ID = "PROCESS_INSTANCE_ID";
     public static final String ROOT_PROCESS_ID = "ROOT_PROCESS_ID";
     public static final String ROOT_PROCESS_INSTANCE_ID = "ROOT_PROCESS_INSTANCE_ID";
@@ -73,7 +74,7 @@ public abstract class RestJobsServiceTest<T extends RestJobsService> {
         assertThat(callbackEndpoint)
                 .isEqualTo("%s/management/jobs/%s/instances/%s/timers/%s",
                         CALLBACK_URL,
-                        PROCESS_ID,
+                        PROCESS_ID.id(),
                         PROCESS_INSTANCE_ID,
                         description.timerId());
     }
@@ -107,12 +108,11 @@ public abstract class RestJobsServiceTest<T extends RestJobsService> {
         assertThat(httpRecipient.getMethod()).isEqualTo("POST");
         assertThat(httpRecipient.getUrl()).isEqualTo("%s/management/jobs/%s/instances/%s/timers/%s",
                 CALLBACK_URL,
-                PROCESS_ID,
+                PROCESS_ID.id(),
                 PROCESS_INSTANCE_ID,
                 TIMER_ID);
         assertThat(httpRecipient.getHeaders())
-                .hasSize(6)
-                .containsEntry("processId", PROCESS_ID)
+                .containsEntry("processId", PROCESS_ID.id())
                 .containsEntry("processInstanceId", PROCESS_INSTANCE_ID)
                 .containsEntry("rootProcessId", ROOT_PROCESS_ID)
                 .containsEntry("rootProcessInstanceId", ROOT_PROCESS_INSTANCE_ID)

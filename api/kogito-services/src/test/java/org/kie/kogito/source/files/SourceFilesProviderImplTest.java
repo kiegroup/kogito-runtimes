@@ -44,8 +44,8 @@ class SourceFilesProviderImplTest {
 
     @Test
     void getSourceFilesByProcessId() {
-        KogitoProcessId id = new KogitoProcessId("a_process");
-        KogitoProcessId anotherId = new KogitoProcessId("a_process", "1.0.0");
+        KogitoProcessId id = new KogitoProcessId("a_process", "1.0.0");
+        KogitoProcessId anotherId = new KogitoProcessId("another_process", "1.0.0");
         sourceFilesProvider.addSourceFile(id, new SourceFile("myworkflow.sw.json"));
         sourceFilesProvider.addSourceFile(id, new SourceFile("myworkflow.sw.yaml"));
 

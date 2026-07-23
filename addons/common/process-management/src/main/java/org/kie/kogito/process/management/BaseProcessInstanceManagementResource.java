@@ -28,6 +28,7 @@ import org.jbpm.workflow.core.Node;
 import org.jbpm.workflow.core.WorkflowProcess;
 import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.Application;
+import org.kie.kogito.Model;
 import org.kie.kogito.internal.process.runtime.KogitoNodeInstance;
 import org.kie.kogito.internal.process.runtime.KogitoWorkflowProcess;
 import org.kie.kogito.process.Process;
@@ -62,8 +63,9 @@ public abstract class BaseProcessInstanceManagementResource<T> implements Proces
         this.application = application;
     }
 
-    public T doGetProcesses() {
-        return buildOkResponse(processes.get().stream().map(Process::id));
+    public T doGetProcesses(boolean includeVersion) {
+        Function<Process<? extends Model>, Object> function = includeVersion ? Process::processId : Process::id;
+        return buildOkResponse(processes.get().stream().map(function).toList());
     }
 
     public T doGetProcessInfo(String processId, String version) {
@@ -237,7 +239,7 @@ public abstract class BaseProcessInstanceManagementResource<T> implements Proces
             return badRequestResponse(PROCESS_AND_INSTANCE_REQUIRED);
         }
 
-        Process<?> process = processes.get().processById(new KogitoProcessId(processId,version));
+        Process<?> process = processes.get().processById(new KogitoProcessId(processId, version));
         if (process == null) {
             return notFoundResponse(String.format(PROCESS_NOT_FOUND, processId));
         }

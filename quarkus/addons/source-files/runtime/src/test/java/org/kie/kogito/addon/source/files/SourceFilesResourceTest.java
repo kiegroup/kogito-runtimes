@@ -37,8 +37,8 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class SourceFilesResourceTest {
-    private static final KogitoProcessId PROCESS_ID = new KogitoProcessId("processId","1.0.0");
-    
+    private static final KogitoProcessId PROCESS_ID = new KogitoProcessId("processId", "1.0.0");
+
     private SourceFilesResource sourceFilesTestResource;
 
     @Mock

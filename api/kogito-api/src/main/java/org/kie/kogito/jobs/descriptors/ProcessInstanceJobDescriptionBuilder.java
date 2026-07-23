@@ -20,6 +20,7 @@ package org.kie.kogito.jobs.descriptors;
 
 import java.util.UUID;
 
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.jobs.ExpirationTime;
 
 public class ProcessInstanceJobDescriptionBuilder {
@@ -30,7 +31,7 @@ public class ProcessInstanceJobDescriptionBuilder {
     private Integer priority = ProcessInstanceJobDescription.DEFAULT_PRIORITY;
     private String processInstanceId;
     private String rootProcessInstanceId;
-    private String processId;
+    private KogitoProcessId processId;
     private String rootProcessId;
     private String nodeInstanceId;
 
@@ -68,7 +69,7 @@ public class ProcessInstanceJobDescriptionBuilder {
         return this;
     }
 
-    public ProcessInstanceJobDescriptionBuilder processId(String processId) {
+    public ProcessInstanceJobDescriptionBuilder processId(KogitoProcessId processId) {
         this.processId = processId;
         return this;
     }

@@ -37,6 +37,7 @@ public class JobCloudEventSerializer {
     public static final ObjectMapper DEFAULT_OBJECT_MAPPER = new ObjectMapper()
             .registerModule(new JavaTimeModule())
             .registerModule(JsonFormat.getCloudEventJacksonModule())
+            .registerModule(new JobJacksonModule())
             .disable(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
     private final ObjectMapper objectMapper;

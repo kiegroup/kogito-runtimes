@@ -18,6 +18,7 @@
  */
 package org.kie.kogito.jobs.descriptors;
 
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.jobs.ExpirationTime;
 import org.kie.kogito.jobs.JobDescription;
 
@@ -33,7 +34,7 @@ public class ProcessInstanceJobDescription implements JobDescription {
     private final Integer priority;
     private final String processInstanceId;
     private final String rootProcessInstanceId;
-    private final String processId;
+    private final KogitoProcessId processId;
     private final String rootProcessId;
     private final String nodeInstanceId;
 
@@ -43,7 +44,7 @@ public class ProcessInstanceJobDescription implements JobDescription {
             Integer priority,
             String processInstanceId,
             String rootProcessInstanceId,
-            String processId,
+            KogitoProcessId processId,
             String rootProcessId,
             String nodeInstanceId) {
         this.id = requireNonNull(id);
@@ -84,7 +85,7 @@ public class ProcessInstanceJobDescription implements JobDescription {
         return rootProcessInstanceId;
     }
 
-    public String processId() {
+    public KogitoProcessId processId() {
         return processId;
     }
 
@@ -102,13 +103,12 @@ public class ProcessInstanceJobDescription implements JobDescription {
 
     @Override
     public String path() {
-        return JOBS_CALLBACK_URI + "/"
-                + processId()
-                + "/instances/"
-                + processInstanceId()
-                + "/timers/"
-                + timerId();
-
+        StringBuilder sb = new StringBuilder(JOBS_CALLBACK_URI).append('/').append(processId().id());
+        if (processId.version() != null) {
+            sb.append('/').append(processId.version());
+        }
+        sb.append("/instances/").append(processInstanceId()).append("/timers/").append(timerId());
+        return sb.toString();
     }
 
     @Override

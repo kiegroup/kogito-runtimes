@@ -57,7 +57,7 @@ public class SourceFilesResource extends BaseSourceFilesResource<Response> {
     public Collection<SourceFile> getSourceFilesByProcessId(@PathParam("processId") String processId) {
         return super.getSourceFilesByProcessId(new KogitoProcessId(processId));
     }
-    
+
     @GET
     @Path("{processId}/{version}/sources")
     @Produces(MediaType.APPLICATION_JSON)
@@ -65,14 +65,13 @@ public class SourceFilesResource extends BaseSourceFilesResource<Response> {
         return super.getSourceFilesByProcessId(new KogitoProcessId(processId, version));
     }
 
-
     @GET
     @Path("{processId}/source")
     @Produces(MediaType.TEXT_PLAIN)
     public Response getSourceFileByProcessId(@PathParam("processId") String processId) throws Exception {
-     return super.getSourceFileByProcessId(new KogitoProcessId(processId));
+        return super.getSourceFileByProcessId(new KogitoProcessId(processId));
     }
-    
+
     @GET
     @Path("{processId}/{version}/source")
     @Produces(MediaType.TEXT_PLAIN)

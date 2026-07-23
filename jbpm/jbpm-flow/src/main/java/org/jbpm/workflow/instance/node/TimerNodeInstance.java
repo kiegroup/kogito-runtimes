@@ -83,7 +83,7 @@ public class TimerNodeInstance extends StateBasedNodeInstance implements EventLi
                                     .expirationTime(expirationTime)
                                     .processInstanceId(getProcessInstance().getStringId())
                                     .rootProcessInstanceId(getProcessInstance().getRootProcessInstanceId())
-                                    .processId(getProcessInstance().getProcessId())
+                                    .processId(getProcessInstance().getWorkflowId())
                                     .rootProcessId(getProcessInstance().getRootProcessId())
                                     .nodeInstanceId(this.getId())
                                     .build();

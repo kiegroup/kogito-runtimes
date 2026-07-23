@@ -343,7 +343,7 @@ public class StaticWorkflowApplication extends StaticApplication implements Auto
      */
     public Process<JsonNodeModel> process(Workflow workflow) {
         Process<JsonNodeModel> process = createProcess(workflow);
-        processes.map.put(new KogitoProcessId(workflow.getId(),workflow.getVersion()), process);
+        processes.map.put(new KogitoProcessId(workflow.getId(), workflow.getVersion()), process);
         return process;
     }
 
@@ -360,8 +360,13 @@ public class StaticWorkflowApplication extends StaticApplication implements Auto
     }
 
     private Optional<ProcessInstance<JsonNodeModel>> findProcessInstance(String id) {
-    	return processes.processByProcessInstanceId(id).map(v -> (ProcessInstance<JsonNodeModel>)v);
-        
+        for (Process<? extends Model> process : processes) {
+            Optional<?> pi = process.instances().findById(id);
+            if (pi.isPresent()) {
+                return (Optional<ProcessInstance<JsonNodeModel>>) pi;
+            }
+        }
+        return Optional.empty();
     }
 
     public Optional<JsonNodeModel> variables(String id) {
@@ -413,15 +418,15 @@ public class StaticWorkflowApplication extends StaticApplication implements Auto
             return map.get(processId);
         }
 
-		@Override
-		public Iterator<Process<? extends Model>> iterator() {
-			return map.values().iterator();
-		}
-		
-		@Override
-	    public Stream<Process<? extends Model>> stream() {
-	    	return map.values().stream();
-	    }
+        @Override
+        public Iterator<Process<? extends Model>> iterator() {
+            return map.values().iterator();
+        }
+
+        @Override
+        public Stream<Process<? extends Model>> stream() {
+            return map.values().stream();
+        }
 
     }
 

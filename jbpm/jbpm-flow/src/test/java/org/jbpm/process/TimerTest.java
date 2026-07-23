@@ -29,6 +29,7 @@ import org.jbpm.ruleflow.instance.RuleFlowProcessInstance;
 import org.jbpm.test.util.AbstractBaseTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.internal.process.runtime.KogitoProcessRuntime;
 import org.kie.kogito.jobs.DurationExpirationTime;
 import org.kie.kogito.jobs.ExactExpirationTime;
@@ -80,7 +81,7 @@ public class TimerTest extends AbstractBaseTest {
             ProcessInstanceJobDescription desc = ProcessInstanceJobDescription.newProcessInstanceJobDescriptionBuilder()
                     .expirationTime(ExactExpirationTime.now())
                     .processInstanceId(processInstance.getStringId())
-                    .processId("test")
+                    .processId(new KogitoProcessId("test"))
                     .id("job1")
                     .timerId("timer1")
                     .build();
@@ -93,7 +94,7 @@ public class TimerTest extends AbstractBaseTest {
             desc = ProcessInstanceJobDescription.newProcessInstanceJobDescriptionBuilder()
                     .expirationTime(DurationExpirationTime.after(500))
                     .processInstanceId(processInstance.getStringId())
-                    .processId("test")
+                    .processId(new KogitoProcessId("test"))
                     .id("job2")
                     .timerId("timer2")
                     .build();
@@ -106,7 +107,7 @@ public class TimerTest extends AbstractBaseTest {
             desc = ProcessInstanceJobDescription.newProcessInstanceJobDescriptionBuilder()
                     .expirationTime(DurationExpirationTime.repeat(500, 300L))
                     .processInstanceId(processInstance.getStringId())
-                    .processId("test")
+                    .processId(new KogitoProcessId("test"))
                     .id("job3")
                     .timerId("timer3")
                     .build();

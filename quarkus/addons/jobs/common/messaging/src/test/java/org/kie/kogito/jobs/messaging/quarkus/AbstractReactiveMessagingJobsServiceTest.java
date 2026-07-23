@@ -27,6 +27,7 @@ import org.eclipse.microprofile.reactive.messaging.Message;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.jobs.ExactExpirationTime;
 import org.kie.kogito.jobs.ExpirationTime;
 import org.kie.kogito.jobs.JobDescription;
@@ -63,7 +64,7 @@ public abstract class AbstractReactiveMessagingJobsServiceTest<T extends Abstrac
     protected static final URI SERVICE_URI = URI.create("http://myService.com:8080");
     protected static final String PROCESS_INSTANCE_ID = "PROCESS_INSTANCE_ID";
     protected static final String ROOT_PROCESS_INSTANCE_ID = "ROOT_PROCESS_INSTANCE_ID";
-    protected static final String PROCESS_ID = "PROCESS_ID";
+    protected static final KogitoProcessId PROCESS_ID = new KogitoProcessId("PROCESS_ID", "VERSION");
     protected static final String ROOT_PROCESS_ID = "ROOT_PROCESS_ID";
     protected static final Integer PRIORITY = 0;
     protected static final String NODE_INSTANCE_ID = "NODE_INSTANCE_ID";
@@ -73,7 +74,7 @@ public abstract class AbstractReactiveMessagingJobsServiceTest<T extends Abstrac
     protected static final String SERIALIZED_EVENT = "SERIALIZED_EVENT";
     protected static final String SERIALIZED_SECOND_EVENT = "SERIALIZED_SECOND_EVENT";
     protected static final String JOB_ID_STRING = "JOB_ID_STRING";
-    private static final String CALLBACK_ENDPOINT = SERVICE_URI + "/management/jobs/" + PROCESS_ID
+    private static final String CALLBACK_ENDPOINT = SERVICE_URI + "/management/jobs/" + PROCESS_ID.id() + "/" + PROCESS_ID.version()
             + "/instances/" + PROCESS_INSTANCE_ID + "/timers/" + TIMER_ID;
     protected static final String ERROR = "ERROR";
     protected static final String FATAL_ERROR = "FATAL_ERROR";
@@ -305,7 +306,8 @@ public abstract class AbstractReactiveMessagingJobsServiceTest<T extends Abstrac
                         .url(CALLBACK_ENDPOINT)
                         .header("processInstanceId", PROCESS_INSTANCE_ID)
                         .header("rootProcessInstanceId", ROOT_PROCESS_INSTANCE_ID)
-                        .header("processId", PROCESS_ID)
+                        .header("processId", PROCESS_ID.id())
+                        .header("processVersion", PROCESS_ID.version())
                         .header("rootProcessId", ROOT_PROCESS_ID)
                         .header("nodeInstanceId", NODE_INSTANCE_ID)
                         .header("Content-Type", "application/json")

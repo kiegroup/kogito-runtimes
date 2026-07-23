@@ -21,6 +21,7 @@ package org.kie.kogito.jobs.api;
 import java.net.URI;
 
 import org.junit.jupiter.api.Test;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.jobs.ExactExpirationTime;
 import org.kie.kogito.jobs.ExpirationTime;
 import org.kie.kogito.jobs.descriptors.ProcessInstanceJobDescription;
@@ -40,7 +41,7 @@ class JobCallbackResourceDefTest {
     private static final URI SERVICE_URI = URI.create("http://myService.com:8080");
     private static final String PROCESS_INSTANCE_ID = "PROCESS_INSTANCE_ID";
     private static final String ROOT_PROCESS_INSTANCE_ID = "ROOT_PROCESS_INSTANCE_ID";
-    private static final String PROCESS_ID = "PROCESS_ID";
+    private static final KogitoProcessId PROCESS_ID = new KogitoProcessId("PROCESS_ID");
     private static final String ROOT_PROCESS_ID = "ROOT_PROCESS_ID";
     private static final Integer PRIORITY = 0;
     private static final String NODE_INSTANCE_ID = "NODE_INSTANCE_ID";
@@ -50,7 +51,7 @@ class JobCallbackResourceDefTest {
     private static final String TIMER_ID = "TIMER_ID";
     private static final String CALLBACK = "CALLBACK";
 
-    private static final String EXPECTED_CALLBACK_URI = SERVICE_URI + "/management/jobs/" + PROCESS_ID
+    private static final String EXPECTED_CALLBACK_URI = SERVICE_URI + "/management/jobs/" + PROCESS_ID.id()
             + "/instances/" + PROCESS_INSTANCE_ID + "/timers/" + TIMER_ID;
 
     @Test
@@ -71,9 +72,9 @@ class JobCallbackResourceDefTest {
         assertThat(httpRecipient.getMethod()).isEqualTo("POST");
         assertThat(httpRecipient.getUrl()).isEqualTo(CALLBACK);
         assertThat(httpRecipient.getHeaders())
-                .hasSize(6)
                 .containsEntry(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .containsEntry("processId", PROCESS_ID)
+                .containsEntry(JobCallbackResourceDef.PROCESS_ID, PROCESS_ID.id())
+                .containsEntry(JobCallbackResourceDef.PROCESS_VERSION, PROCESS_ID.version())
                 .containsEntry("processInstanceId", PROCESS_INSTANCE_ID)
                 .containsEntry("rootProcessId", ROOT_PROCESS_ID)
                 .containsEntry("rootProcessInstanceId", ROOT_PROCESS_INSTANCE_ID)

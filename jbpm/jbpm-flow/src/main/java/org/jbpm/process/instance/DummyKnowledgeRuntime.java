@@ -33,6 +33,7 @@ import org.kie.api.KieBase;
 import org.kie.api.command.Command;
 import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.event.process.ProcessEventListener;
+import org.kie.api.event.process.ProcessEventManager;
 import org.kie.api.event.rule.AgendaEventListener;
 import org.kie.api.event.rule.RuleRuntimeEventListener;
 import org.kie.api.logger.KieRuntimeLogger;
@@ -40,6 +41,8 @@ import org.kie.api.runtime.Calendars;
 import org.kie.api.runtime.Channel;
 import org.kie.api.runtime.Environment;
 import org.kie.api.runtime.Globals;
+import org.kie.api.runtime.KieRuntime;
+import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.KieSessionConfiguration;
 import org.kie.api.runtime.ObjectFilter;
 import org.kie.api.runtime.process.ProcessInstance;
@@ -51,8 +54,13 @@ import org.kie.api.runtime.rule.LiveQuery;
 import org.kie.api.runtime.rule.QueryResults;
 import org.kie.api.runtime.rule.ViewChangedEventListener;
 import org.kie.api.time.SessionClock;
+import org.kie.kogito.Application;
 import org.kie.kogito.calendar.BusinessCalendar;
+import org.kie.kogito.internal.process.event.KogitoProcessEventSupport;
 import org.kie.kogito.internal.process.runtime.KogitoProcessInstance;
+import org.kie.kogito.internal.process.runtime.KogitoProcessRuntime;
+import org.kie.kogito.internal.process.workitem.KogitoWorkItemManager;
+import org.kie.kogito.jobs.JobsService;
 import org.kie.kogito.process.ProcessConfig;
 
 import static org.jbpm.process.core.constants.CalendarConstants.BUSINESS_CALENDAR_ENVIRONMENT_KEY;
@@ -62,7 +70,7 @@ import static org.jbpm.workflow.instance.impl.NodeInstanceFactoryRegistry.NODE_I
  * A severely limited implementation of the WorkingMemory interface.
  * It only exists for legacy reasons.
  */
-class DummyKnowledgeRuntime implements InternalKnowledgeRuntime {
+class DummyKnowledgeRuntime implements InternalKnowledgeRuntime, KogitoProcessRuntime {
 
     private final EnvironmentImpl environment;
     private InternalProcessRuntime processRuntime;
@@ -382,5 +390,50 @@ class DummyKnowledgeRuntime implements InternalKnowledgeRuntime {
     @Override
     public WorkItemManager getWorkItemManager() {
         return this.processRuntime.getWorkItemManager();
+    }
+
+    @Override
+    public KogitoWorkItemManager getKogitoWorkItemManager() {
+        return (KogitoWorkItemManager) this.processRuntime.getWorkItemManager();
+    }
+
+    @Override
+    public KogitoProcessEventSupport getProcessEventSupport() {
+        return processRuntime.getProcessEventSupport();
+    }
+
+    @Override
+    public ProcessEventManager getProcessEventManager() {
+        return processRuntime;
+    }
+
+    @Override
+    public JobsService getJobsService() {
+        return null;
+    }
+
+    @Override
+    public KieRuntime getKieRuntime() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public KieSession getKieSession() {
+        return null;
+    }
+
+    @Override
+    public Application getApplication() {
+        return processRuntime.getApplication();
+    }
+
+    @Override
+    public KogitoProcessInstance startProcessInstance(String processInstanceId, String trigger) {
+        return processRuntime.getKogitoProcessRuntime().startProcessInstance(processInstanceId, trigger);
+    }
+
+    @Override
+    public Collection<KogitoProcessInstance> getKogitoProcessInstances() {
+        return Collections.emptyList();
     }
 }

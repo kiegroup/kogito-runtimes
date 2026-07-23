@@ -22,6 +22,10 @@ import java.time.ZonedDateTime;
 import java.util.Objects;
 import java.util.StringJoiner;
 
+import org.kie.api.definition.process.KogitoProcessId;
+
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+
 /**
  * Job describes the actual entity that should be scheduled and executed
  * upon given expiration time. The job requires following information
@@ -39,6 +43,7 @@ import java.util.StringJoiner;
  * <li>rootProcessId - root process id of the process instance that owns the job</li>
  * </ul>
  */
+
 public class Job {
 
     private String id;
@@ -47,18 +52,19 @@ public class Job {
     private String callbackEndpoint;
     private String processInstanceId;
     private String rootProcessInstanceId;
-    private String processId;
     private String rootProcessId;
     private String nodeInstanceId;
     private Long repeatInterval;
     private Integer repeatLimit;
+    @JsonUnwrapped
+    private KogitoProcessId processId;
 
     public Job() {
     }
 
     @SuppressWarnings("squid:S00107")
     public Job(String id, ZonedDateTime expirationTime, Integer priority, String callbackEndpoint,
-            String processInstanceId, String rootProcessInstanceId, String processId, String rootProcessId,
+            String processInstanceId, String rootProcessInstanceId, KogitoProcessId processId, String rootProcessId,
             Long repeatInterval, Integer repeatLimit, String nodeInstanceId) {
         this.id = id;
         this.expirationTime = expirationTime;
@@ -121,12 +127,12 @@ public class Job {
         this.rootProcessInstanceId = rootProcessInstanceId;
     }
 
-    public String getProcessId() {
-        return processId;
+    public void setProcessId(KogitoProcessId processId) {
+        this.processId = processId;
     }
 
-    public void setProcessId(String processId) {
-        this.processId = processId;
+    public KogitoProcessId getProcessId() {
+        return processId;
     }
 
     public String getRootProcessId() {
