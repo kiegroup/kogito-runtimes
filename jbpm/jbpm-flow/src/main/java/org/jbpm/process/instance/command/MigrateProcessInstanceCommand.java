@@ -27,6 +27,7 @@ import org.jbpm.workflow.instance.NodeInstanceContainer;
 import org.jbpm.workflow.instance.impl.NodeInstanceImpl;
 import org.jbpm.workflow.instance.impl.WorkflowProcessInstanceImpl;
 import org.kie.api.command.ExecutableCommand;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.definition.process.WorkflowElementIdentifier;
 import org.kie.api.definition.process.WorkflowProcess;
 import org.kie.api.runtime.Context;
@@ -105,7 +106,7 @@ public class MigrateProcessInstanceCommand implements ExecutableCommand<Void>, K
             throw new IllegalArgumentException("Null process id");
         }
 
-        WorkflowProcess process = (WorkflowProcess) runtime.getKieBase().getProcess(processId);
+        WorkflowProcess process = (WorkflowProcess) runtime.getKieBase().getProcess(new KogitoProcessId(processId));
         if (process == null) {
             throw new IllegalArgumentException("Could not find process " + processId);
         }

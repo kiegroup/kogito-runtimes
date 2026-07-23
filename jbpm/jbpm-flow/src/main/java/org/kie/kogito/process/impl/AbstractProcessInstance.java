@@ -135,9 +135,8 @@ public abstract class AbstractProcessInstance<T extends Model> implements Proces
                 throw new ProcessInstanceExecutionException(id, null, null, e.getMessage(), e);
             }
         }
-        String processId = processDefinition.getId();
 
-        WorkflowProcessInstance workflowProcessInstance = (WorkflowProcessInstance) ((CorrelationAwareProcessRuntime) rt).createProcessInstance(processId, correlationKey, map);
+        WorkflowProcessInstance workflowProcessInstance = (WorkflowProcessInstance) ((CorrelationAwareProcessRuntime) rt).createProcessInstance(processDefinition.getProcessId(), correlationKey, map);
         syncWorkflowInstanceState(workflowProcessInstance);
         workflowProcessInstance.setMetaData(KOGITO_PROCESS_INSTANCE, this);
         internalSetProcessInstance(workflowProcessInstance);

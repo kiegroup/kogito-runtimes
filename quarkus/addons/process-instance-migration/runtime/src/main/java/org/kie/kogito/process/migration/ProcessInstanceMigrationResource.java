@@ -69,7 +69,7 @@ public class ProcessInstanceMigrationResource extends BaseProcessInstanceMigrati
     @Path("{processId}/instances/{processInstanceId}/migrate")
     @Produces(MediaType.APPLICATION_JSON)
     public Response migrateInstance(@PathParam("processId") String processId, @PathParam("processInstanceId") String processInstanceId, ProcessMigrationSpec migrationSpec) {
-        return doMigrateInstance(processId, migrationSpec, processInstanceId);
+        return doMigrateInstance(processId, null, migrationSpec, processInstanceId);
     }
 
     @Override
@@ -77,6 +77,20 @@ public class ProcessInstanceMigrationResource extends BaseProcessInstanceMigrati
     @Path("{processId}/migrate")
     @Produces(MediaType.APPLICATION_JSON)
     public Response migrateAllInstances(@PathParam("processId") String processId, ProcessMigrationSpec migrationSpec) {
-        return doMigrateAllInstances(processId, migrationSpec);
+        return doMigrateAllInstances(processId, null, migrationSpec);
+    }
+    
+    @POST
+    @Path("{processId}/{version}/instances/{processInstanceId}/migrate")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response migrateInstance(@PathParam("processId") String processId, @PathParam("version") String version, @PathParam("processInstanceId") String processInstanceId, ProcessMigrationSpec migrationSpec) {
+        return doMigrateInstance(processId, version, migrationSpec, processInstanceId);
+    }
+
+    @POST
+    @Path("{processId}/{version}/migrate")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response migrateAllInstances(@PathParam("processId") String processId, @PathParam("version") String version,  ProcessMigrationSpec migrationSpec) {
+        return doMigrateAllInstances(processId, version, migrationSpec);
     }
 }

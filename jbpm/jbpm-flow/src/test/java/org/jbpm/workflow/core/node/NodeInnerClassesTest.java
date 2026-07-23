@@ -30,6 +30,7 @@ import org.jbpm.ruleflow.core.WorkflowElementIdentifierFactory;
 import org.jbpm.test.util.AbstractBaseTest;
 import org.jbpm.workflow.core.Node;
 import org.junit.jupiter.api.Test;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.definition.process.WorkflowElementIdentifier;
 import org.kie.kogito.internal.process.runtime.KogitoProcessInstance;
 import org.kie.kogito.internal.process.runtime.KogitoProcessRuntime;
@@ -82,7 +83,7 @@ public class NodeInnerClassesTest extends AbstractBaseTest {
         TestProcessEventListener procEventListener = new TestProcessEventListener();
         kruntime.getProcessEventManager().addEventListener(procEventListener);
 
-        KogitoProcessInstance processInstance = kruntime.startProcess("org.drools.core.process.event");
+        KogitoProcessInstance processInstance = kruntime.startProcess(new KogitoProcessId("org.drools.core.process.event"));
         assertThat(processInstance).isNotNull();
     }
 

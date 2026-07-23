@@ -43,19 +43,16 @@ import org.jbpm.workflow.core.impl.NodeIoHelper;
 import org.jbpm.workflow.core.node.EventTrigger;
 import org.jbpm.workflow.core.node.StartNode;
 import org.jbpm.workflow.core.node.Trigger;
-import org.kie.api.command.ExecutableCommand;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.definition.process.Node;
 import org.kie.api.definition.process.Process;
 import org.kie.api.event.rule.DefaultAgendaEventListener;
 import org.kie.api.event.rule.MatchCreatedEvent;
 import org.kie.api.event.rule.RuleFlowGroupDeactivatedEvent;
-import org.kie.api.runtime.Context;
-import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.process.EventListener;
 import org.kie.api.runtime.process.ProcessInstance;
 import org.kie.api.runtime.process.WorkItemManager;
 import org.kie.api.runtime.rule.AgendaFilter;
-import org.kie.internal.command.RegistryContext;
 import org.kie.internal.process.CorrelationKey;
 import org.kie.internal.runtime.StatefulKnowledgeSession;
 import org.kie.kogito.Application;
@@ -115,37 +112,37 @@ public class ProcessRuntimeImpl extends AbstractProcessRuntime {
     }
 
     @Override
-    public ProcessInstance startProcess(String processId) {
+    public ProcessInstance startProcess(KogitoProcessId processId) {
         return kogitoProcessRuntime.startProcess(processId, null, null, null);
     }
 
     @Override
-    public ProcessInstance startProcess(String processId, Map<String, Object> parameters) {
+    public ProcessInstance startProcess(KogitoProcessId processId, Map<String, Object> parameters) {
         return kogitoProcessRuntime.startProcess(processId, parameters, null, null);
     }
 
-    public ProcessInstance startProcess(String processId, Map<String, Object> parameters, String trigger) {
+    public ProcessInstance startProcess(KogitoProcessId processId, Map<String, Object> parameters, String trigger) {
         return kogitoProcessRuntime.startProcess(processId, parameters, trigger, null);
     }
 
     @Override
-    public ProcessInstance startProcess(String processId, AgendaFilter agendaFilter) {
+    public ProcessInstance startProcess(KogitoProcessId processId, AgendaFilter agendaFilter) {
         return kogitoProcessRuntime.startProcess(processId, null, null, agendaFilter);
     }
 
     @Override
-    public ProcessInstance startProcess(String processId, Map<String, Object> parameters, AgendaFilter agendaFilter) {
+    public ProcessInstance startProcess(KogitoProcessId processId, Map<String, Object> parameters, AgendaFilter agendaFilter) {
         return kogitoProcessRuntime.startProcess(processId, parameters, null, agendaFilter);
     }
 
     @Override
-    public ProcessInstance startProcessFromNodeIds(String s, Map<String, Object> map, String... strings) {
+    public ProcessInstance startProcessFromNodeIds(KogitoProcessId s, Map<String, Object> map, String... strings) {
         throw new UnsupportedOperationException("org.jbpm.process.instance.ProcessRuntimeImpl.startProcessFromNodeIds -> TODO");
 
     }
 
     @Override
-    public KogitoProcessInstance createProcessInstance(String processId,
+    public ProcessInstance createProcessInstance(KogitoProcessId processId,
             Map<String, Object> parameters) {
         return createProcessInstance(processId, null, parameters);
     }
@@ -156,7 +153,7 @@ public class ProcessRuntimeImpl extends AbstractProcessRuntime {
     }
 
     @Override
-    public ProcessInstance startProcess(String processId, CorrelationKey correlationKey, Map<String, Object> parameters) {
+    public ProcessInstance startProcess(KogitoProcessId processId, CorrelationKey correlationKey, Map<String, Object> parameters) {
         ProcessInstance processInstance = createProcessInstance(processId, correlationKey, parameters);
         if (processInstance != null) {
             return startProcessInstance(processInstance.getId());
@@ -165,7 +162,7 @@ public class ProcessRuntimeImpl extends AbstractProcessRuntime {
     }
 
     @Override
-    public KogitoProcessInstance createProcessInstance(String processId, CorrelationKey correlationKey, Map<String, Object> parameters) {
+    public ProcessInstance createProcessInstance(KogitoProcessId processId, CorrelationKey correlationKey, Map<String, Object> parameters) {
         final Process process = kruntime.getKieBase().getProcess(processId);
         if (process == null) {
             throw new IllegalArgumentException("Unknown process ID: " + processId);
@@ -174,7 +171,7 @@ public class ProcessRuntimeImpl extends AbstractProcessRuntime {
     }
 
     @Override
-    public ProcessInstance startProcessFromNodeIds(String s, CorrelationKey correlationKey, Map<String, Object> map, String... strings) {
+    public ProcessInstance startProcessFromNodeIds(KogitoProcessId s, CorrelationKey correlationKey, Map<String, Object> map, String... strings) {
         throw new UnsupportedOperationException("org.jbpm.process.instance.ProcessRuntimeImpl.startProcessFromNodeIds -> TODO");
 
     }
@@ -272,7 +269,7 @@ public class ProcessRuntimeImpl extends AbstractProcessRuntime {
                                             type = ((EventTypeFilter) filter).getType();
                                         }
                                     }
-                                    StartProcessEventListener listener = new StartProcessEventListener(startNode, trigger, process.getId(), filters);
+                                    StartProcessEventListener listener = new StartProcessEventListener(startNode, trigger, process.getProcessId(), filters);
                                     signalManager.addEventListener(type, listener);
                                     ((RuleFlowProcess) process).getRuntimeMetaData().put("StartProcessEventType", type);
                                     ((RuleFlowProcess) process).getRuntimeMetaData().put("StartProcessEventListener", listener);
@@ -315,7 +312,7 @@ public class ProcessRuntimeImpl extends AbstractProcessRuntime {
                     if (ruleName.startsWith("RuleFlow-Start-")) {
                         String processId = ruleName.replace("RuleFlow-Start-", "");
 
-                        startProcessWithParamsAndTrigger(processId, null, "conditional");
+                        startProcessWithParamsAndTrigger(new KogitoProcessId(processId), null, "conditional");
                     }
                 }
             }
@@ -334,7 +331,7 @@ public class ProcessRuntimeImpl extends AbstractProcessRuntime {
         });
     }
 
-    private void startProcessWithParamsAndTrigger(String processId, Map<String, Object> params, String type) {
+    private void startProcessWithParamsAndTrigger(KogitoProcessId processId, Map<String, Object> params, String type) {
 
         startProcess(processId, params, type);
     }
@@ -391,12 +388,12 @@ public class ProcessRuntimeImpl extends AbstractProcessRuntime {
 
     private class StartProcessEventListener implements EventListener {
 
-        private String processId;
+        private KogitoProcessId processId;
         private List<EventFilter> eventFilters;
         private StartNode startNode;
         private Trigger trigger;
 
-        public StartProcessEventListener(StartNode startNode, Trigger trigger, String processId, List<EventFilter> eventFilters) {
+        public StartProcessEventListener(StartNode startNode, Trigger trigger, KogitoProcessId processId, List<EventFilter> eventFilters) {
             this.processId = processId;
             this.eventFilters = eventFilters;
             this.trigger = trigger;
@@ -438,30 +435,6 @@ public class ProcessRuntimeImpl extends AbstractProcessRuntime {
             Map<String, Object> parameters = NodeIoHelper.processOutputs(trigger.getInAssociations(), key -> outputSet.get(key));
             startProcessWithParamsAndTrigger(processId, parameters, type);
 
-        }
-    }
-
-    private class StartProcessWithTypeCommand implements ExecutableCommand<Void> {
-
-        private static final long serialVersionUID = -8890906804846111698L;
-
-        private String processId;
-        private Map<String, Object> params;
-        private String type;
-
-        private StartProcessWithTypeCommand(String processId, Map<String, Object> params, String type) {
-            this.processId = processId;
-            this.params = params;
-            this.type = type;
-        }
-
-        @Override
-        public Void execute(Context context) {
-            KieSession ksession = ((RegistryContext) context).lookup(KieSession.class);
-            ((ProcessRuntimeImpl) ((InternalKnowledgeRuntime) ksession).getProcessRuntime()).startProcess(processId,
-                    params, type);
-
-            return null;
         }
     }
 

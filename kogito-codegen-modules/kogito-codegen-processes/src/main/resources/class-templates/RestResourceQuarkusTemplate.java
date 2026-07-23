@@ -65,7 +65,7 @@ import org.kie.kogito.auth.SecurityPolicy;
 import jakarta.ws.rs.core.StreamingOutput;
 
 
-@Path("/$name$")
+@Path("$name$")
 @Tag(name = "Process - $name$", description = "$documentation$")
 public class $Type$Resource {
 
@@ -172,17 +172,4 @@ public class $Type$Resource {
         return processService.updatePartial(process, id, resource.toModel()).orElseThrow(NotFoundException::new);
     }
 
-    @GET
-    @Path("/{id}/tasks")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Operation(operationId = "getTasksInstance_$name$", summary = "$documentation$", description = "$processInstanceDescription$")
-    public List<TaskModel> getTasks_$name$(@PathParam("id") String id,
-                                          @QueryParam("user") final String user,
-                                          @QueryParam("group") final List<String> groups) {
-        return processService.getWorkItems(process, id, SecurityPolicy.of(identityProviderFactory.getOrImpersonateIdentity(user, groups)))
-                .orElseThrow(NotFoundException::new)
-                .stream()
-                .map($TaskModelFactory$::from)
-                .collect(Collectors.toList());
-    }
 }

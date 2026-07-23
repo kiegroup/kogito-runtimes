@@ -18,7 +18,12 @@
  */
 package $Package$;
 
+import java.util.Iterator;
+
+import org.kie.api.definition.process.KogitoProcessId;
+import org.kie.kogito.Model;
 import org.kie.kogito.jobs.JobsService;
+import org.kie.kogito.process.Process;
 import org.kie.kogito.process.ProcessConfig;
 import org.kie.kogito.process.impl.StaticProcessConfig;
 import org.kie.kogito.services.jobs.impl.InMemoryProcessJobExecutorFactory;
@@ -29,8 +34,10 @@ import org.kie.kogito.uow.UnitOfWorkManager;
 public class Processes implements org.kie.kogito.process.Processes {
 
     private final Application application;
-    private java.util.Map<String, org.kie.kogito.process.Process<? extends org.kie.kogito.Model>> mappedProcesses = new java.util.concurrent.ConcurrentHashMap<>();
-
+    private java.util.Map<KogitoProcessId, org.kie.kogito.process.Process<? extends org.kie.kogito.Model>> mappedProcesses = new java.util.concurrent.ConcurrentHashMap<>();
+    private boolean isRegistered = false;
+    
+    
     public Processes(Application application) {
         this.application = application;
         JobsService jobsService = this.application.config().get(ProcessConfig.class).jobsService();
@@ -42,14 +49,17 @@ public class Processes implements org.kie.kogito.process.Processes {
         }
     }
 
-    public org.kie.kogito.process.Process<? extends org.kie.kogito.Model> processById(String processId) {
-        if ("$ProcessId".equals(processId)) {
-            return mappedProcesses.computeIfAbsent("$ProcessId", k -> new $ProcessClassName$(application).configure());
-        }
-        return null;
+    public org.kie.kogito.process.Process<? extends org.kie.kogito.Model> processById(KogitoProcessId processId) {
+        if (!isRegistered) {
+    	    isRegistered=true;
+    	     registerProcesses();
+    	}
+    	return mappedProcesses.get(processId);
     }
-
-    public java.util.Collection<String> processIds() {
-        return java.util.Arrays.asList("$ProcessId$");
+    
+   
+    @Override
+    public Iterator<Process<? extends Model>> iterator() {
+        return mappedProcesses.values().iterator();
     }
 }

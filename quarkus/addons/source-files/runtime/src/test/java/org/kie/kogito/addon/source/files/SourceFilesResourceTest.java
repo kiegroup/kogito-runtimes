@@ -23,6 +23,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.source.files.SourceFile;
 import org.kie.kogito.source.files.SourceFilesProvider;
 import org.mockito.Mock;
@@ -36,8 +37,8 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class SourceFilesResourceTest {
-    private static final String PROCESS_ID = "processId";
-
+    private static final KogitoProcessId PROCESS_ID = new KogitoProcessId("processId","1.0.0");
+    
     private SourceFilesResource sourceFilesTestResource;
 
     @Mock

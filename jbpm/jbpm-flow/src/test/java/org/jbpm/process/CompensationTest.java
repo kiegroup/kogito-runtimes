@@ -52,6 +52,7 @@ import org.jbpm.workflow.core.node.WorkItemNode;
 import org.jbpm.workflow.instance.impl.WorkflowProcessInstanceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.definition.process.NodeContainer;
 import org.kie.kogito.internal.process.runtime.KogitoProcessContext;
 import org.kie.kogito.internal.process.runtime.KogitoProcessInstance;
@@ -131,7 +132,7 @@ public class CompensationTest extends AbstractBaseTest {
 
     @Test
     public void testCompensationBoundaryEventSpecific() throws Exception {
-        String processId = "org.jbpm.process.compensation.boundary";
+        KogitoProcessId processId = new KogitoProcessId("org.jbpm.process.compensation.boundary", "1.0.0");
         String[] workItemNames = { "Don-Quixote", "Sancho", "Ricote" };
         List<String> eventList = new ArrayList<String>();
         RuleFlowProcess process = createCompensationBoundaryEventProcess(processId, workItemNames, eventList);
@@ -145,7 +146,7 @@ public class CompensationTest extends AbstractBaseTest {
         runCompensationBoundaryEventSpecificTest(kruntime, process, processId, workItemNames, eventList, compensationEvent);
     }
 
-    public static void runCompensationBoundaryEventSpecificTest(KogitoProcessRuntime kruntime, RuleFlowProcess process, String processId,
+    public static void runCompensationBoundaryEventSpecificTest(KogitoProcessRuntime kruntime, RuleFlowProcess process, KogitoProcessId processId,
             String[] workItemNames, List<String> eventList, String compensationEvent) {
         TestWorkItemHandler workItemHandler = new TestWorkItemHandler();
         for (String workItem : workItemNames) {
@@ -177,19 +178,20 @@ public class CompensationTest extends AbstractBaseTest {
 
     @Test
     public void testCompensationBoundaryEventGeneral() throws Exception {
-        String processId = "org.jbpm.process.compensation.boundary";
+        KogitoProcessId processId = new KogitoProcessId("org.jbpm.process.compensation.boundary", "1.0.0");
         String[] workItemNames = { "Don-Quixote", "Sancho", "Ricote" };
         List<String> eventList = new ArrayList<String>();
         RuleFlowProcess process = createCompensationBoundaryEventProcess(processId, workItemNames, eventList);
 
         // run process
         kruntime = createKogitoProcessRuntime(process);
-        String compensationEvent = CompensationScope.IMPLICIT_COMPENSATION_PREFIX + processId;
+        //TODO review if this should be id or a composition of id and version
+        String compensationEvent = CompensationScope.IMPLICIT_COMPENSATION_PREFIX + processId.id();
 
         runCompensationBoundaryEventGeneralTest(kruntime, process, processId, workItemNames, eventList, compensationEvent);
     }
 
-    public static void runCompensationBoundaryEventGeneralTest(KogitoProcessRuntime kruntime, RuleFlowProcess process, String processId,
+    public static void runCompensationBoundaryEventGeneralTest(KogitoProcessRuntime kruntime, RuleFlowProcess process, KogitoProcessId processId,
             String[] workItemNames, List<String> eventList, String compensationEvent) {
         TestWorkItemHandler workItemHandler = new TestWorkItemHandler();
         for (String workItem : workItemNames) {
@@ -219,11 +221,12 @@ public class CompensationTest extends AbstractBaseTest {
         assertThat(processInstance.getState()).isEqualTo(KogitoProcessInstance.STATE_COMPLETED);
     }
 
-    private RuleFlowProcess createCompensationBoundaryEventProcess(String processId, String[] workItemNames,
+    private RuleFlowProcess createCompensationBoundaryEventProcess(KogitoProcessId processId, String[] workItemNames,
             final List<String> eventList) throws Exception {
         RuleFlowProcess process = new RuleFlowProcess();
         process.setAutoComplete(true);
-        process.setId(processId);
+        process.setId(processId.id());
+        process.setVersion(processId.version());
         process.setName("CESP Process");
         process.setMetaData("Compensation", true);
 
@@ -266,7 +269,7 @@ public class CompensationTest extends AbstractBaseTest {
 
     @Test
     public void testCompensationEventSubProcessSpecific() throws Exception {
-        String processId = "org.jbpm.process.compensation.event.subprocess";
+        KogitoProcessId processId = new KogitoProcessId("org.jbpm.process.compensation.event.subprocess", "1.0.0");
         String[] workItemNames = { "kwik", "kwek", "kwak" };
         List<String> eventList = new ArrayList<String>();
         RuleFlowProcess process = createCompensationEventSubProcessProcess(processId, workItemNames, eventList);
@@ -280,7 +283,7 @@ public class CompensationTest extends AbstractBaseTest {
         runCompensationEventSubProcessSpecificTest(kruntime, process, processId, workItemNames, eventList, compensationEvent);
     }
 
-    public static void runCompensationEventSubProcessSpecificTest(KogitoProcessRuntime kruntime, RuleFlowProcess process, String processId,
+    public static void runCompensationEventSubProcessSpecificTest(KogitoProcessRuntime kruntime, RuleFlowProcess process, KogitoProcessId processId,
             String[] workItemNames, List<String> eventList, String compensationEvent) {
 
         // run process
@@ -316,7 +319,7 @@ public class CompensationTest extends AbstractBaseTest {
 
     @Test
     public void testCompensationEventSubProcessGeneral() throws Exception {
-        String processId = "org.jbpm.process.compensation.event.subprocess.general";
+        KogitoProcessId processId = new KogitoProcessId("org.jbpm.process.compensation.event.subprocess.general", "1.0.0");
         String[] workItemNames = { "kwik", "kwek", "kwak" };
         List<String> eventList = new ArrayList<String>();
         RuleFlowProcess process = createCompensationEventSubProcessProcess(processId, workItemNames, eventList);
@@ -329,7 +332,7 @@ public class CompensationTest extends AbstractBaseTest {
         runCompensationEventSubProcessGeneralTest(kruntime, process, processId, workItemNames, eventList, compensationEvent);
     }
 
-    public static void runCompensationEventSubProcessGeneralTest(KogitoProcessRuntime kruntime, RuleFlowProcess process, String processId,
+    public static void runCompensationEventSubProcessGeneralTest(KogitoProcessRuntime kruntime, RuleFlowProcess process, KogitoProcessId processId,
             String[] workItemNames, List<String> eventList, String compensationEvent) {
         TestWorkItemHandler workItemHandler = new TestWorkItemHandler();
         for (String workItem : workItemNames) {
@@ -353,11 +356,12 @@ public class CompensationTest extends AbstractBaseTest {
         assertThat(processInstance.getState()).isEqualTo(KogitoProcessInstance.STATE_COMPLETED);
     }
 
-    private RuleFlowProcess createCompensationEventSubProcessProcess(String processId, String[] workItemNames,
+    private RuleFlowProcess createCompensationEventSubProcessProcess(KogitoProcessId processId, String[] workItemNames,
             final List<String> eventList) throws Exception {
         RuleFlowProcess process = new RuleFlowProcess();
         process.setAutoComplete(true);
-        process.setId(processId);
+        process.setId(processId.id());
+        process.setVersion(processId.version());
         process.setName("CESP Process");
         process.setMetaData("Compensation", true);
 
@@ -428,7 +432,7 @@ public class CompensationTest extends AbstractBaseTest {
 
     @Test
     public void testNestedCompensationEventSubProcessSpecific() throws Exception {
-        String processId = "org.jbpm.process.compensation.event.nested.subprocess";
+        KogitoProcessId processId = new KogitoProcessId("org.jbpm.process.compensation.event.nested.subprocess", "1.0.0");
         String[] workItemNames = { "kwik", "kwek", "kwak" };
         List<String> eventList = new ArrayList<String>();
         RuleFlowProcess process = createNestedCompensationEventSubProcessProcess(processId, workItemNames, eventList);
@@ -443,7 +447,7 @@ public class CompensationTest extends AbstractBaseTest {
 
     @Test
     public void testNestedCompensationEventSubProcessGeneral() throws Exception {
-        String processId = "org.jbpm.process.compensation.event.subprocess.general";
+        KogitoProcessId processId = new KogitoProcessId("org.jbpm.process.compensation.event.subprocess.general", "1.0.0");
         String[] workItemNames = { "apple", "banana", "orange" };
         List<String> eventList = new ArrayList<String>();
         RuleFlowProcess process = createNestedCompensationEventSubProcessProcess(processId, workItemNames, eventList);
@@ -456,11 +460,12 @@ public class CompensationTest extends AbstractBaseTest {
         runCompensationEventSubProcessGeneralTest(kruntime, process, processId, workItemNames, eventList, compensationEvent);
     }
 
-    private RuleFlowProcess createNestedCompensationEventSubProcessProcess(String processId, String[] workItemNames,
+    private RuleFlowProcess createNestedCompensationEventSubProcessProcess(KogitoProcessId processId, String[] workItemNames,
             final List<String> eventList) throws Exception {
         RuleFlowProcess process = new RuleFlowProcess();
         process.setAutoComplete(true);
-        process.setId(processId);
+        process.setId(processId.id());
+        process.setVersion(processId.version());
         process.setName("CESP Process");
         process.setMetaData("Compensation", true);
 
@@ -556,7 +561,7 @@ public class CompensationTest extends AbstractBaseTest {
 
     @Test
     public void testNestedCompensationBoundaryEventSpecific() throws Exception {
-        String processId = "org.jbpm.process.compensation.boundary.nested";
+        KogitoProcessId processId = new KogitoProcessId("org.jbpm.process.compensation.boundary.nested", "1.0.0");
         String[] workItemNames = { "Don-Quixote", "Sancho", "Ricote" };
         List<String> eventList = new ArrayList<String>();
         RuleFlowProcess process = createNestedCompensationBoundaryEventProcess(processId, workItemNames, eventList);
@@ -572,7 +577,7 @@ public class CompensationTest extends AbstractBaseTest {
 
     @Test
     public void testNestedCompensationBoundaryEventGeneral() throws Exception {
-        String processId = "org.jbpm.process.compensation.boundary.general.nested";
+        KogitoProcessId processId = new KogitoProcessId("org.jbpm.process.compensation.boundary.general.nested", "1.0.0");
         String[] workItemNames = { "Jip", "Janneke", "Takkie" };
         List<String> eventList = new ArrayList<String>();
         RuleFlowProcess process = createNestedCompensationBoundaryEventProcess(processId, workItemNames, eventList);
@@ -586,11 +591,12 @@ public class CompensationTest extends AbstractBaseTest {
         runCompensationBoundaryEventGeneralTest(kruntime, process, processId, workItemNames, eventList, compensationEvent);
     }
 
-    private RuleFlowProcess createNestedCompensationBoundaryEventProcess(String processId, String[] workItemNames,
+    private RuleFlowProcess createNestedCompensationBoundaryEventProcess(KogitoProcessId processId, String[] workItemNames,
             final List<String> eventList) throws Exception {
         RuleFlowProcess process = new RuleFlowProcess();
         process.setAutoComplete(true);
-        process.setId(processId);
+        process.setId(processId.id());
+        process.setVersion(processId.version());
         process.setName("CESP Process");
         process.setMetaData("Compensation", true);
 

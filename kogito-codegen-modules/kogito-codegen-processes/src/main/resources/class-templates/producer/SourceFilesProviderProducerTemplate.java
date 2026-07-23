@@ -28,9 +28,8 @@ public class SourceFilesProviderProducer {
     private static final SourceFilesProviderImpl INSTANCE = new SourceFilesProviderImpl();
 
     static {
-        INSTANCE.addSourceFile("$processId$", new SourceFile("$sourcePath$"));
     }
-
+    
     public SourceFilesProvider getSourceFilesProvider() {
         return INSTANCE;
     }

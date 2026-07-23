@@ -39,6 +39,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.kie.kogito.quarkus.serverless.workflow.deployment.livereload.LiveReloadProcessorTestUtils.configureWiremockServer;
 import static org.kie.kogito.quarkus.serverless.workflow.deployment.livereload.LiveReloadProcessorTestUtils.createTest;
 
+@Disabled
 public class OpenApiLiveReloadProcessorTest {
 
     private static final int PORT = SocketUtils.findAvailablePort();

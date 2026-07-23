@@ -28,6 +28,7 @@ import org.jbpm.ruleflow.core.RuleFlowProcessFactory;
 import org.jbpm.ruleflow.core.WorkflowElementIdentifierFactory;
 import org.jbpm.test.util.AbstractBaseTest;
 import org.junit.jupiter.api.Test;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.definition.process.WorkflowElementIdentifier;
 import org.kie.kogito.internal.process.runtime.KogitoProcessRuntime;
 import org.slf4j.LoggerFactory;
@@ -96,7 +97,7 @@ public class ForEachTest extends AbstractBaseTest {
 
         KogitoProcessRuntime kruntime = createKogitoProcessRuntime(factory.getProcess());
 
-        kruntime.startProcess("ParentProcess", parameters);
+        kruntime.startProcess(new KogitoProcessId("ParentProcess", "1.0"), parameters);
     }
 
 }

@@ -25,6 +25,7 @@ import org.jbpm.test.util.NodeLeftCountDownProcessEventListener;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.Application;
 import org.kie.kogito.Model;
 import org.kie.kogito.codegen.AbstractCodegenIT;
@@ -48,7 +49,7 @@ public class ServerlessWorkflowIT extends AbstractCodegenIT {
         Application app = generateCodeProcessesOnly(processLocation);
         assertThat(app).isNotNull();
 
-        Process<? extends Model> p = app.get(Processes.class).processById("function");
+        Process<? extends Model> p = app.get(Processes.class).processById(new KogitoProcessId("function", "1.0"));
 
         Model m = p.createModel();
         Map<String, Object> parameters = new HashMap<>();
@@ -70,7 +71,7 @@ public class ServerlessWorkflowIT extends AbstractCodegenIT {
         NodeLeftCountDownProcessEventListener listener = new NodeLeftCountDownProcessEventListener("End", 1);
         app.config().get(ProcessConfig.class).processEventListeners().listeners().add(listener);
 
-        Process<? extends Model> p = app.get(Processes.class).processById("function");
+        Process<? extends Model> p = app.get(Processes.class).processById(new KogitoProcessId("function", "1.0"));
 
         Model m = p.createModel();
         Map<String, Object> parameters = new HashMap<>();
@@ -92,7 +93,7 @@ public class ServerlessWorkflowIT extends AbstractCodegenIT {
         Application app = generateCodeProcessesOnly(processLocation);
         assertThat(app).isNotNull();
 
-        Process<? extends Model> p = app.get(Processes.class).processById("function");
+        Process<? extends Model> p = app.get(Processes.class).processById(new KogitoProcessId("function", "1.0"));
 
         Model m = p.createModel();
         Map<String, Object> parameters = new HashMap<>();
@@ -111,7 +112,7 @@ public class ServerlessWorkflowIT extends AbstractCodegenIT {
         Application app = generateCodeProcessesOnly(processLocation);
         assertThat(app).isNotNull();
 
-        Process<? extends Model> p = app.get(Processes.class).processById("noactions");
+        Process<? extends Model> p = app.get(Processes.class).processById(new KogitoProcessId("noactions", "1.0"));
 
         Model m = p.createModel();
         Map<String, Object> parameters = new HashMap<>();
@@ -130,7 +131,7 @@ public class ServerlessWorkflowIT extends AbstractCodegenIT {
         Application app = generateCodeProcessesOnly(processLocation);
         assertThat(app).isNotNull();
 
-        Process<? extends Model> p = app.get(Processes.class).processById("function");
+        Process<? extends Model> p = app.get(Processes.class).processById(new KogitoProcessId("function", "1.0"));
 
         Model m = p.createModel();
         Map<String, Object> parameters = new HashMap<>();
@@ -149,7 +150,7 @@ public class ServerlessWorkflowIT extends AbstractCodegenIT {
         Application app = generateCodeProcessesOnly(processLocation);
         assertThat(app).isNotNull();
 
-        Process<? extends Model> p = app.get(Processes.class).processById("singleservice");
+        Process<? extends Model> p = app.get(Processes.class).processById(new KogitoProcessId("singleservice", "1.0"));
 
         Model m = p.createModel();
         Map<String, Object> parameters = new HashMap<>();
@@ -185,7 +186,7 @@ public class ServerlessWorkflowIT extends AbstractCodegenIT {
         Application app = generateCodeProcessesOnly(processLocation);
         assertThat(app).isNotNull();
 
-        Process<? extends Model> p = app.get(Processes.class).processById("singleinject");
+        Process<? extends Model> p = app.get(Processes.class).processById(new KogitoProcessId("singleinject", "1.0"));
 
         Model m = p.createModel();
         Map<String, Object> parameters = new HashMap<>();
@@ -219,7 +220,7 @@ public class ServerlessWorkflowIT extends AbstractCodegenIT {
         Application app = generateCodeProcessesOnly(processLocation);
         assertThat(app).isNotNull();
 
-        Process<? extends Model> p = app.get(Processes.class).processById("switchworkflow");
+        Process<? extends Model> p = app.get(Processes.class).processById(new KogitoProcessId("switchworkflow", "1.0"));
 
         Model m = p.createModel();
         Map<String, Object> parameters = new HashMap<>();
@@ -253,7 +254,7 @@ public class ServerlessWorkflowIT extends AbstractCodegenIT {
         Application app = generateCodeProcessesOnly(processLocation);
         assertThat(app).isNotNull();
 
-        Process<? extends Model> p = app.get(Processes.class).processById("switchworkflow");
+        Process<? extends Model> p = app.get(Processes.class).processById(new KogitoProcessId("switchworkflow", "1.0"));
 
         Model m = p.createModel();
         Map<String, Object> parameters = new HashMap<>();
@@ -287,7 +288,7 @@ public class ServerlessWorkflowIT extends AbstractCodegenIT {
         Application app = generateCodeProcessesOnly(processLocation);
         assertThat(app).isNotNull();
 
-        Process<? extends Model> p = app.get(Processes.class).processById("switchworkflow");
+        Process<? extends Model> p = app.get(Processes.class).processById(new KogitoProcessId("switchworkflow", "1.0"));
 
         Model m = p.createModel();
         Map<String, Object> parameters = new HashMap<>();
@@ -312,7 +313,7 @@ public class ServerlessWorkflowIT extends AbstractCodegenIT {
         Application app = generateCodeProcessesOnly("serverless/single-subflow.sw.json", "serverless/called-subflow.sw.json");
         assertThat(app).isNotNull();
 
-        Process<? extends Model> p = app.get(Processes.class).processById("singlesubflow");
+        Process<? extends Model> p = app.get(Processes.class).processById(new KogitoProcessId("singlesubflow", "1.0"));
 
         Model m = p.createModel();
         Map<String, Object> parameters = new HashMap<>();
@@ -350,7 +351,7 @@ public class ServerlessWorkflowIT extends AbstractCodegenIT {
         Application app = generateCodeProcessesOnly(processLocation);
         assertThat(app).isNotNull();
 
-        Process<? extends Model> p = app.get(Processes.class).processById("prchecker");
+        Process<? extends Model> p = app.get(Processes.class).processById(new KogitoProcessId("prchecker", "1.0"));
 
         Model m = p.createModel();
         Map<String, Object> parameters = new HashMap<>();

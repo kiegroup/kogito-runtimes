@@ -18,26 +18,40 @@
  */
 package $Package$;
 
+import java.util.Iterator;
+import java.util.stream.Stream;
+
+import org.kie.api.definition.process.KogitoProcessId;
+import org.kie.kogito.Model;
+import org.kie.kogito.process.Process;
+
 @jakarta.enterprise.context.ApplicationScoped
 public class Processes implements org.kie.kogito.process.Processes {
 
     @jakarta.inject.Inject
     jakarta.enterprise.inject.Instance<org.kie.kogito.process.Process<? extends org.kie.kogito.Model>> processes;
 
-    private java.util.Map<String, org.kie.kogito.process.Process<? extends org.kie.kogito.Model>> mappedProcesses = new java.util.HashMap<>();
+    private java.util.Map<KogitoProcessId, org.kie.kogito.process.Process<? extends org.kie.kogito.Model>> mappedProcesses = new java.util.HashMap<>();
 
     @jakarta.annotation.PostConstruct
     public void setup() {
         for (org.kie.kogito.process.Process<? extends org.kie.kogito.Model> process : processes) {
-            mappedProcesses.put(process.id(), process);
+            mappedProcesses.put(process.processId(), process);
         }
     }
-
-    public org.kie.kogito.process.Process<? extends org.kie.kogito.Model> processById(String processId) {
-        return mappedProcesses.get(processId);
+    
+    @Override
+    public Stream<Process<? extends Model>> stream() {
+    	return mappedProcesses.values().stream();
     }
 
-    public java.util.Collection<String> processIds() {
-        return mappedProcesses.keySet();
+    @Override
+    public Iterator<Process<? extends Model>> iterator() {
+        return mappedProcesses.values().iterator();
+	}
+
+    @Override
+    public Process<? extends Model> processById(KogitoProcessId processId) {
+        return mappedProcesses.get(processId);
     }
 }

@@ -171,6 +171,7 @@
     <version.tomcat.embed.core>10.1.55</version.tomcat.embed.core>
     <version.org.hibernate>7.1.14.Final</version.org.hibernate>
     <version.com.graphql-java>24.3</version.com.graphql-java>
+    <version.com.github.zafarkhaja>0.10.2</version.com.github.zafarkhaja>
   </properties>
 
   <dependencyManagement>
@@ -1367,6 +1368,11 @@
         <groupId>org.hibernate.orm</groupId>
         <artifactId>hibernate-core</artifactId>
         <version>${version.org.hibernate}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.github.zafarkhaja</groupId>
+        <artifactId>java-semver</artifactId>
+        <version>${version.com.github.zafarkhaja}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

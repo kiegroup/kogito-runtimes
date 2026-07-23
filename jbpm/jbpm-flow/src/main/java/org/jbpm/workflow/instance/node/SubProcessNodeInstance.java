@@ -33,7 +33,6 @@ import org.jbpm.process.instance.ContextInstanceContainer;
 import org.jbpm.process.instance.InternalProcessRuntime;
 import org.jbpm.process.instance.KogitoProcessContextImpl;
 import org.jbpm.process.instance.ProcessInstance;
-import org.jbpm.process.instance.StartProcessHelper;
 import org.jbpm.process.instance.context.exception.ExceptionScopeInstance;
 import org.jbpm.process.instance.impl.ContextInstanceFactory;
 import org.jbpm.process.instance.impl.ContextInstanceFactoryRegistry;
@@ -42,6 +41,7 @@ import org.jbpm.workflow.core.Node;
 import org.jbpm.workflow.core.impl.NodeIoHelper;
 import org.jbpm.workflow.core.node.SubProcessNode;
 import org.kie.api.KieBase;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.definition.process.Process;
 import org.kie.api.runtime.process.EventListener;
 import org.kie.internal.KieInternalServices;
@@ -86,34 +86,17 @@ public class SubProcessNodeInstance extends StateBasedNodeInstance implements Ev
                     "A SubProcess node only accepts default incoming connections!");
         }
 
-        Map<String, Object> parameters = NodeIoHelper.processInputs(this, key -> getVariable(key));
-
-        String processIdExpression = getSubProcessNode().getProcessId();
-        if (processIdExpression == null) {
-            // if process id is not given try with process name
-            processIdExpression = getSubProcessNode().getProcessName();
-        }
-        String processId = resolveExpression(processIdExpression);
-
         KieBase kbase = getProcessInstance().getKnowledgeRuntime().getKieBase();
-        // start process instance
-        Process process = kbase.getProcess(processId);
+        KogitoProcessId id = getSubProcessNode().getProcessId();
+        Process process = kbase.getProcess(id);
 
         if (process == null) {
-            // try to find it by name
-            String latestProcessId = StartProcessHelper.findLatestProcessByName(kbase, processId);
-            if (latestProcessId != null) {
-                processId = latestProcessId;
-                process = kbase.getProcess(processId);
-            }
-        }
-
-        if (process == null) {
-            logger.error("Could not find process {}", processId);
+            logger.error("Could not find process name {} version {}", id.id(), id.version());
             logger.error("Aborting process");
             getProcessInstance().setState(KogitoProcessInstance.STATE_ABORTED);
-            throw new RuntimeException("Could not find process " + processId);
+            throw new RuntimeException("Could not find process " + id);
         } else {
+            Map<String, Object> parameters = NodeIoHelper.processInputs(this, key -> getVariable(key));
             KogitoProcessRuntime kruntime = InternalProcessRuntime.asKogitoProcessRuntime(getProcessInstance().getKnowledgeRuntime());
             if (getSubProcessNode().getMetaData("MICollectionInput") != null) {
                 // remove foreach input variable to avoid problems when running in variable strict mode
@@ -126,14 +109,14 @@ public class SubProcessNodeInstance extends StateBasedNodeInstance implements Ev
                 // since correlation key must be unique for active instances it appends processId and timestamp
                 List<String> businessKeys = new ArrayList<>();
                 businessKeys.add(getProcessInstance().getCorrelationKey());
-                businessKeys.add(processId);
+                businessKeys.add(id.id());
                 businessKeys.add(String.valueOf(System.currentTimeMillis()));
                 CorrelationKeyFactory correlationKeyFactory = KieInternalServices.Factory.get().newCorrelationKeyFactory();
                 CorrelationKey subProcessCorrelationKey = correlationKeyFactory.newCorrelationKey(businessKeys);
-                processInstance = (ProcessInstanceImpl) ((CorrelationAwareProcessRuntime) kruntime).createProcessInstance(processId, subProcessCorrelationKey, parameters);
+                processInstance = (ProcessInstanceImpl) ((CorrelationAwareProcessRuntime) kruntime).createProcessInstance(id, subProcessCorrelationKey, parameters);
             } else {
 
-                processInstance = (ProcessInstanceImpl) kruntime.createProcessInstance(processId, parameters);
+                processInstance = (ProcessInstanceImpl) kruntime.createProcessInstance(id, parameters);
             }
             this.processInstanceId = processInstance.getStringId();
             processInstance.setMetaData("ParentProcessInstanceId", getProcessInstance().getStringId());

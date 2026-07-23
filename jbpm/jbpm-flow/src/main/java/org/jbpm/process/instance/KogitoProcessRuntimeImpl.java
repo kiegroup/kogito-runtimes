@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.kie.api.KieBase;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.event.process.ProcessEventManager;
 import org.kie.api.runtime.KieRuntime;
 import org.kie.api.runtime.KieSession;
@@ -42,27 +43,27 @@ public class KogitoProcessRuntimeImpl implements KogitoProcessRuntime {
     }
 
     @Override
-    public KogitoProcessInstance startProcess(String processId) {
+    public KogitoProcessInstance startProcess(KogitoProcessId processId) {
         return (KogitoProcessInstance) delegate.startProcess(processId);
     }
 
     @Override
-    public KogitoProcessInstance startProcess(String processId, Map<String, Object> parameters) {
+    public KogitoProcessInstance startProcess(KogitoProcessId processId, Map<String, Object> parameters) {
         return (KogitoProcessInstance) delegate.startProcess(processId, parameters);
     }
 
     @Override
-    public KogitoProcessInstance createProcessInstance(String processId, Map<String, Object> parameters) {
+    public KogitoProcessInstance createProcessInstance(KogitoProcessId processId, Map<String, Object> parameters) {
         return (KogitoProcessInstance) delegate.createProcessInstance(processId, parameters);
     }
 
     @Override
-    public KogitoProcessInstance startProcess(String processId, AgendaFilter agendaFilter) {
+    public KogitoProcessInstance startProcess(KogitoProcessId processId, AgendaFilter agendaFilter) {
         return (KogitoProcessInstance) delegate.startProcess(processId, agendaFilter);
     }
 
     @Override
-    public KogitoProcessInstance startProcess(String processId, Map<String, Object> parameters, AgendaFilter agendaFilter) {
+    public KogitoProcessInstance startProcess(KogitoProcessId processId, Map<String, Object> parameters, AgendaFilter agendaFilter) {
         return (KogitoProcessInstance) delegate.startProcess(processId, parameters, agendaFilter);
     }
 
@@ -148,7 +149,7 @@ public class KogitoProcessRuntimeImpl implements KogitoProcessRuntime {
         return null;
     }
 
-    public KogitoProcessInstance startProcess(String processId, Map<String, Object> parameters, String trigger, AgendaFilter agendaFilter) {
+    public KogitoProcessInstance startProcess(KogitoProcessId processId, Map<String, Object> parameters, String trigger, AgendaFilter agendaFilter) {
         KogitoProcessInstance processInstance = createProcessInstance(processId, parameters);
         if (processInstance != null) {
             // start process instance

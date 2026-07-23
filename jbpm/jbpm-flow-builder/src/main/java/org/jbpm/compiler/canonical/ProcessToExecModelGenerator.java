@@ -18,7 +18,6 @@
  */
 package org.jbpm.compiler.canonical;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -27,13 +26,10 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import org.drools.util.StringUtils;
-import org.jbpm.process.core.ContextContainer;
 import org.jbpm.process.core.context.variable.Variable;
 import org.jbpm.process.core.context.variable.VariableScope;
 import org.jbpm.ruleflow.core.RuleFlowProcess;
-import org.jbpm.workflow.core.impl.WorkflowProcessImpl;
-import org.jbpm.workflow.core.node.WorkItemNode;
-import org.kie.api.definition.process.Node;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.definition.process.WorkflowProcess;
 import org.kie.kogito.ProcessInput;
 import org.kie.kogito.internal.process.runtime.KogitoWorkflowProcess;
@@ -97,7 +93,7 @@ public class ProcessToExecModelGenerator {
                 ClassOrInterfaceDeclaration.class,
                 sl -> true);
 
-        String extractedProcessId = extractProcessId(process.getId());
+        String extractedProcessId = extractProcessId(process.getProcessId());
 
         if (!processClazzOptional.isPresent()) {
             throw new NoSuchElementException("Cannot find class declaration in the template");
@@ -127,10 +123,10 @@ public class ProcessToExecModelGenerator {
 
     public ModelMetaData generateModel(WorkflowProcess process) {
         String packageName = process.getPackageName();
-        String name = extractModelClassName(process.getId());
+        String name = extractModelClassName(process.getProcessId());
         VariableScope variableScope = getVariableScope(process);
-        String toModelClassName = extractModelClassName(process.getId()) + "Output";
-        return new ModelMetaData(process.getId(),
+        String toModelClassName = extractModelClassName(process.getProcessId()) + "Output";
+        return new ModelMetaData(process.getProcessId(),
                 packageName,
                 name,
                 ((KogitoWorkflowProcess) process).getVisibility(),
@@ -143,25 +139,25 @@ public class ProcessToExecModelGenerator {
 
     public ModelMetaData generateInputModel(WorkflowProcess process) {
         String packageName = process.getPackageName();
-        String modelName = extractModelClassName(process.getId());
+        String modelName = extractModelClassName(process.getProcessId());
         String name = modelName + "Input";
         VariableDeclarations inputVars = VariableDeclarations.ofInput(getVariableScope(process));
-        return new ModelMetaData(process.getId(),
+        return new ModelMetaData(process.getProcessId(),
                 packageName, name,
                 ((KogitoWorkflowProcess) process).getVisibility(),
                 inputVars,
                 true,
                 "/class-templates/ModelNoIDTemplate.java",
                 new AddMethodConsumer("toModel", modelName, inputVars, false),
-                new AddProcessAnnotation(process.getId()));
+                new AddProcessAnnotation(process.getProcessId()));
     }
 
     public ModelMetaData generateOutputModel(WorkflowProcess process) {
         String packageName = process.getPackageName();
-        String modelName = extractModelClassName(process.getId());
+        String modelName = extractModelClassName(process.getProcessId());
         String name = modelName + "Output";
         VariableScope variableScope = getVariableScope(process);
-        return new ModelMetaData(process.getId(),
+        return new ModelMetaData(process.getProcessId(),
                 packageName,
                 name,
                 ((KogitoWorkflowProcess) process).getVisibility(),
@@ -234,9 +230,9 @@ public class ProcessToExecModelGenerator {
 
     private static class AddProcessAnnotation implements Consumer<CompilationUnit> {
 
-        private final String processId;
+        private final KogitoProcessId processId;
 
-        public AddProcessAnnotation(String processId) {
+        public AddProcessAnnotation(KogitoProcessId processId) {
             this.processId = processId;
         }
 
@@ -246,37 +242,16 @@ public class ProcessToExecModelGenerator {
                     .orElseThrow(() -> new NoSuchElementException("Cannot find class declaration in the template"));
 
             clazz.addAndGetAnnotation(ProcessInput.class)
-                    .addPair(PROCESS_NAME_PARAM, new StringLiteralExpr(processId));
+                    .addPair(PROCESS_NAME_PARAM, new StringLiteralExpr(processId.id()));
         }
     }
 
-    public static String extractModelClassName(String processId) {
+    public static String extractModelClassName(KogitoProcessId processId) {
         return sanitizeClassName(extractProcessId(processId) + MODEL_CLASS_SUFFIX);
     }
 
-    public List<WorkItemModelMetaData> generateWorkItemModel(WorkflowProcess process) {
-        String packageName = process.getPackageName();
-        List<WorkItemModelMetaData> workItemTaskModels = new ArrayList<>();
-
-        VariableScope variableScope = (VariableScope) ((org.jbpm.process.core.Process) process).getDefaultContext(
-                VariableScope.VARIABLE_SCOPE);
-
-        for (Node node : ((WorkflowProcessImpl) process).getNodesRecursively()) {
-            if (node instanceof WorkItemNode workItemNode) {
-                VariableScope nodeVariableScope = (VariableScope) ((ContextContainer) workItemNode
-                        .getParentContainer()).getDefaultContext(VariableScope.VARIABLE_SCOPE);
-                if (nodeVariableScope == null) {
-                    nodeVariableScope = variableScope;
-                }
-                workItemTaskModels.add(new WorkItemModelMetaData(packageName, variableScope, nodeVariableScope,
-                        workItemNode, process.getId()));
-            }
-        }
-
-        return workItemTaskModels;
-    }
-
-    public static String extractProcessId(String processId) {
-        return processId.contains(".") ? processId.substring(processId.lastIndexOf('.') + 1) : processId;
+    public static String extractProcessId(KogitoProcessId processId) {
+        // TODO take version into account
+        return processId.id().contains(".") ? processId.id().substring(processId.id().lastIndexOf('.') + 1) : processId.id();
     }
 }

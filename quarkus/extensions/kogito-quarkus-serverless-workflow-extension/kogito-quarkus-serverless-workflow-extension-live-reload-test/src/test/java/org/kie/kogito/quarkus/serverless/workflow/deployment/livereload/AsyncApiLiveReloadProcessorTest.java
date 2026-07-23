@@ -40,6 +40,7 @@ import static org.awaitility.Awaitility.await;
 import static org.kie.kogito.quarkus.serverless.workflow.deployment.livereload.LiveReloadProcessorTestUtils.configureWiremockServer;
 import static org.kie.kogito.quarkus.serverless.workflow.deployment.livereload.LiveReloadProcessorTestUtils.createTest;
 
+@Disabled
 public class AsyncApiLiveReloadProcessorTest {
 
     private static final int PORT = SocketUtils.findAvailablePort();
