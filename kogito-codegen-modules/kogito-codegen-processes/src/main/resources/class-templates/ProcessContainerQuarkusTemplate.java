@@ -36,7 +36,7 @@ public class Processes implements org.kie.kogito.process.Processes {
     @jakarta.annotation.PostConstruct
     public void setup() {
         for (org.kie.kogito.process.Process<? extends org.kie.kogito.Model> process : processes) {
-            mappedProcesses.put(process.id(), process);
+            mappedProcesses.put(process.processId(), process);
         }
     }
     

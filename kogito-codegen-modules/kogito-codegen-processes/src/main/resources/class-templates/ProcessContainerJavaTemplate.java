@@ -35,7 +35,9 @@ public class Processes implements org.kie.kogito.process.Processes {
 
     private final Application application;
     private java.util.Map<KogitoProcessId, org.kie.kogito.process.Process<? extends org.kie.kogito.Model>> mappedProcesses = new java.util.concurrent.ConcurrentHashMap<>();
-
+    private boolean isRegistered = false;
+    
+    
     public Processes(Application application) {
         this.application = application;
         JobsService jobsService = this.application.config().get(ProcessConfig.class).jobsService();
@@ -48,13 +50,14 @@ public class Processes implements org.kie.kogito.process.Processes {
     }
 
     public org.kie.kogito.process.Process<? extends org.kie.kogito.Model> processById(KogitoProcessId processId) {
+        if (!isRegistered) {
+    	    isRegistered=true;
+    	     registerProcesses();
+    	}
     	return mappedProcesses.get(processId);
     }
     
-    private void registerProcess(org.kie.kogito.process.Process<? extends org.kie.kogito.Model> process) {
-        mappedProcesses.put(process.processId(), process);
-    }
-    
+   
     @Override
     public Iterator<Process<? extends Model>> iterator() {
         return mappedProcesses.values().iterator();
