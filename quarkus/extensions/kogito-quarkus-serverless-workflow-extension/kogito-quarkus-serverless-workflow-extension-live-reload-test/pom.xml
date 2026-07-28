@@ -80,10 +80,20 @@
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-clients</artifactId>
         </dependency>
-        <!-- Required for dev mode tests. -->
+        <!-- Required for dev mode tests in Quarkus 3.33.x: dev-UI classes were split into separate artifacts -->
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-messaging-dev</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-kafka-client-dev</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-grpc-dev</artifactId>
             <scope>test</scope>
         </dependency>
 
