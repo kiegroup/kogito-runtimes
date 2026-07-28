@@ -27,11 +27,9 @@ import io.quarkus.restclient.runtime.RestClientBuilderFactory;
 import jakarta.annotation.Priority;
 import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.inject.Alternative;
-import jakarta.enterprise.inject.Specializes;
 
 @Dependent
 @Alternative
-@Specializes
 @Priority(199)
 public class RuntimeConfigCredentialsProvider extends ConfigCredentialsProvider {
 
