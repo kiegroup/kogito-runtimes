@@ -19,7 +19,6 @@
 package org.kie.kogito.quarkus.serverless.workflow.opentelemetry;
 
 import io.opentelemetry.api.common.AttributeKey;
-import io.opentelemetry.semconv.ResourceAttributes;
 
 /**
  * Centralized constants for OpenTelemetry attribute keys used in SonataFlow.
@@ -52,8 +51,8 @@ public final class SonataFlowOtelAttributes {
             AttributeKey.stringKey("sonataflow.transaction.id");
 
     // Standard OpenTelemetry Service Attributes (using semantic conventions)
-    public static final AttributeKey<String> SERVICE_NAME = ResourceAttributes.SERVICE_NAME;
-    public static final AttributeKey<String> SERVICE_VERSION = ResourceAttributes.SERVICE_VERSION;
+    public static final AttributeKey<String> SERVICE_NAME = AttributeKey.stringKey("service.name");
+    public static final AttributeKey<String> SERVICE_VERSION = AttributeKey.stringKey("service.version");
 
     // Event Attributes - Process lifecycle
     public static final AttributeKey<String> PROCESS_INSTANCE_ID =
