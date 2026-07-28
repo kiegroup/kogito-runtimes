@@ -81,7 +81,15 @@ public class LambdaSubProcessNodeVisitor extends AbstractNodeVisitor<SubProcessN
             throw new RuntimeException(e);
         }
         String name = node.getName();
+
         KogitoProcessId subProcessId = node.getProcessId();
+        if (subProcessId.version() == null) {
+            KogitoWorkflowProcess process = metadata.processes().get(subProcessId);
+            subProcessId = process.getProcessId();
+            if (subProcessId != null) {
+                node.setProcessId(subProcessId);
+            }
+        }
 
         NodeValidator.of(getNodeKey(), name)
                 .notEmpty("subProcessId", subProcessId.id())
@@ -96,7 +104,7 @@ public class LambdaSubProcessNodeVisitor extends AbstractNodeVisitor<SubProcessN
 
         Map<String, String> inputTypes = node.getIoSpecification().getInputTypes();
 
-        String subProcessModelClassName = metadata.getModelClassName() != null ? metadata.getModelClassName() : ProcessToExecModelGenerator.extractModelClassName(subProcessId);
+        String subProcessModelClassName = metadata.getModelClassName();
 
         ModelMetaData subProcessModel = new ModelMetaData(subProcessId,
                 metadata.getModelPackageName() != null ? metadata.getModelPackageName() : metadata.getPackageName(),
@@ -155,7 +163,7 @@ public class LambdaSubProcessNodeVisitor extends AbstractNodeVisitor<SubProcessN
     }
 
     private BlockStmt createInstance(SubProcessNode subProcessNode, ProcessMetaData metadata) {
-        String subProcessModelClassName = metadata.getModelClassName() != null ? metadata.getModelClassName() : ProcessToExecModelGenerator.extractModelClassName(subProcessNode.getProcessId());
+        String subProcessModelClassName = metadata.getModelClassName();
         String processFieldName = "app";
         Expression expr = new NameExpr(processFieldName);
         ClassOrInterfaceType processesType = new ClassOrInterfaceType(null, Processes.class.getCanonicalName());

@@ -29,10 +29,13 @@ import java.util.Map;
 import java.util.Set;
 
 import org.kie.api.definition.process.KogitoProcessId;
+import org.kie.kogito.internal.process.runtime.KogitoWorkflowProcess;
 
 import com.github.javaparser.ast.CompilationUnit;
 
 public class ProcessMetaData {
+
+    private final Map<KogitoProcessId, KogitoWorkflowProcess> processes;
 
     private final String processPackageName;
     private final String processBaseClassName;
@@ -67,8 +70,8 @@ public class ProcessMetaData {
     private Map<String, CompilationUnit> generatedHandlers = new HashMap<>();
     private Set<CompilationUnit> generatedListeners = new HashSet<>();
 
-    public ProcessMetaData(String processId, String extractedProcessId, String processName, String processVersion, String processPackageName, String processClassName) {
-        super();
+    public ProcessMetaData(String processId, String extractedProcessId, String processName, String processVersion, String processPackageName, String processClassName,
+            Map<KogitoProcessId, KogitoWorkflowProcess> processes) {
         this.processId = processId;
         this.extractedProcessId = extractedProcessId;
         this.processName = processName;
@@ -76,10 +79,15 @@ public class ProcessMetaData {
         this.processPackageName = processPackageName;
         this.processClassName = processPackageName == null ? processClassName : processPackageName + "." + processClassName;
         this.processBaseClassName = processClassName;
+        this.processes = processes;
     }
 
     public String getPackageName() {
         return processPackageName;
+    }
+
+    public Map<KogitoProcessId, KogitoWorkflowProcess> processes() {
+        return processes;
     }
 
     public String getProcessBaseClassName() {

@@ -35,7 +35,7 @@ import jakarta.ws.rs.core.Response;
 public class GreetResource {
 
     @Inject
-    @Named("greet")
+    @Named("greet_1.0")
     Process<? extends Model> process;
 
     @GET

@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 import org.drools.codegen.common.di.DependencyInjectionAnnotator;
 import org.drools.codegen.common.rest.RestAnnotator;
 import org.drools.util.StringUtils;
+import org.jbpm.compiler.canonical.ProcessToExecModelGenerator;
 import org.jbpm.compiler.canonical.TriggerMetaData;
 import org.jbpm.ruleflow.core.Metadata;
 import org.jbpm.ruleflow.core.RuleFlowProcess;
@@ -44,7 +45,6 @@ import org.kie.kogito.codegen.core.CodegenUtils;
 import org.kie.kogito.codegen.core.GeneratorConfig;
 import org.kie.kogito.codegen.faultTolerance.FaultToleranceAnnotator;
 import org.kie.kogito.internal.process.runtime.KogitoWorkflowProcess;
-import org.kie.kogito.internal.utils.ConversionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,7 +80,6 @@ public class ProcessResourceGenerator {
 
     private static final String REST_TEMPLATE_NAME = "RestResource";
     private static final String REACTIVE_REST_TEMPLATE_NAME = "ReactiveRestResource";
-    private static final String REST_WORK_ITEM_TEMPLATE_NAME = "RestResourceWorkItem";
     private static final String REST_SIGNAL_TEMPLATE_NAME = "RestResourceSignal";
 
     private static final String SIGNAL_METHOD_PREFFIX = "signal_";
@@ -92,10 +91,8 @@ public class ProcessResourceGenerator {
     private final String processClazzName;
     private final String processName;
     private KogitoWorkflowProcess process;
-    private String processId;
     private String dataClazzName;
     private String modelfqcn;
-    private String version;
 
     private boolean startable;
     private boolean dynamic;
@@ -107,20 +104,25 @@ public class ProcessResourceGenerator {
     private CompilationUnit taskModelFactoryUnit;
     private String taskModelFactoryClassName;
 
+    private final String path;
+
     public ProcessResourceGenerator(
             KogitoBuildContext context,
             KogitoWorkflowProcess process,
             String modelfqcn,
             String processfqcn,
-            String appCanonicalName) {
+            String appCanonicalName, boolean inclVersion) {
         if (!context.hasRest()) {
             throw new IllegalArgumentException(String.format(INVALID_CONTEXT_TEMPLATE, context.name()));
         }
         this.context = context;
         this.process = process;
-        this.processId = process.getId();
-        this.processName = ConversionUtils.sanitizeToSimpleName(processId);
-        this.version = process.getVersion();
+        if (inclVersion) {
+            this.processName = process.getProcessId().toString();
+            this.path = process.getId() + "/" + process.getVersion();
+        } else {
+            this.processName = this.path = process.getId();
+        }
         this.resourceClazzName = sanitizeClassName(processName + "Resource");
         this.relativePath = process.getPackageName().replace(".", "/") + "/" + resourceClazzName + ".java";
         this.modelfqcn = modelfqcn;
@@ -207,7 +209,7 @@ public class ProcessResourceGenerator {
 
         if (context.hasDI()) {
             template.findAll(FieldDeclaration.class,
-                    CodegenUtils::isProcessField).forEach(fd -> context.getDependencyInjectionAnnotator().withNamedInjection(fd, processId));
+                    CodegenUtils::isProcessField).forEach(fd -> context.getDependencyInjectionAnnotator().withNamedInjection(fd, ProcessToExecModelGenerator.extractProcessId(process.getProcessId())));
         } else {
             template.findAll(FieldDeclaration.class,
                     CodegenUtils::isProcessField).forEach(this::initializeProcessField);
@@ -443,8 +445,7 @@ public class ProcessResourceGenerator {
                 .getOrDefault("customDescription", "")
                 .toString();
         String interpolated =
-                s.replace("$name$", processName).replace("$version$", version)
-                        .replace("$id$", processId)
+                s.replace("$name$", processName).replace("$path$", path)
                         .replace("$documentation$", documentation)
                         .replace("$processInstanceDescription$", processInstanceDescription);
         vv.setString(interpolated);

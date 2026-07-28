@@ -104,9 +104,6 @@ public class ProcessInstanceJobDescription implements JobDescription {
     @Override
     public String path() {
         StringBuilder sb = new StringBuilder(JOBS_CALLBACK_URI).append('/').append(processId().id());
-        if (processId.version() != null) {
-            sb.append('/').append(processId.version());
-        }
         sb.append("/instances/").append(processInstanceId()).append("/timers/").append(timerId());
         return sb.toString();
     }

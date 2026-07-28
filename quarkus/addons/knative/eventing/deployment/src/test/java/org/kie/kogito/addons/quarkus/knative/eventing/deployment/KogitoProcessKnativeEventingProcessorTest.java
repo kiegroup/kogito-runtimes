@@ -29,6 +29,7 @@ import org.jbpm.ruleflow.core.Metadata;
 import org.jbpm.ruleflow.core.WorkflowElementIdentifierFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.definition.process.Node;
 import org.kie.kogito.codegen.process.events.ProcessCloudEventMeta;
 import org.kie.kogito.codegen.process.events.ProcessCloudEventMetaBuilder;
@@ -93,7 +94,7 @@ class KogitoProcessKnativeEventingProcessorTest {
         when(processor.selectDeploymentTarget(null, kubernetesMetaBuildItems)).thenCallRealMethod();
         when(processor.getCloudEventMetaBuilder()).thenReturn(mockedCEBuilder);
         when(mockedCEBuilder.build(containerGeneratorBuildItem.getProcessContainerGenerators()))
-                .thenReturn(Collections.singleton(new ProcessCloudEventMeta("123", triggerMetadata)));
+                .thenReturn(Collections.singleton(new ProcessCloudEventMeta(new KogitoProcessId("123"), triggerMetadata)));
 
         processor.buildMetadata(singletonList(containerGeneratorBuildItem), extendedCloudEventsBuildItems, null, kubernetesMetaBuildItems, metadata);
 
@@ -119,7 +120,7 @@ class KogitoProcessKnativeEventingProcessorTest {
         when(processor.selectDeploymentTarget(deploymentTargets, kubernetesMetaBuildItems)).thenCallRealMethod();
         when(processor.getCloudEventMetaBuilder()).thenReturn(mockedCEBuilder);
         when(mockedCEBuilder.build(containerGeneratorBuildItem.getProcessContainerGenerators()))
-                .thenReturn(Collections.singleton(new ProcessCloudEventMeta("123", triggerMetadata)));
+                .thenReturn(Collections.singleton(new ProcessCloudEventMeta(new KogitoProcessId("123"), triggerMetadata)));
 
         processor.buildMetadata(singletonList(containerGeneratorBuildItem), extendedCloudEventsBuildItems, deploymentTargets, kubernetesMetaBuildItems, metadata);
 

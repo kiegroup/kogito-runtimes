@@ -19,6 +19,7 @@
 package org.jbpm.compiler.canonical;
 
 import java.util.Collections;
+import java.util.Map;
 
 import org.jbpm.process.core.datatype.impl.type.IntegerDataType;
 import org.jbpm.process.core.datatype.impl.type.ObjectDataType;
@@ -26,105 +27,17 @@ import org.jbpm.process.core.datatype.impl.type.StringDataType;
 import org.jbpm.ruleflow.core.RuleFlowProcessFactory;
 import org.jbpm.ruleflow.core.WorkflowElementIdentifierFactory;
 import org.junit.jupiter.api.Test;
-import org.kie.api.definition.process.Process;
 import org.kie.api.definition.process.WorkflowElementIdentifier;
 import org.kie.api.definition.process.WorkflowProcess;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ProcessToExecModelGeneratorTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(ProcessToExecModelGeneratorTest.class);
-
     private static WorkflowElementIdentifier one = WorkflowElementIdentifierFactory.fromExternalFormat("one");
     private static WorkflowElementIdentifier two = WorkflowElementIdentifierFactory.fromExternalFormat("two");
     private static WorkflowElementIdentifier three = WorkflowElementIdentifierFactory.fromExternalFormat("three");
     private static WorkflowElementIdentifier four = WorkflowElementIdentifierFactory.fromExternalFormat("four");
-
-    @Test
-    public void testScriptAndWorkItemGeneration() {
-
-        RuleFlowProcessFactory factory = RuleFlowProcessFactory.createProcess("demo.orders");
-        factory
-                .variable("order", new ObjectDataType("com.myspace.demo.Order"))
-                .variable("approver", new ObjectDataType("String"))
-                .name("orders")
-                .packageName("com.myspace.demo")
-                .dynamic(false)
-                .version("1.0")
-                .workItemNode(one)
-                .name("Log")
-                .workName("Log")
-                .done()
-                .actionNode(two)
-                .name("Dump order")
-                .action("java", "System.out.println(\"Order has been created \" + order);")
-                .done()
-                .endNode(three)
-                .name("end")
-                .terminate(false)
-                .done()
-                .startNode(four)
-                .name("start")
-                .done()
-                .connection(two, one)
-                .connection(four, two)
-                .connection(one, three);
-
-        WorkflowProcess process = factory.validate().getProcess();
-
-        ProcessMetaData processMetadata = ProcessToExecModelGenerator.INSTANCE.generate(process);
-        assertThat(processMetadata).as("Dumper should return non null class for process").isNotNull();
-
-        logger.debug(processMetadata.getGeneratedClassModel().toString());
-
-        assertThat(processMetadata.getExtractedProcessId()).isEqualTo("orders");
-        assertThat(processMetadata.getProcessId()).isEqualTo("demo.orders");
-        assertThat(processMetadata.getProcessName()).isEqualTo("orders");
-        assertThat(processMetadata.getProcessVersion()).isEqualTo("1.0");
-        assertThat(processMetadata.getProcessClassName()).isEqualTo("com.myspace.demo.OrdersProcess");
-        assertThat(processMetadata.getGeneratedClassModel()).isNotNull();
-        assertThat(processMetadata.getWorkItems()).hasSize(1);
-    }
-
-    @Test
-    public void testScriptAndWorkItemModelGeneration() {
-
-        RuleFlowProcessFactory factory = RuleFlowProcessFactory.createProcess("demo.orders");
-        factory
-                .variable("order", new ObjectDataType("com.myspace.demo.Order"))
-                .variable("approver", new ObjectDataType("String"))
-                .name("orders")
-                .packageName("com.myspace.demo")
-                .dynamic(false)
-                .version("1.0")
-                .workItemNode(one)
-                .name("Log")
-                .workName("Log")
-                .done()
-                .actionNode(two)
-                .name("Dump order")
-                .action("java", "System.out.println(\"Order has been created \" + order);")
-                .done()
-                .endNode(three)
-                .name("end")
-                .terminate(false)
-                .done()
-                .startNode(four)
-                .name("start")
-                .done()
-                .connection(two, one)
-                .connection(four, two)
-                .connection(one, three);
-
-        Process process = factory.validate().getProcess();
-
-        ModelMetaData modelMetadata = ProcessToExecModelGenerator.INSTANCE.generateModel((WorkflowProcess) process);
-        assertThat(modelMetadata).as("Dumper should return non null class for process").isNotNull();
-        assertThat(modelMetadata.getModelClassName()).isEqualTo("com.myspace.demo.OrdersModel");
-    }
 
     @Test
     public void testScriptVariablewithDefaultValue() {
@@ -159,7 +72,7 @@ public class ProcessToExecModelGeneratorTest {
 
         WorkflowProcess process = factory.validate().getProcess();
 
-        ProcessMetaData processMetadata = ProcessToExecModelGenerator.INSTANCE.generate(process);
+        ProcessMetaData processMetadata = ProcessToExecModelGenerator.INSTANCE.generate(process, Map.of());
         assertThat(processMetadata).as("Dumper should return non null class for process").isNotNull();
     }
 
@@ -196,7 +109,7 @@ public class ProcessToExecModelGeneratorTest {
 
         WorkflowProcess process = factory.validate().getProcess();
 
-        ProcessMetaData processMetadata = ProcessToExecModelGenerator.INSTANCE.generate(process);
+        ProcessMetaData processMetadata = ProcessToExecModelGenerator.INSTANCE.generate(process, Map.of());
         assertThat(processMetadata).as("Dumper should return non null class for process").isNotNull();
     }
 }

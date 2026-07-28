@@ -18,22 +18,26 @@
  */
 package org.kie.kogito.codegen.process;
 
+import java.util.Map;
 import java.util.Optional;
 
 import org.jbpm.compiler.canonical.ProcessMetaData;
 import org.jbpm.compiler.canonical.ProcessToExecModelGenerator;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.internal.process.runtime.KogitoWorkflowProcess;
 
 public class ProcessExecutableModelGenerator {
 
     private final KogitoWorkflowProcess workFlowProcess;
-    private final ProcessToExecModelGenerator execModelGenerator;
     private String processFilePath;
     private ProcessMetaData processMetaData;
 
-    public ProcessExecutableModelGenerator(KogitoWorkflowProcess workFlowProcess, ProcessToExecModelGenerator execModelGenerator) {
+    public ProcessExecutableModelGenerator(KogitoWorkflowProcess workFlowProcess, ProcessToExecModelGenerator execModelGenerator, Map<KogitoProcessId, KogitoWorkflowProcess> processes) {
         this.workFlowProcess = workFlowProcess;
-        this.execModelGenerator = execModelGenerator;
+        this.processMetaData = execModelGenerator.generate(workFlowProcess, processes);
+        String processClazzName = processMetaData.getProcessClassName();
+        processFilePath = processClazzName.replace('.', '/') + ".java";
+
     }
 
     public boolean isPublic() {
@@ -41,14 +45,6 @@ public class ProcessExecutableModelGenerator {
     }
 
     public ProcessMetaData generate() {
-        if (processMetaData != null) {
-            return processMetaData;
-        }
-        processMetaData = execModelGenerator.generate(workFlowProcess);
-
-        // this is ugly, but this class will be refactored
-        String processClazzName = processMetaData.getProcessClassName();
-        processFilePath = processClazzName.replace('.', '/') + ".java";
         return processMetaData;
     }
 
@@ -58,9 +54,6 @@ public class ProcessExecutableModelGenerator {
     }
 
     public String className() {
-        if (processMetaData == null) {
-            generate();
-        }
         return processMetaData.getProcessClassName();
     }
 
@@ -72,8 +65,8 @@ public class ProcessExecutableModelGenerator {
         return ProcessToExecModelGenerator.extractProcessId(workFlowProcess.getProcessId());
     }
 
-    public String getProcessId() {
-        return workFlowProcess.getId();
+    public KogitoProcessId getProcessId() {
+        return workFlowProcess.getProcessId();
     }
 
     public KogitoWorkflowProcess process() {

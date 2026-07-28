@@ -21,6 +21,7 @@ package org.kie.kogito.codegen.process.events;
 import java.util.Objects;
 
 import org.jbpm.compiler.canonical.TriggerMetaData;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.event.DataEventAttrBuilder;
 import org.kie.kogito.event.EventKind;
 import org.kie.kogito.event.cloudevents.CloudEventMeta;
@@ -30,10 +31,10 @@ import org.kie.kogito.event.cloudevents.CloudEventMeta;
  */
 public class ProcessCloudEventMeta extends CloudEventMeta {
 
-    final String processId;
+    final KogitoProcessId processId;
     final String triggerName;
 
-    public ProcessCloudEventMeta(String processId, TriggerMetaData trigger) {
+    public ProcessCloudEventMeta(KogitoProcessId processId, TriggerMetaData trigger) {
         this.processId = processId;
         this.triggerName = trigger.getName();
 
@@ -42,7 +43,7 @@ public class ProcessCloudEventMeta extends CloudEventMeta {
         this.setSource(this.getKind() == EventKind.PRODUCED ? DataEventAttrBuilder.toSource(processId) : "");
     }
 
-    public String getProcessId() {
+    public KogitoProcessId getProcessId() {
         return processId;
     }
 

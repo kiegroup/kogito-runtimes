@@ -74,6 +74,7 @@ import com.github.javaparser.ast.type.ClassOrInterfaceType;
 
 import static com.github.javaparser.StaticJavaParser.parseClassOrInterfaceType;
 import static org.kie.kogito.internal.utils.ConversionUtils.sanitizeClassName;
+import static org.kie.kogito.internal.utils.ConversionUtils.sanitizeJavaName;
 
 /**
  * Generates the Process&lt;T&gt; container
@@ -396,7 +397,7 @@ public class ProcessGenerator {
                 .addStatement(new MethodCallExpr("activate")));
 
         if (context.hasDI()) {
-            context.getDependencyInjectionAnnotator().withNamedApplicationComponent(cls, process.getId());
+            context.getDependencyInjectionAnnotator().withNamedApplicationComponent(cls, process.getProcessId().toString());
             context.getDependencyInjectionAnnotator().withEagerStartup(cls);
             context.getDependencyInjectionAnnotator().withInjection(constructor);
         }
@@ -496,7 +497,7 @@ public class ProcessGenerator {
                 FieldDeclaration subprocessFieldDeclaration = new FieldDeclaration();
 
                 String subProcessName = ProcessToExecModelGenerator.extractProcessId(subProcess);
-                String fieldName = "process" + subProcessName;
+                String fieldName = sanitizeJavaName("process" + subProcessName);
                 ClassOrInterfaceType modelType = new ClassOrInterfaceType(null, new SimpleName(org.kie.kogito.process.Process.class.getCanonicalName()),
                         NodeList.nodeList(
                                 new ClassOrInterfaceType(null, processMetaData.getModelPackageName() != null ? processMetaData.getModelPackageName() + "." + processMetaData.getModelClassName()

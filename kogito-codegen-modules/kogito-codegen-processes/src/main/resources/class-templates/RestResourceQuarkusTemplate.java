@@ -65,7 +65,7 @@ import org.kie.kogito.auth.SecurityPolicy;
 import jakarta.ws.rs.core.StreamingOutput;
 
 
-@Path("$name$")
+@Path("$path$")
 @Tag(name = "Process - $name$", description = "$documentation$")
 public class $Type$Resource {
 
