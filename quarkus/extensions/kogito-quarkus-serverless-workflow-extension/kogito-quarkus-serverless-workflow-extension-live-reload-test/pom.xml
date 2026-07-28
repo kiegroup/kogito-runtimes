@@ -80,6 +80,12 @@
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-clients</artifactId>
         </dependency>
+        <!-- Required for dev mode tests. -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-messaging-dev</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>io.grpc</groupId>
