@@ -38,6 +38,7 @@ import org.drools.codegen.common.AppPaths;
 import org.drools.codegen.common.DroolsModelBuildContext;
 import org.drools.codegen.common.GeneratedFile;
 import org.drools.codegen.common.GeneratedFileType;
+import org.jboss.jandex.ClassInfo;
 import org.jboss.jandex.DotName;
 import org.jboss.jandex.IndexView;
 import org.jboss.jandex.Indexer;
@@ -317,6 +318,8 @@ public class KogitoAssetsProcessor {
         return makeBuildItems(compiledClassesMap);
     }
 
+    private static final DotName PATH_ANNOTATION = DotName.createSimple("jakarta.ws.rs.Path");
+
     private Optional<KogitoGeneratedClassesBuildItem> indexGeneratedBeanBuildItemWithRestResources(
             KogitoBuildContext context,
             Collection<GeneratedFile> generatedFiles,
@@ -324,15 +327,30 @@ public class KogitoAssetsProcessor {
             BuildProducer<GeneratedBeanBuildItem> generatedBeans,
             BuildProducer<GeneratedJaxRsResourceBuildItem> jaxrsProducer) throws IOException {
 
-        generatedBeanBuildItems.forEach(generatedBeans::produce);
-        Set<String> restResourceClassNameSet = generatedFiles.stream()
+        // Build the Jandex index first so we can determine which REST-typed files are actual
+        // JAX-RS resources (annotated with @Path).
+        // Classes with @Path must only be registered via jaxrsProducer: ResteasyReactiveCommonProcessor
+        // consumes GeneratedJaxRsResourceBuildItem and re-emits each as a GeneratedBeanBuildItem,
+        // so also emitting them via generatedBeans would produce duplicate GeneratedClassBuildItem
+        // entries rejected by Quarkus 3.31+ (AbstractJarBuilder.checkConsistency).
+        // REST-typed classes without @Path (e.g. GlobalObjectMapper, ProcessCloudEventMetaFactory)
+        // are REST-conditional but not JAX-RS resources and must only go via generatedBeans.
+        KogitoGeneratedClassesBuildItem index = indexBuildItems(context, generatedBeanBuildItems);
+        Set<String> jaxRsResourceNames = generatedFiles.stream()
                 .filter(file -> file.type().equals(REST))
                 .map(file -> toClassName(file.path().toString()))
+                .filter(name -> {
+                    ClassInfo classInfo = index.getIndexedClasses().getClassByName(DotName.createSimple(name));
+                    return classInfo != null && classInfo.declaredAnnotation(PATH_ANNOTATION) != null;
+                })
                 .collect(Collectors.toSet());
         generatedBeanBuildItems.stream()
-                .filter(b -> restResourceClassNameSet.contains(b.getName()))
+                .filter(b -> !jaxRsResourceNames.contains(b.getName()))
+                .forEach(generatedBeans::produce);
+        generatedBeanBuildItems.stream()
+                .filter(b -> jaxRsResourceNames.contains(b.getName()))
                 .forEach(b -> jaxrsProducer.produce(new GeneratedJaxRsResourceBuildItem(b.getName(), b.getData())));
-        return Optional.of(indexBuildItems(context, generatedBeanBuildItems));
+        return Optional.of(index);
     }
 
     private void registerKogitoIncubationAPI(BuildProducer<ReflectiveClassBuildItem> reflectiveClass) {
