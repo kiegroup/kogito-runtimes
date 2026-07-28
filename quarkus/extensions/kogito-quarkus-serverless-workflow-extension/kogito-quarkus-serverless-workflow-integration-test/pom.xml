@@ -27,6 +27,7 @@
     <version>111-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
+  <packaging>quarkus</packaging>
 
   <artifactId>sonataflow-quarkus-integration-test</artifactId>
   <name>SonataFlow :: Quarkus Serverless Workflow Extension :: Integration Tests</name>
@@ -126,7 +127,7 @@
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-junit5</artifactId>
+      <artifactId>quarkus-junit</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -241,7 +242,7 @@
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-junit5-internal</artifactId>
+      <artifactId>quarkus-junit-internal</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -305,15 +306,6 @@
         <configuration>
           <skip>${skipTests}</skip>
         </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>build</goal>
-              <goal>generate-code</goal>
-              <goal>generate-code-tests</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

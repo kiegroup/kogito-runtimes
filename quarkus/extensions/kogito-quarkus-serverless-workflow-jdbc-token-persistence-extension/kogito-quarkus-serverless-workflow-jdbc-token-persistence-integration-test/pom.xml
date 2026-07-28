@@ -27,6 +27,7 @@
     <version>111-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
+  <packaging>quarkus</packaging>
 
   <artifactId>sonataflow-quarkus-jdbc-token-persistence-integration-test</artifactId>
   <description>SonataFlow :: Quarkus Serverless Workflow JDBC Token Persistence Extension :: Integration Tests</description>
@@ -124,7 +125,7 @@
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-junit5</artifactId>
+      <artifactId>quarkus-junit</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -244,15 +245,6 @@
         <configuration>
           <skip>${skipTests}</skip>
         </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>build</goal>
-              <goal>generate-code</goal>
-              <goal>generate-code-tests</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

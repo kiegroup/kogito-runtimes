@@ -28,6 +28,7 @@
     <version>111-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
+  <packaging>quarkus</packaging>
 
   <artifactId>sonataflow-addons-quarkus-jwt-parser-integration-tests</artifactId>
   <name>SonataFlow :: Add-Ons :: Quarkus :: JWT Parser :: Integration Tests</name>
@@ -56,7 +57,7 @@
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-junit5</artifactId>
+      <artifactId>quarkus-junit</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -81,13 +82,7 @@
       <plugin>
         <groupId>io.quarkus</groupId>
         <artifactId>quarkus-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>build</goal>
-            </goals>
-          </execution>
-        </executions>
+        <extensions>true</extensions>
       </plugin>
     </plugins>
   </build>
