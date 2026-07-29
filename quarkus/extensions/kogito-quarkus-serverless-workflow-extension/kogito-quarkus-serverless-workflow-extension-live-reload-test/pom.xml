@@ -96,6 +96,11 @@
             <artifactId>quarkus-grpc-dev</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.quarkus.qute</groupId>
+            <artifactId>qute-debug</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>io.grpc</groupId>

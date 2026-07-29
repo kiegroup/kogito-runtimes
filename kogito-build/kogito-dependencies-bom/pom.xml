@@ -1368,6 +1368,11 @@
         <artifactId>hibernate-core</artifactId>
         <version>${version.org.hibernate}</version>
       </dependency>
+      <dependency>
+        <groupId>io.quarkus.qute</groupId>
+        <artifactId>qute-debug</artifactId>
+        <version>${version.io.quarkus}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
