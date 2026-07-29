@@ -161,6 +161,7 @@ public class KogitoAssetsProcessor {
 
     @BuildStep
     public List<KogitoGeneratedClassesBuildItem> generateModel(
+            Capabilities capabilities,
             KogitoGeneratedSourcesBuildItem sources,
             List<KogitoAddonsPreGeneratedSourcesBuildItem> addonsPreSources,
             List<KogitoAddonsPostGeneratedSourcesBuildItem> addonsPostSources,
@@ -173,6 +174,9 @@ public class KogitoAssetsProcessor {
             BuildProducer<GeneratedResourceBuildItem> genResBI) throws IOException {
 
         final KogitoBuildContext context = contextBuildItem.getKogitoBuildContext();
+        // GeneratedJaxRsResourceBuildItem is only consumed by Quarkus REST (resteasy-reactive).
+        // When using classic RESTEasy, @Path resources must go through generatedBeans only.
+        boolean useJaxRsProducer = capabilities.isPresent(Capability.RESTEASY_REACTIVE);
 
         Collection<GeneratedFile> generatedFiles = collectGeneratedFiles(sources, addonsPreSources, addonsPostSources);
 
@@ -201,7 +205,8 @@ public class KogitoAssetsProcessor {
                 generatedJavaSourcesFiles,
                 generatedBeanBuildItems,
                 generatedBeans,
-                jaxrsProducer);
+                jaxrsProducer,
+                useJaxRsProducer);
 
         registerDataEventsForReflection(optionalIndex.map(KogitoGeneratedClassesBuildItem::getIndexedClasses),
                 context, reflectiveClass);
@@ -325,14 +330,22 @@ public class KogitoAssetsProcessor {
             Collection<GeneratedFile> generatedFiles,
             Collection<GeneratedBeanBuildItem> generatedBeanBuildItems,
             BuildProducer<GeneratedBeanBuildItem> generatedBeans,
-            BuildProducer<GeneratedJaxRsResourceBuildItem> jaxrsProducer) throws IOException {
+            BuildProducer<GeneratedJaxRsResourceBuildItem> jaxrsProducer,
+            boolean useJaxRsProducer) throws IOException {
 
-        // Build the Jandex index first so we can determine which REST-typed files are actual
-        // JAX-RS resources (annotated with @Path).
-        // Classes with @Path must only be registered via jaxrsProducer: ResteasyReactiveCommonProcessor
-        // consumes GeneratedJaxRsResourceBuildItem and re-emits each as a GeneratedBeanBuildItem,
-        // so also emitting them via generatedBeans would produce duplicate GeneratedClassBuildItem
-        // entries rejected by Quarkus 3.31+ (AbstractJarBuilder.checkConsistency).
+        if (!useJaxRsProducer) {
+            // Classic RESTEasy: all generated beans go through generatedBeans only.
+            // GeneratedJaxRsResourceBuildItem is consumed only by Quarkus REST (resteasy-reactive),
+            // so using it with classic RESTEasy would leave @Path resources unregistered.
+            generatedBeanBuildItems.forEach(generatedBeans::produce);
+            return Optional.of(indexBuildItems(context, generatedBeanBuildItems));
+        }
+
+        // Quarkus REST (resteasy-reactive): @Path classes must go exclusively via jaxrsProducer.
+        // ResteasyReactiveCommonProcessor consumes GeneratedJaxRsResourceBuildItem and re-emits
+        // each as a GeneratedBeanBuildItem, so also emitting them via generatedBeans would produce
+        // duplicate GeneratedClassBuildItem entries rejected by Quarkus 3.31+
+        // (AbstractJarBuilder.checkConsistency).
         // REST-typed classes without @Path (e.g. GlobalObjectMapper, ProcessCloudEventMetaFactory)
         // are REST-conditional but not JAX-RS resources and must only go via generatedBeans.
         KogitoGeneratedClassesBuildItem index = indexBuildItems(context, generatedBeanBuildItems);
