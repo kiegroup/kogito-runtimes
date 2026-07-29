@@ -91,7 +91,7 @@
     <version.io.micrometer>1.16.6</version.io.micrometer>
     <version.org.flywaydb>11.14.1</version.org.flywaydb>
     <version.org.postgresql>42.7.12</version.org.postgresql>
-    <version.com.h2>2.3.232</version.com.h2> <!-- Overriding version 2.3.230 to fix https://github.com/h2database/h2database/issues/4079 -->
+    <version.com.h2>2.3.240</version.com.h2> 
     <version.io.serverlessworkflow>4.1.0.Final</version.io.serverlessworkflow>
     <version.io.smallrye-open-api>4.0.12</version.io.smallrye-open-api>
     <version.io.smallrye-config>3.13.4</version.io.smallrye-config>
