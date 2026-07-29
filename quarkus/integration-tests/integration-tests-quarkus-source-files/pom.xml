@@ -22,7 +22,6 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <packaging>quarkus</packaging>
   <parent>
     <groupId>org.kie.kogito</groupId>
     <artifactId>kogito-quarkus-integration-tests</artifactId>
@@ -124,7 +123,6 @@
         <plugin>
           <groupId>io.quarkus</groupId>
           <artifactId>quarkus-maven-plugin</artifactId>
-          <extensions>true</extensions>
           <configuration>
             <noDeps>true</noDeps>
             <skip>${skipTests}</skip>
@@ -136,6 +134,13 @@
       <plugin>
         <groupId>io.quarkus</groupId>
         <artifactId>quarkus-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>build</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

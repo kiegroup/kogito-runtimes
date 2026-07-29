@@ -28,7 +28,6 @@
     <version>111-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <packaging>quarkus</packaging>
 
   <name>SonataFlow :: Add-Ons :: Quarkus :: Camel :: Integration Tests</name>
   <description>SonataFlow Quarkus Camel Integration with Serverless Workflow</description>
@@ -120,6 +119,13 @@
         <configuration>
           <skip>${skipTests}</skip>
         </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>build</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

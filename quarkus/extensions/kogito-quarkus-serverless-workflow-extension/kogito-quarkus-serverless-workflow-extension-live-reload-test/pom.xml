@@ -23,7 +23,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <packaging>quarkus</packaging>
     <parent>
         <groupId>org.apache.kie.sonataflow</groupId>
         <artifactId>sonataflow-quarkus-extension</artifactId>
@@ -163,10 +162,18 @@
                 <groupId>io.quarkus</groupId>
                 <artifactId>quarkus-maven-plugin</artifactId>
                 <version>${version.io.quarkus}</version>
-                <extensions>true</extensions>
                 <configuration>
                     <skip>${skipTests}</skip>
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>build</goal>
+                            <goal>generate-code</goal>
+                            <goal>generate-code-tests</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

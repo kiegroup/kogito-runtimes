@@ -28,7 +28,6 @@
     <version>111-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <packaging>quarkus</packaging>
 
   <artifactId>sonataflow-quarkus-image-integration-test</artifactId>
   <name>SonataFlow :: Quarkus Serverless Workflow Extension :: Image Integration Tests</name>
@@ -101,7 +100,6 @@
         <plugin>
           <groupId>io.quarkus</groupId>
           <artifactId>quarkus-maven-plugin</artifactId>
-          <extensions>true</extensions>
           <configuration>
             <noDeps>true</noDeps>
             <skip>${skipTests}</skip>
@@ -113,6 +111,13 @@
       <plugin>
         <groupId>io.quarkus</groupId>
         <artifactId>quarkus-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>build</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
