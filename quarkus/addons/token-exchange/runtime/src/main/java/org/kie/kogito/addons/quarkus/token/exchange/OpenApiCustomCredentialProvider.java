@@ -51,7 +51,6 @@ import jakarta.annotation.PreDestroy;
 import jakarta.annotation.Priority;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Alternative;
-import jakarta.enterprise.inject.Specializes;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.HttpHeaders;
 
@@ -67,7 +66,6 @@ import static io.quarkiverse.openapi.generator.providers.AbstractAuthProvider.ge
  */
 @ApplicationScoped
 @Alternative
-@Specializes
 @Priority(200)
 public class OpenApiCustomCredentialProvider extends RuntimeConfigCredentialsProvider implements TokenCRUD {
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenApiCustomCredentialProvider.class);

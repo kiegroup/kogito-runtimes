@@ -38,6 +38,7 @@ import org.drools.codegen.common.AppPaths;
 import org.drools.codegen.common.DroolsModelBuildContext;
 import org.drools.codegen.common.GeneratedFile;
 import org.drools.codegen.common.GeneratedFileType;
+import org.jboss.jandex.ClassInfo;
 import org.jboss.jandex.DotName;
 import org.jboss.jandex.IndexView;
 import org.jboss.jandex.Indexer;
@@ -160,6 +161,7 @@ public class KogitoAssetsProcessor {
 
     @BuildStep
     public List<KogitoGeneratedClassesBuildItem> generateModel(
+            Capabilities capabilities,
             KogitoGeneratedSourcesBuildItem sources,
             List<KogitoAddonsPreGeneratedSourcesBuildItem> addonsPreSources,
             List<KogitoAddonsPostGeneratedSourcesBuildItem> addonsPostSources,
@@ -172,6 +174,9 @@ public class KogitoAssetsProcessor {
             BuildProducer<GeneratedResourceBuildItem> genResBI) throws IOException {
 
         final KogitoBuildContext context = contextBuildItem.getKogitoBuildContext();
+        // GeneratedJaxRsResourceBuildItem is only consumed by Quarkus REST (resteasy-reactive).
+        // When using classic RESTEasy, @Path resources must go through generatedBeans only.
+        boolean useJaxRsProducer = capabilities.isPresent(Capability.RESTEASY_REACTIVE);
 
         Collection<GeneratedFile> generatedFiles = collectGeneratedFiles(sources, addonsPreSources, addonsPostSources);
 
@@ -200,7 +205,8 @@ public class KogitoAssetsProcessor {
                 generatedJavaSourcesFiles,
                 generatedBeanBuildItems,
                 generatedBeans,
-                jaxrsProducer);
+                jaxrsProducer,
+                useJaxRsProducer);
 
         registerDataEventsForReflection(optionalIndex.map(KogitoGeneratedClassesBuildItem::getIndexedClasses),
                 context, reflectiveClass);
@@ -317,22 +323,35 @@ public class KogitoAssetsProcessor {
         return makeBuildItems(compiledClassesMap);
     }
 
+    private static final DotName PATH_ANNOTATION = DotName.createSimple("jakarta.ws.rs.Path");
+
     private Optional<KogitoGeneratedClassesBuildItem> indexGeneratedBeanBuildItemWithRestResources(
             KogitoBuildContext context,
             Collection<GeneratedFile> generatedFiles,
             Collection<GeneratedBeanBuildItem> generatedBeanBuildItems,
             BuildProducer<GeneratedBeanBuildItem> generatedBeans,
-            BuildProducer<GeneratedJaxRsResourceBuildItem> jaxrsProducer) throws IOException {
-
-        generatedBeanBuildItems.forEach(generatedBeans::produce);
-        Set<String> restResourceClassNameSet = generatedFiles.stream()
-                .filter(file -> file.type().equals(REST))
-                .map(file -> toClassName(file.path().toString()))
-                .collect(Collectors.toSet());
-        generatedBeanBuildItems.stream()
-                .filter(b -> restResourceClassNameSet.contains(b.getName()))
-                .forEach(b -> jaxrsProducer.produce(new GeneratedJaxRsResourceBuildItem(b.getName(), b.getData())));
-        return Optional.of(indexBuildItems(context, generatedBeanBuildItems));
+            BuildProducer<GeneratedJaxRsResourceBuildItem> jaxrsProducer,
+            boolean useJaxRsProducer) throws IOException {
+        KogitoGeneratedClassesBuildItem index = indexBuildItems(context, generatedBeanBuildItems);
+        if (useJaxRsProducer) {
+            Set<String> jaxRsResourceNames = generatedFiles.stream()
+                    .filter(file -> file.type().equals(REST))
+                    .map(file -> toClassName(file.path().toString()))
+                    .filter(name -> {
+                        ClassInfo classInfo = index.getIndexedClasses().getClassByName(DotName.createSimple(name));
+                        return classInfo != null && classInfo.declaredAnnotation(PATH_ANNOTATION) != null;
+                    })
+                    .collect(Collectors.toSet());
+            generatedBeanBuildItems.stream()
+                    .filter(b -> !jaxRsResourceNames.contains(b.getName()))
+                    .forEach(generatedBeans::produce);
+            generatedBeanBuildItems.stream()
+                    .filter(b -> jaxRsResourceNames.contains(b.getName()))
+                    .forEach(b -> jaxrsProducer.produce(new GeneratedJaxRsResourceBuildItem(b.getName(), b.getData())));
+        } else {
+            generatedBeanBuildItems.forEach(generatedBeans::produce);
+        }
+        return Optional.of(index);
     }
 
     private void registerKogitoIncubationAPI(BuildProducer<ReflectiveClassBuildItem> reflectiveClass) {

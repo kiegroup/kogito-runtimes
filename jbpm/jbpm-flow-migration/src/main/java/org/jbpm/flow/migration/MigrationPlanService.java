@@ -32,7 +32,7 @@ import org.kie.kogito.process.Processes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.google.common.base.Functions.identity;
+import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 
 /**
