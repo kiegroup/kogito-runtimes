@@ -332,37 +332,25 @@ public class KogitoAssetsProcessor {
             BuildProducer<GeneratedBeanBuildItem> generatedBeans,
             BuildProducer<GeneratedJaxRsResourceBuildItem> jaxrsProducer,
             boolean useJaxRsProducer) throws IOException {
-
-        if (!useJaxRsProducer) {
-            // Classic RESTEasy: all generated beans go through generatedBeans only.
-            // GeneratedJaxRsResourceBuildItem is consumed only by Quarkus REST (resteasy-reactive),
-            // so using it with classic RESTEasy would leave @Path resources unregistered.
-            generatedBeanBuildItems.forEach(generatedBeans::produce);
-            return Optional.of(indexBuildItems(context, generatedBeanBuildItems));
-        }
-
-        // Quarkus REST (resteasy-reactive): @Path classes must go exclusively via jaxrsProducer.
-        // ResteasyReactiveCommonProcessor consumes GeneratedJaxRsResourceBuildItem and re-emits
-        // each as a GeneratedBeanBuildItem, so also emitting them via generatedBeans would produce
-        // duplicate GeneratedClassBuildItem entries rejected by Quarkus 3.31+
-        // (AbstractJarBuilder.checkConsistency).
-        // REST-typed classes without @Path (e.g. GlobalObjectMapper, ProcessCloudEventMetaFactory)
-        // are REST-conditional but not JAX-RS resources and must only go via generatedBeans.
         KogitoGeneratedClassesBuildItem index = indexBuildItems(context, generatedBeanBuildItems);
-        Set<String> jaxRsResourceNames = generatedFiles.stream()
-                .filter(file -> file.type().equals(REST))
-                .map(file -> toClassName(file.path().toString()))
-                .filter(name -> {
-                    ClassInfo classInfo = index.getIndexedClasses().getClassByName(DotName.createSimple(name));
-                    return classInfo != null && classInfo.declaredAnnotation(PATH_ANNOTATION) != null;
-                })
-                .collect(Collectors.toSet());
-        generatedBeanBuildItems.stream()
-                .filter(b -> !jaxRsResourceNames.contains(b.getName()))
-                .forEach(generatedBeans::produce);
-        generatedBeanBuildItems.stream()
-                .filter(b -> jaxRsResourceNames.contains(b.getName()))
-                .forEach(b -> jaxrsProducer.produce(new GeneratedJaxRsResourceBuildItem(b.getName(), b.getData())));
+        if (useJaxRsProducer) {
+            Set<String> jaxRsResourceNames = generatedFiles.stream()
+                    .filter(file -> file.type().equals(REST))
+                    .map(file -> toClassName(file.path().toString()))
+                    .filter(name -> {
+                        ClassInfo classInfo = index.getIndexedClasses().getClassByName(DotName.createSimple(name));
+                        return classInfo != null && classInfo.declaredAnnotation(PATH_ANNOTATION) != null;
+                    })
+                    .collect(Collectors.toSet());
+            generatedBeanBuildItems.stream()
+                    .filter(b -> !jaxRsResourceNames.contains(b.getName()))
+                    .forEach(generatedBeans::produce);
+            generatedBeanBuildItems.stream()
+                    .filter(b -> jaxRsResourceNames.contains(b.getName()))
+                    .forEach(b -> jaxrsProducer.produce(new GeneratedJaxRsResourceBuildItem(b.getName(), b.getData())));
+        } else {
+            generatedBeanBuildItems.forEach(generatedBeans::produce);
+        }
         return Optional.of(index);
     }
 
