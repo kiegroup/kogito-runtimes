@@ -34,6 +34,7 @@ import org.jbpm.workflow.instance.impl.NodeInstanceImpl;
 import org.jbpm.workflow.instance.impl.ProcessInstanceResolverFactory;
 import org.jbpm.workflow.instance.impl.WorkflowProcessInstanceImpl;
 import org.kie.api.command.ExecutableCommand;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.definition.process.Process;
 import org.kie.api.runtime.Context;
 import org.kie.api.runtime.EnvironmentName;
@@ -195,7 +196,7 @@ public class DynamicUtils {
     public static String addDynamicSubProcess(
             final DynamicNodeInstance dynamicContext,
             KieRuntime ksession,
-            final String processId,
+            final KogitoProcessId processId,
             final Map<String, Object> parameters) {
         final WorkflowProcessInstance processInstance = dynamicContext.getProcessInstance();
         return internalAddDynamicSubProcess(processInstance,
@@ -208,7 +209,7 @@ public class DynamicUtils {
     public static String addDynamicSubProcess(
             final org.kie.api.runtime.process.ProcessInstance processInstance,
             KieRuntime ksession,
-            final String processId,
+            final KogitoProcessId processId,
             final Map<String, Object> parameters) {
         return internalAddDynamicSubProcess((WorkflowProcessInstance) processInstance,
                 null,
@@ -221,7 +222,7 @@ public class DynamicUtils {
             final WorkflowProcessInstance processInstance,
             final DynamicNodeInstance dynamicContext,
             KieRuntime ksession,
-            final String processId,
+            final KogitoProcessId processId,
             final Map<String, Object> parameters) {
         final SubProcessNodeInstance subProcessNodeInstance = new SubProcessNodeInstance();
         subProcessNodeInstance.setNodeInstanceContainer(dynamicContext == null ? processInstance : dynamicContext);
@@ -262,7 +263,7 @@ public class DynamicUtils {
     }
 
     private static String executeSubProcess(KogitoProcessRuntime kruntime,
-            String processId,
+            KogitoProcessId processId,
             Map<String, Object> parameters,
             ProcessInstance processInstance,
             SubProcessNodeInstance subProcessNodeInstance) {
@@ -279,7 +280,7 @@ public class DynamicUtils {
             if (((WorkflowProcessInstanceImpl) processInstance).getCorrelationKey() != null) {
                 List<String> businessKeys = new ArrayList<>();
                 businessKeys.add(((WorkflowProcessInstanceImpl) processInstance).getCorrelationKey());
-                businessKeys.add(processId);
+                businessKeys.add(processId.id());
                 businessKeys.add(String.valueOf(System.currentTimeMillis()));
                 CorrelationKeyFactory correlationKeyFactory = KieInternalServices.Factory.get().newCorrelationKeyFactory();
                 CorrelationKey subProcessCorrelationKey = correlationKeyFactory.newCorrelationKey(businessKeys);

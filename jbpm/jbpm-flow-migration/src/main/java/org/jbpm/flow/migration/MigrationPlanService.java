@@ -25,6 +25,7 @@ import org.jbpm.flow.migration.model.MigrationPlan;
 import org.jbpm.flow.migration.model.ProcessDefinitionMigrationPlan;
 import org.jbpm.ruleflow.instance.RuleFlowProcessInstance;
 import org.jbpm.workflow.instance.impl.NodeInstanceImpl;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.Model;
 import org.kie.kogito.internal.process.runtime.KogitoNodeInstance;
 import org.kie.kogito.internal.process.runtime.KogitoWorkflowProcessInstance;
@@ -117,13 +118,13 @@ public class MigrationPlanService {
         }
 
         // target process not being deployed
-        if (!processes.processIds().contains(targetDefinition.getProcessId())) {
+        if (!processes.stream().anyMatch(p -> p.id().equals(targetDefinition.getProcessId()))) {
             LOGGER.debug("No migration target defintion deployed in this container {} for migrating {}.", targetDefinition, processStateDefinition);
             return null;
         }
 
         // target process not matching version
-        org.kie.kogito.process.Process<? extends Model> process = processes.processById(targetDefinition.getProcessId());
+        org.kie.kogito.process.Process<? extends Model> process = processes.processById(new KogitoProcessId(targetDefinition.getProcessId(), targetDefinition.getProcessVersion()));
         ProcessDefinitionMigrationPlan targetDeployed =
                 new ProcessDefinitionMigrationPlan(process.id(), process.version());
 

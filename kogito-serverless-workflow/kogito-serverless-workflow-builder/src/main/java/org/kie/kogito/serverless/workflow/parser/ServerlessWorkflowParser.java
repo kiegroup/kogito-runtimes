@@ -36,6 +36,7 @@ import org.jbpm.ruleflow.core.Metadata;
 import org.jbpm.ruleflow.core.RuleFlowProcessFactory;
 import org.jbpm.ruleflow.core.validation.RuleFlowProcessValidator;
 import org.jbpm.workflow.core.WorkflowModelValidator;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.codegen.api.GeneratedInfo;
 import org.kie.kogito.codegen.api.context.KogitoBuildContext;
 import org.kie.kogito.internal.process.runtime.KogitoWorkflowProcess;
@@ -153,7 +154,7 @@ public class ServerlessWorkflowParser {
         if (parserContext.isCompensation()) {
             factory.metaData(Metadata.COMPENSATION, true);
             factory.metaData(Metadata.COMPENSATE_WHEN_ABORTED, true);
-            factory.addCompensationContext(workflow.getId());
+            factory.addCompensationContext(KogitoProcessId.toString(workflow.getId(), workflow.getVersion()));
         }
         TimeoutsDefinition timeouts = workflow.getTimeouts();
         if (timeouts != null) {

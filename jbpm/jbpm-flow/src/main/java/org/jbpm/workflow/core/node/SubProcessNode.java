@@ -26,6 +26,7 @@ import org.jbpm.process.core.context.AbstractContext;
 import org.jbpm.process.core.impl.ContextContainerImpl;
 import org.jbpm.workflow.core.Node;
 import org.kie.api.definition.process.Connection;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.definition.process.NodeType;
 
 import static org.jbpm.workflow.instance.WorkflowProcessParameters.WORKFLOW_PARAM_MULTIPLE_CONNECTIONS;
@@ -41,7 +42,7 @@ public class SubProcessNode extends StateBasedNode implements ContextContainer {
     // NOTE: ContextInstances are not persisted as current functionality (exception scope) does not require it
     private ContextContainer contextContainer = new ContextContainerImpl();
 
-    private String processId;
+    private KogitoProcessId processId;
     private String processName;
     private boolean waitForCompletion = true;
 
@@ -52,11 +53,11 @@ public class SubProcessNode extends StateBasedNode implements ContextContainer {
         super(NodeType.SUBPROCESS);
     }
 
-    public void setProcessId(final String processId) {
+    public void setProcessId(final KogitoProcessId processId) {
         this.processId = processId;
     }
 
-    public String getProcessId() {
+    public KogitoProcessId getProcessId() {
         return this.processId;
     }
 

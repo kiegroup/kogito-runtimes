@@ -21,6 +21,8 @@ package org.kie.kogito.jobs.api.event.serialization;
 import java.net.URI;
 import java.time.ZonedDateTime;
 
+import org.kie.api.definition.process.KogitoProcessId;
+
 class SerializationTestConstants {
     static final String ID = "ID";
     static final String SPEC_VERSION = "1.0";
@@ -29,7 +31,7 @@ class SerializationTestConstants {
     static final String SUBJECT = "SUBJECT";
     static final String JOB_ID = "JOB_ID";
     static final String PROCESS_INSTANCE_ID_VALUE = "PROCESS_INSTANCE_ID";
-    static final String PROCESS_ID_VALUE = "PROCESS_ID";
+    static final KogitoProcessId PROCESS_ID_VALUE = new KogitoProcessId("PROCESS_ID", "VERSION");
     static final String ROOT_PROCESS_INSTANCE_ID_VALUE = "ROOT_PROCESS_INSTANCE_ID";
     static final String ROOT_PROCESS_ID_VALUE = "ROOT_PROCESS_ID";
     static final String KOGITO_ADDONS_VALUE = "KOGITO_ADDONS";

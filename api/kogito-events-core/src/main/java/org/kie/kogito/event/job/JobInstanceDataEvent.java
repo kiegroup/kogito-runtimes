@@ -19,6 +19,7 @@
 
 package org.kie.kogito.event.job;
 
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.event.AbstractDataEvent;
 
 public class JobInstanceDataEvent extends AbstractDataEvent<byte[]> {
@@ -28,10 +29,10 @@ public class JobInstanceDataEvent extends AbstractDataEvent<byte[]> {
             byte[] data,
             String kogitoProcessInstanceId,
             String kogitoRootProcessInstanceId,
-            String kogitoProcessId,
+            KogitoProcessId kogitoProcessId,
             String kogitoRootProcessId,
             String kogitoIdentity) {
-        super(type, source, data, kogitoProcessInstanceId, kogitoRootProcessInstanceId, kogitoProcessId,
+        super(type, source, data, kogitoProcessInstanceId, kogitoRootProcessInstanceId, kogitoProcessId != null ? kogitoProcessId.id() : null,
                 kogitoRootProcessId, null, kogitoIdentity);
     }
 }

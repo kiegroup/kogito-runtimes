@@ -31,6 +31,7 @@ import org.drools.core.time.TimerService;
 import org.jbpm.workflow.instance.impl.CodegenNodeInstanceFactoryRegistry;
 import org.kie.api.KieBase;
 import org.kie.api.command.Command;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.event.process.ProcessEventListener;
 import org.kie.api.event.process.ProcessEventManager;
 import org.kie.api.event.rule.AgendaEventListener;
@@ -111,28 +112,8 @@ class DummyKnowledgeRuntime implements InternalKnowledgeRuntime, KogitoProcessRu
     }
 
     @Override
-    public KogitoProcessEventSupport getProcessEventSupport() {
-        return processRuntime.getProcessEventSupport();
-    }
-
-    @Override
-    public ProcessEventManager getProcessEventManager() {
-        return processRuntime;
-    }
-
-    @Override
     public Environment getEnvironment() {
         return environment;
-    }
-
-    @Override
-    public JobsService getJobsService() {
-        return null;
-    }
-
-    @Override
-    public KieRuntime getKieRuntime() {
-        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -167,11 +148,6 @@ class DummyKnowledgeRuntime implements InternalKnowledgeRuntime, KogitoProcessRu
 
     @Override
     public KieBase getKieBase() {
-        return null;
-    }
-
-    @Override
-    public KieSession getKieSession() {
         return null;
     }
 
@@ -246,44 +222,39 @@ class DummyKnowledgeRuntime implements InternalKnowledgeRuntime, KogitoProcessRu
     }
 
     @Override
-    public KogitoProcessInstance startProcess(String processId) {
+    public KogitoProcessInstance startProcess(KogitoProcessId processId) {
         return (KogitoProcessInstance) processRuntime.startProcess(processId);
     }
 
     @Override
-    public KogitoProcessInstance startProcess(String processId, Map<String, Object> parameters) {
+    public KogitoProcessInstance startProcess(KogitoProcessId processId, Map<String, Object> parameters) {
         return (KogitoProcessInstance) processRuntime.startProcess(processId, parameters);
     }
 
     @Override
-    public KogitoProcessInstance startProcess(String processId, AgendaFilter agendaFilter) {
+    public KogitoProcessInstance startProcess(KogitoProcessId processId, AgendaFilter agendaFilter) {
         return (KogitoProcessInstance) processRuntime.startProcess(processId, agendaFilter);
     }
 
     @Override
-    public KogitoProcessInstance startProcess(String processId, Map<String, Object> parameters, AgendaFilter agendaFilter) {
+    public KogitoProcessInstance startProcess(KogitoProcessId processId, Map<String, Object> parameters, AgendaFilter agendaFilter) {
         return (KogitoProcessInstance) processRuntime.startProcess(processId, parameters, agendaFilter);
     }
 
     @Override
-    public ProcessInstance startProcessFromNodeIds(String s, Map<String, Object> map, String... strings) {
+    public ProcessInstance startProcessFromNodeIds(KogitoProcessId s, Map<String, Object> map, String... strings) {
         return processRuntime.startProcessFromNodeIds(s, map, strings);
 
     }
 
     @Override
-    public KogitoProcessInstance createProcessInstance(String processId, Map<String, Object> parameters) {
+    public KogitoProcessInstance createProcessInstance(KogitoProcessId processId, Map<String, Object> parameters) {
         return (KogitoProcessInstance) processRuntime.createProcessInstance(processId, null, parameters);
     }
 
     @Override
     public KogitoProcessInstance startProcessInstance(String processInstanceId) {
         return processRuntime.getKogitoProcessRuntime().startProcessInstance(processInstanceId);
-    }
-
-    @Override
-    public KogitoProcessInstance startProcessInstance(String processInstanceId, String trigger) {
-        return processRuntime.getKogitoProcessRuntime().startProcessInstance(processInstanceId, trigger);
     }
 
     @Override
@@ -302,16 +273,6 @@ class DummyKnowledgeRuntime implements InternalKnowledgeRuntime, KogitoProcessRu
     }
 
     @Override
-    public Collection<KogitoProcessInstance> getKogitoProcessInstances() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public WorkItemManager getWorkItemManager() {
-        return (WorkItemManager) getKogitoWorkItemManager();
-    }
-
-    @Override
     public KogitoProcessInstance getProcessInstance(String processInstanceId) {
         return (KogitoProcessInstance) processRuntime.getProcessInstance(processInstanceId);
     }
@@ -324,11 +285,6 @@ class DummyKnowledgeRuntime implements InternalKnowledgeRuntime, KogitoProcessRu
     @Override
     public void abortProcessInstance(String processInstanceId) {
 
-    }
-
-    @Override
-    public KogitoWorkItemManager getKogitoWorkItemManager() {
-        return (KogitoWorkItemManager) this.processRuntime.getWorkItemManager();
     }
 
     @Override
@@ -432,7 +388,52 @@ class DummyKnowledgeRuntime implements InternalKnowledgeRuntime, KogitoProcessRu
     }
 
     @Override
+    public WorkItemManager getWorkItemManager() {
+        return this.processRuntime.getWorkItemManager();
+    }
+
+    @Override
+    public KogitoWorkItemManager getKogitoWorkItemManager() {
+        return (KogitoWorkItemManager) this.processRuntime.getWorkItemManager();
+    }
+
+    @Override
+    public KogitoProcessEventSupport getProcessEventSupport() {
+        return processRuntime.getProcessEventSupport();
+    }
+
+    @Override
+    public ProcessEventManager getProcessEventManager() {
+        return processRuntime;
+    }
+
+    @Override
+    public JobsService getJobsService() {
+        return null;
+    }
+
+    @Override
+    public KieRuntime getKieRuntime() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public KieSession getKieSession() {
+        return null;
+    }
+
+    @Override
     public Application getApplication() {
         return processRuntime.getApplication();
+    }
+
+    @Override
+    public KogitoProcessInstance startProcessInstance(String processInstanceId, String trigger) {
+        return processRuntime.getKogitoProcessRuntime().startProcessInstance(processInstanceId, trigger);
+    }
+
+    @Override
+    public Collection<KogitoProcessInstance> getKogitoProcessInstances() {
+        return Collections.emptyList();
     }
 }

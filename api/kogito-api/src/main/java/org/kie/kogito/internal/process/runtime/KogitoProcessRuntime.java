@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.kie.api.KieBase;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.event.process.ProcessEventManager;
 import org.kie.api.runtime.KieRuntime;
 import org.kie.api.runtime.KieSession;
@@ -44,7 +45,7 @@ public interface KogitoProcessRuntime {
      * @param processId The id of the process that should be started
      * @return the <code>ProcessInstance</code> that represents the instance of the process that was started
      */
-    KogitoProcessInstance startProcess(String processId);
+    KogitoProcessInstance startProcess(KogitoProcessId processId);
 
     /**
      * Start a new process instance. The process (definition) that should
@@ -56,7 +57,7 @@ public interface KogitoProcessRuntime {
      * @param parameters the process variables that should be set when starting the process instance
      * @return the <code>ProcessInstance</code> that represents the instance of the process that was started
      */
-    KogitoProcessInstance startProcess(String processId, Map<String, Object> parameters);
+    KogitoProcessInstance startProcess(KogitoProcessId processId, Map<String, Object> parameters);
 
     /**
      * Creates a new process instance (but does not yet start it). The process
@@ -70,7 +71,7 @@ public interface KogitoProcessRuntime {
      * @param parameters the process variables that should be set when creating the process instance
      * @return the <code>ProcessInstance</code> that represents the instance of the process that was created (but not yet started)
      */
-    KogitoProcessInstance createProcessInstance(String processId, Map<String, Object> parameters);
+    KogitoProcessInstance createProcessInstance(KogitoProcessId processId, Map<String, Object> parameters);
 
     /**
      * Start a new process instance. The process (definition) that should
@@ -80,7 +81,7 @@ public interface KogitoProcessRuntime {
      * @param agendaFilter filters the Matches that may fire
      * @return the <code>ProcessInstance</code> that represents the instance of the process that was started
      */
-    KogitoProcessInstance startProcess(String processId, AgendaFilter agendaFilter);
+    KogitoProcessInstance startProcess(KogitoProcessId processId, AgendaFilter agendaFilter);
 
     /**
      * Start a new process instance. The process (definition) that should
@@ -93,7 +94,7 @@ public interface KogitoProcessRuntime {
      * @param agendaFilter filters the Matches that may fire
      * @return the <code>ProcessInstance</code> that represents the instance of the process that was started
      */
-    KogitoProcessInstance startProcess(String processId, Map<String, Object> parameters, AgendaFilter agendaFilter);
+    KogitoProcessInstance startProcess(KogitoProcessId processId, Map<String, Object> parameters, AgendaFilter agendaFilter);
 
     /**
      * Starts the given process instance (which was created by using createProcesInstance

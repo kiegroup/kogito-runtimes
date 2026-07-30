@@ -20,6 +20,7 @@ package org.kie.kogito.event;
 
 import java.util.Objects;
 
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.internal.process.runtime.KogitoProcessInstance;
 
 /**
@@ -36,9 +37,9 @@ public final class DataEventAttrBuilder {
         return String.format(AbstractDataEvent.SOURCE_FORMAT, process.getProcessId().toLowerCase());
     }
 
-    public static String toSource(final String processId) {
+    public static String toSource(final KogitoProcessId processId) {
         Objects.requireNonNull(processId);
-        return String.format(AbstractDataEvent.SOURCE_FORMAT, processId.toLowerCase());
+        return String.format(AbstractDataEvent.SOURCE_FORMAT, processId.id().toLowerCase());
     }
 
     public static String toType(final String channelName, final KogitoProcessInstance process) {
@@ -47,10 +48,10 @@ public final class DataEventAttrBuilder {
         return String.format(AbstractDataEvent.TYPE_FORMAT, process.getProcessId().toLowerCase(), channelName.toLowerCase());
     }
 
-    public static String toType(final String channelName, final String processId) {
+    public static String toType(final String channelName, final KogitoProcessId processId) {
         Objects.requireNonNull(processId);
         Objects.requireNonNull(channelName);
-        return String.format(AbstractDataEvent.TYPE_FORMAT, processId.toLowerCase(), channelName.toLowerCase());
+        return String.format(AbstractDataEvent.TYPE_FORMAT, processId.id().toLowerCase(), channelName.toLowerCase());
     }
 
 }

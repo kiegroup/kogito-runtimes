@@ -80,5 +80,4 @@ public class DummyProcess implements org.kie.api.definition.process.Process {
     @Override
     public void setResource(Resource res) {
     }
-
 }

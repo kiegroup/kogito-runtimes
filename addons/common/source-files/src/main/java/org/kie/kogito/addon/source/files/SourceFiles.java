@@ -21,13 +21,14 @@ package org.kie.kogito.addon.source.files;
 
 import java.util.Collection;
 
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.source.files.SourceFile;
 
 public interface SourceFiles<T> {
 
     T getSourceFileByUri(String uri) throws Exception;
 
-    Collection<SourceFile> getSourceFilesByProcessId(String processId);
+    Collection<SourceFile> getSourceFilesByProcessId(KogitoProcessId processId);
 
-    T getSourceFileByProcessId(String processId) throws Exception;
+    T getSourceFileByProcessId(KogitoProcessId processId) throws Exception;
 }

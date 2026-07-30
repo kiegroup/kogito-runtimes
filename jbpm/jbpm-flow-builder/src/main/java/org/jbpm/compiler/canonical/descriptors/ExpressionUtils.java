@@ -28,6 +28,7 @@ import java.util.function.Supplier;
 import org.drools.mvel.parser.ast.expr.BigDecimalLiteralExpr;
 import org.drools.mvel.parser.ast.expr.BigIntegerLiteralExpr;
 import org.jbpm.process.core.datatype.impl.coverter.TypeConverterRegistry;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.process.expr.ExpressionHandlerFactory;
 
 import com.github.javaparser.StaticJavaParser;
@@ -69,6 +70,10 @@ public class ExpressionUtils {
             result.addArgument(getLiteralExpr(arg));
         }
         return result;
+    }
+
+    public static ObjectCreationExpr buildKogitoProcessId(KogitoProcessId id) {
+        return getObjectCreationExpr(KogitoProcessId.class, id.id(), id.version());
     }
 
     public static ObjectCreationExpr getObjectCreationExpr(ClassOrInterfaceType type, Object... args) {

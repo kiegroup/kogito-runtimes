@@ -40,6 +40,8 @@ public class JobCallbackResourceDef {
 
     public static final String PROCESS_ID = "processId";
 
+    public static final String PROCESS_VERSION = "processVersion";
+
     public static final String PROCESS_INSTANCE_ID = "processInstanceId";
 
     public static final String ROOT_PROCESS_ID = "rootProcessId";
@@ -81,7 +83,8 @@ public class JobCallbackResourceDef {
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
 
         if (description instanceof ProcessInstanceJobDescription processInstanceJobDescription) {
-            selector.header(PROCESS_ID, processInstanceJobDescription.processId())
+            selector.header(PROCESS_ID, processInstanceJobDescription.processId().id())
+                    .header(PROCESS_VERSION, processInstanceJobDescription.processId().version())
                     .header(PROCESS_INSTANCE_ID, processInstanceJobDescription.processInstanceId())
                     .header(ROOT_PROCESS_ID, processInstanceJobDescription.rootProcessId())
                     .header(ROOT_PROCESS_INSTANCE_ID, processInstanceJobDescription.rootProcessInstanceId())

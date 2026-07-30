@@ -34,6 +34,7 @@ import org.jbpm.process.core.ContextContainer;
 import org.jbpm.process.core.ContextResolver;
 import org.jbpm.process.core.Process;
 import org.jbpm.process.core.context.AbstractContext;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.io.Resource;
 import org.kie.kogito.internal.process.runtime.KogitoWorkflowProcess;
 
@@ -48,6 +49,7 @@ public class ProcessImpl implements Process, Serializable, ContextResolver {
     private String id;
     private String name;
     private String version;
+    private KogitoProcessId workflowId;
     private String type;
     private String visibility;
     private String packageName;
@@ -81,6 +83,14 @@ public class ProcessImpl implements Process, Serializable, ContextResolver {
 
     public String getVersion() {
         return this.version;
+    }
+
+    @Override
+    public KogitoProcessId getProcessId() {
+        if (workflowId == null) {
+            workflowId = new KogitoProcessId(this.getId(), this.getVersion());
+        }
+        return workflowId;
     }
 
     public String getType() {

@@ -106,7 +106,7 @@ class JobCloudEventDeserializerTest {
                 .withSubject(SUBJECT)
                 .withData(readFileContent(CANCEL_JOB_REQUEST_EVENT_DATA_CONTENT_RESOURCE))
                 .withExtension(PROCESS_INSTANCE_ID, PROCESS_INSTANCE_ID_VALUE)
-                .withExtension(PROCESS_ID, PROCESS_ID_VALUE)
+                .withExtension(PROCESS_ID, PROCESS_ID_VALUE.id())
                 .withExtension(PROCESS_ROOT_PROCESS_INSTANCE_ID, ROOT_PROCESS_INSTANCE_ID_VALUE)
                 .withExtension(PROCESS_ROOT_PROCESS_ID, ROOT_PROCESS_ID_VALUE)
                 .withExtension(ADDONS, KOGITO_ADDONS_VALUE)
@@ -126,7 +126,7 @@ class JobCloudEventDeserializerTest {
                 .withSubject(SUBJECT)
                 .withData(readFileContent(CREATE_PROCESS_INSTANCE_JOB_REQUEST_EVENT_DATA_CONTENT_RESOURCE))
                 .withExtension(PROCESS_INSTANCE_ID, PROCESS_INSTANCE_ID_VALUE)
-                .withExtension(PROCESS_ID, PROCESS_ID_VALUE)
+                .withExtension(PROCESS_ID, PROCESS_ID_VALUE.id())
                 .withExtension(PROCESS_ROOT_PROCESS_INSTANCE_ID, ROOT_PROCESS_INSTANCE_ID_VALUE)
                 .withExtension(PROCESS_ROOT_PROCESS_ID, ROOT_PROCESS_ID_VALUE)
                 .withExtension(ADDONS, KOGITO_ADDONS_VALUE)
@@ -167,7 +167,7 @@ class JobCloudEventDeserializerTest {
 
     private static void assertProcessContextFields(ProcessInstanceContextJobCloudEvent<?> event) {
         assertThat(event.getProcessInstanceId()).isEqualTo(PROCESS_INSTANCE_ID_VALUE);
-        assertThat(event.getProcessId()).isEqualTo(PROCESS_ID_VALUE);
+        assertThat(event.getProcessId()).isEqualTo(PROCESS_ID_VALUE.id());
         assertThat(event.getRootProcessInstanceId()).isEqualTo(ROOT_PROCESS_INSTANCE_ID_VALUE);
         assertThat(event.getRootProcessId()).isEqualTo(ROOT_PROCESS_ID_VALUE);
         assertThat(event.getKogitoAddons()).isEqualTo(KOGITO_ADDONS_VALUE);

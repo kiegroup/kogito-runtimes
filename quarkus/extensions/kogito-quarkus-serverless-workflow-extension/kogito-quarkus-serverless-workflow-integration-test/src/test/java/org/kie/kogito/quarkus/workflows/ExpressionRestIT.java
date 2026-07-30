@@ -39,7 +39,7 @@ class ExpressionRestIT {
                 .accept(ContentType.JSON)
                 .header("pepe", "pepa")
                 .body("{\"workflowdata\":{\"numbers\":[{\"x\":2, \"y\": 1},{\"x\":4, \"y\": 3}]}, \"randomAdditionalProperty\":\"Im ignored in runtimes but will be visible on data index\"}").when()
-                .post("/expression")
+                .post("/expression/1.0")
                 .then()
                 .statusCode(201)
                 .body("workflowdata.result", is(4))
@@ -48,6 +48,24 @@ class ExpressionRestIT {
                 .body("workflowdata.message", is("my name is javierito and in my native language dog is translated to perro and the header pepe is pepa"))
                 .body("workflowdata.user", is("anonymous"))
                 .body("workflowdata.discardedResult", nullValue());
+    }
+
+    @Test
+    void testExpressionV2Rest() {
+        testExpressionNewVersion("expression/2.0");
+        testExpressionNewVersion("expression");
+    }
+
+    private void testExpressionNewVersion(String testPath) {
+        given()
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .body("{\"numbers\":[{\"x\":2, \"y\": 1},{\"x\":4, \"y\": 9}]}").when()
+                .post(testPath)
+                .then()
+                .statusCode(201)
+                .body("workflowdata.result", is(3.0F))
+                .body("workflowdata.number", nullValue());
     }
 
     @Test

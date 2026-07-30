@@ -21,6 +21,7 @@ package org.kie.kogito.event;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.internal.process.runtime.KogitoProcessInstance;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,9 +44,9 @@ class DataEventAttrBuilderTest {
     @Test
     void verifyEventTypeBeingGenerated() {
         final String channelName = "github";
-        final String processId = "the_cool_project";
+        final KogitoProcessId processId = new KogitoProcessId("the_cool_project");
         final String type = DataEventAttrBuilder.toType(channelName, processId);
-        assertThat(type).isNotBlank().contains(processId).contains(channelName).startsWith(AbstractDataEvent.TYPE_PREFIX);
+        assertThat(type).isNotBlank().contains(processId.id()).contains(channelName).startsWith(AbstractDataEvent.TYPE_PREFIX);
     }
 
     @Test

@@ -1,0 +1,57 @@
+{
+  "id": "expression",
+  "version": "2.0",
+  "name": "Workflow Expression example",
+  "dataInputSchema" : "schema/expressionInput.json",
+  "description": "An example of how to use a JQ expression assignment",
+  "start": "max",
+  "functions": [
+    {
+      "name": "max",
+      "type": "expression",
+      "operation": "{max: .numbers | max_by(.x), min: .numbers | min_by(.y)}"
+    },
+    {
+      "name": "square",
+      "type": "expression",
+      "operation": ".number | sqrt"
+    }
+  ],
+  "states": [
+    {
+      "name": "max",
+      "type": "operation",
+      "actions": [
+        {
+          "name": "maxAction",
+          "functionRef": {
+            "refName": "max"
+          },
+          "actionDataFilter": {
+             "results" : ".max.y", 
+             "toStateData" : ".number"
+          }
+        }
+      ],
+      "transition": "square"
+    },
+    {
+      "name": "square",
+      "type": "operation",
+      "stateDataFilter": {
+       "output": "{result}"
+      },
+      "actions": [
+        {
+          "name": "square",
+          "functionRef": "square"
+           ,
+            "actionDataFilter" : {
+              "toStateData": ".result" 
+            }
+        }
+      ],
+      "end": true
+    }
+  ]
+}

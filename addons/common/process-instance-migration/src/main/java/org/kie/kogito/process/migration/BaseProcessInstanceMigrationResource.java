@@ -21,6 +21,7 @@ package org.kie.kogito.process.migration;
 import java.util.*;
 import java.util.function.Supplier;
 
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.Application;
 import org.kie.kogito.Model;
 import org.kie.kogito.process.Process;
@@ -34,20 +35,17 @@ public abstract class BaseProcessInstanceMigrationResource<T> implements Process
 
     private Supplier<Processes> processes;
 
-    private Application application;
-
     public BaseProcessInstanceMigrationResource(Processes processes, Application application) {
         this(() -> processes, application);
     }
 
     public BaseProcessInstanceMigrationResource(Supplier<Processes> processes, Application application) {
         this.processes = processes;
-        this.application = application;
     }
 
-    public T doMigrateInstance(String processId, ProcessMigrationSpec migrationSpec, String processInstanceId) {
+    public T doMigrateInstance(String processId, String version, ProcessMigrationSpec migrationSpec, String processInstanceId) {
         try {
-            Process<? extends Model> process = processes.get().processById(processId);
+            Process<? extends Model> process = processes.get().processById(new KogitoProcessId(processId, version));
             process.instances().migrateProcessInstances(migrationSpec.getTargetProcessId(), migrationSpec.getTargetProcessVersion(), processInstanceId);
             Map<String, Object> message = new HashMap<>();
             message.put("message", processInstanceId + " instance migrated");
@@ -59,9 +57,9 @@ public abstract class BaseProcessInstanceMigrationResource<T> implements Process
         }
     }
 
-    public T doMigrateAllInstances(String processId, ProcessMigrationSpec migrationSpec) {
+    public T doMigrateAllInstances(String processId, String version, ProcessMigrationSpec migrationSpec) {
         try {
-            Process<? extends Model> process = processes.get().processById(processId);
+            Process<? extends Model> process = processes.get().processById(new KogitoProcessId(processId, version));
             long numberOfProcessInstanceMigrated = process.instances().migrateAll(migrationSpec.getTargetProcessId(), migrationSpec.getTargetProcessVersion());
             Map<String, Object> message = new HashMap<>();
             message.put("message", "All instances migrated");

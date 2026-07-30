@@ -23,13 +23,19 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.kie.api.definition.process.KogitoProcessId;
+import org.kie.kogito.internal.process.runtime.KogitoWorkflowProcess;
+
 import com.github.javaparser.ast.CompilationUnit;
 
 public class ProcessMetaData {
+
+    private final Map<KogitoProcessId, KogitoWorkflowProcess> processes;
 
     private final String processPackageName;
     private final String processBaseClassName;
@@ -46,7 +52,7 @@ public class ProcessMetaData {
     private CompilationUnit generatedClassModel;
 
     private Set<String> workItems = new HashSet<>();
-    private Map<String, String> subProcesses = new HashMap<>();
+    private Set<KogitoProcessId> subProcesses = new LinkedHashSet<>();
 
     private Map<String, String> signals = new HashMap<>();
 
@@ -64,8 +70,8 @@ public class ProcessMetaData {
     private Map<String, CompilationUnit> generatedHandlers = new HashMap<>();
     private Set<CompilationUnit> generatedListeners = new HashSet<>();
 
-    public ProcessMetaData(String processId, String extractedProcessId, String processName, String processVersion, String processPackageName, String processClassName) {
-        super();
+    public ProcessMetaData(String processId, String extractedProcessId, String processName, String processVersion, String processPackageName, String processClassName,
+            Map<KogitoProcessId, KogitoWorkflowProcess> processes) {
         this.processId = processId;
         this.extractedProcessId = extractedProcessId;
         this.processName = processName;
@@ -73,10 +79,15 @@ public class ProcessMetaData {
         this.processPackageName = processPackageName;
         this.processClassName = processPackageName == null ? processClassName : processPackageName + "." + processClassName;
         this.processBaseClassName = processClassName;
+        this.processes = processes;
     }
 
     public String getPackageName() {
         return processPackageName;
+    }
+
+    public Map<KogitoProcessId, KogitoWorkflowProcess> processes() {
+        return processes;
     }
 
     public String getProcessBaseClassName() {
@@ -139,12 +150,12 @@ public class ProcessMetaData {
         this.workItems = workItems;
     }
 
-    public Map<String, String> getSubProcesses() {
+    public Set<KogitoProcessId> getSubProcesses() {
         return subProcesses;
     }
 
-    public ProcessMetaData addSubProcess(String processId, String subProcessId) {
-        subProcesses.put(processId, subProcessId);
+    public ProcessMetaData addSubProcess(KogitoProcessId subProcessId) {
+        subProcesses.add(subProcessId);
         return this;
     }
 

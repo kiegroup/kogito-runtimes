@@ -30,7 +30,10 @@ import javax.lang.model.SourceVersion;
 
 import org.drools.compiler.compiler.io.memory.MemoryFileSystem;
 import org.jbpm.compiler.canonical.ProcessMetaData;
+import org.jbpm.compiler.canonical.ProcessToExecModelGenerator;
 import org.jbpm.compiler.canonical.TriggerMetaData;
+import org.jbpm.compiler.canonical.descriptors.ExpressionUtils;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.definition.process.Process;
 import org.kie.api.runtime.process.WorkflowProcessInstance;
 import org.kie.kogito.Model;
@@ -71,6 +74,7 @@ import com.github.javaparser.ast.type.ClassOrInterfaceType;
 
 import static com.github.javaparser.StaticJavaParser.parseClassOrInterfaceType;
 import static org.kie.kogito.internal.utils.ConversionUtils.sanitizeClassName;
+import static org.kie.kogito.internal.utils.ConversionUtils.sanitizeJavaName;
 
 /**
  * Generates the Process&lt;T&gt; container
@@ -346,10 +350,11 @@ public class ProcessGenerator {
                     .setName("registerListeners")
                     .setBody(body);
 
-            for (Entry<String, String> subProcess : processMetaData.getSubProcesses().entrySet()) {
+            for (KogitoProcessId subProcess : processMetaData.getSubProcesses()) {
                 MethodCallExpr signalManager = new MethodCallExpr(new NameExpr("services"), "getSignalManager");
                 MethodCallExpr registerListener =
-                        new MethodCallExpr(signalManager, "addEventListener").addArgument(new StringLiteralExpr(subProcess.getValue())).addArgument(new NameExpr("completionEventListener"));
+                        new MethodCallExpr(signalManager, "addEventListener").addArgument(new StringLiteralExpr(ProcessToExecModelGenerator.extractProcessId(subProcess)))
+                                .addArgument(new NameExpr("completionEventListener"));
                 body.addStatement(registerListener);
             }
             return Optional.of(internalRegisterListeners);
@@ -392,7 +397,7 @@ public class ProcessGenerator {
                 .addStatement(new MethodCallExpr("activate")));
 
         if (context.hasDI()) {
-            context.getDependencyInjectionAnnotator().withNamedApplicationComponent(cls, process.getId());
+            context.getDependencyInjectionAnnotator().withNamedApplicationComponent(cls, process.getProcessId().toString());
             context.getDependencyInjectionAnnotator().withEagerStartup(cls);
             context.getDependencyInjectionAnnotator().withInjection(constructor);
         }
@@ -488,24 +493,25 @@ public class ProcessGenerator {
 
         if (!processMetaData.getSubProcesses().isEmpty()) {
 
-            for (Entry<String, String> subProcess : processMetaData.getSubProcesses().entrySet()) {
+            for (KogitoProcessId subProcess : processMetaData.getSubProcesses()) {
                 FieldDeclaration subprocessFieldDeclaration = new FieldDeclaration();
 
-                String fieldName = "process" + subProcess.getKey();
+                String subProcessName = ProcessToExecModelGenerator.extractProcessId(subProcess);
+                String fieldName = sanitizeJavaName("process" + subProcessName);
                 ClassOrInterfaceType modelType = new ClassOrInterfaceType(null, new SimpleName(org.kie.kogito.process.Process.class.getCanonicalName()),
                         NodeList.nodeList(
                                 new ClassOrInterfaceType(null, processMetaData.getModelPackageName() != null ? processMetaData.getModelPackageName() + "." + processMetaData.getModelClassName()
-                                        : sanitizeClassName(subProcess.getKey() + "Model"))));
+                                        : sanitizeClassName(subProcessName + "Model"))));
                 if (context.hasDI()) {
                     subprocessFieldDeclaration
                             .addVariable(new VariableDeclarator(modelType, fieldName));
-                    context.getDependencyInjectionAnnotator().withNamedInjection(subprocessFieldDeclaration, subProcess.getValue());
+                    context.getDependencyInjectionAnnotator().withNamedInjection(subprocessFieldDeclaration, subProcessName);
                 } else {
                     // app.get(org.kie.kogito.process.Processes.class).processById()
                     MethodCallExpr initSubProcessField = new MethodCallExpr(
                             new MethodCallExpr(new NameExpr(APPLICATION), "get")
                                     .addArgument(new ClassExpr().setType(Processes.class.getCanonicalName())),
-                            "processById").addArgument(new StringLiteralExpr(subProcess.getKey()));
+                            "processById").addArgument(ExpressionUtils.buildKogitoProcessId(subProcess));
 
                     subprocessFieldDeclaration.addVariable(new VariableDeclarator(modelType, fieldName));
                     constructor.getBody().addStatement(new AssignExpr(new FieldAccessExpr(new ThisExpr(), fieldName), new CastExpr(modelType, initSubProcessField), Operator.ASSIGN));

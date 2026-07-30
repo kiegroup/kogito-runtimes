@@ -51,7 +51,6 @@ import org.kie.kogito.process.ProcessConfig;
 import org.kie.kogito.process.Processes;
 import org.kie.kogito.services.jobs.impl.InMemoryJobContext;
 import org.kie.kogito.services.jobs.impl.InMemoryProcessJobExecutorFactory;
-import org.kie.kogito.services.jobs.impl.InMemoryUserTaskJobExecutorFactory;
 import org.kie.kogito.usertask.UserTasks;
 import org.kie.memorycompiler.CompilationResult;
 import org.kie.memorycompiler.JavaCompiler;
@@ -221,7 +220,6 @@ public abstract class AbstractCodegenIT {
         InMemoryJobContext context = new InMemoryJobContext(null, config.unitOfWorkManager(), processes, userTasks);
         staticJobService().clearJobExecutorFactories();
         staticJobService().registerJobExecutorFactory(new InMemoryProcessJobExecutorFactory(context));
-        staticJobService().registerJobExecutorFactory(new InMemoryUserTaskJobExecutorFactory(context));
     }
 
     protected KogitoBuildContext newContext() {

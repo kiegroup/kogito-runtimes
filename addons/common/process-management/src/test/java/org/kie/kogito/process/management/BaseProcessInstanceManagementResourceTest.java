@@ -31,7 +31,9 @@ import org.jbpm.workflow.core.WorkflowProcess;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.Application;
+import org.kie.kogito.Model;
 import org.kie.kogito.process.ProcessError;
 import org.kie.kogito.process.ProcessInstance;
 import org.kie.kogito.process.ProcessInstances;
@@ -63,6 +65,7 @@ import static org.mockito.Mockito.when;
 class BaseProcessInstanceManagementResourceTest {
 
     public static final String PROCESS_ID = "processId";
+    public static final String VERSION = "1.0.0";
     public static final String PROCESS_INSTANCE_ID = "processInstanceId";
     public static final String NODE_ID_ERROR = "processInstanceIdError";
     public static final String NODE_ID = "nodeId";
@@ -102,15 +105,18 @@ class BaseProcessInstanceManagementResourceTest {
 
     @BeforeEach
     void setUp() {
+
         lenient().when(node.getId()).thenReturn(WorkflowElementIdentifierFactory.fromExternalFormat("one"));
         lenient().when(node.getName()).thenReturn("node");
         lenient().when(node.getUniqueId()).thenReturn(NODE_ID);
         lenient().when(node.getMetaData()).thenReturn(singletonMap(UNIQUE_ID, NODE_UNIQUE_ID));
         lenient().when(workflowProcess.getNodesRecursively()).thenReturn(singletonList(node));
+        List<org.kie.kogito.process.Process<? extends Model>> list = List.of(process);
         lenient().when(process.get()).thenReturn(workflowProcess);
         lenient().when(process.id()).thenReturn(PROCESS_ID);
-        lenient().when(processes.processIds()).thenReturn(Arrays.asList(PROCESS_ID));
-        lenient().when(processes.processById(anyString())).thenReturn(process);
+        lenient().when(processes.processById(any())).thenReturn(process);
+        lenient().when(processes.iterator()).thenReturn(list.iterator());
+        lenient().when(processes.stream()).thenReturn(list.stream());
         lenient().when(process.instances()).thenReturn(instances);
         lenient().when(process.name()).thenReturn("Javierito");
         lenient().when(process.version()).thenReturn("1_0");
@@ -203,7 +209,7 @@ class BaseProcessInstanceManagementResourceTest {
             }
 
             @Override
-            public Object getProcesses() {
+            public Object getProcesses(boolean includeVersion) {
                 return null;
             }
 
@@ -221,17 +227,93 @@ class BaseProcessInstanceManagementResourceTest {
             public Object updateProcessInstanceSla(String processId, String processInstanceId, SlaPayload SLAPayload) {
                 return null;
             }
+
+            @Override
+            public Object getProcessInfo(String processId, String version) {
+                return null;
+            }
+
+            @Override
+            public Object getProcessNodes(String processId, String version) {
+                return null;
+            }
+
+            @Override
+            public Object getInstanceInError(String processId, String version, String processInstanceId) {
+                return null;
+            }
+
+            @Override
+            public Object getWorkItemsInProcessInstance(String processId, String version, String processInstanceId) {
+                return null;
+            }
+
+            @Override
+            public Object getProcessInstanceTimers(String processId, String version, String processInstanceId) {
+                return null;
+            }
+
+            @Override
+            public Object retriggerInstanceInError(String processId, String version, String processInstanceId) {
+                return null;
+            }
+
+            @Override
+            public Object skipInstanceInError(String processId, String version, String processInstanceId) {
+                return null;
+            }
+
+            @Override
+            public Object triggerNodeInstanceId(String processId, String version, String processInstanceId,
+                    String nodeId) {
+                return null;
+            }
+
+            @Override
+            public Object retriggerNodeInstanceId(String processId, String version, String processInstanceId,
+                    String nodeInstanceId) {
+                return null;
+            }
+
+            @Override
+            public Object cancelNodeInstanceId(String processId, String version, String processInstanceId,
+                    String nodeInstanceId) {
+                return null;
+            }
+
+            @Override
+            public Object getNodeInstanceTimers(String processId, String version, String processInstanceId,
+                    String nodeInstanceId) {
+                return null;
+            }
+
+            @Override
+            public Object cancelProcessInstanceId(String processId, String version, String processInstanceId) {
+                return null;
+            }
+
+            @Override
+            public Object updateNodeInstanceSla(String processId, String version, String processInstanceId,
+                    String nodeInstanceId, SlaPayload SLAPayload) {
+                return null;
+            }
+
+            @Override
+            public Object updateProcessInstanceSla(String processId, String version, String processInstanceId,
+                    SlaPayload SLAPayload) {
+                return null;
+            }
         });
     }
 
     @Test
     void testDoGetProcessess() {
-        assertThat(tested.doGetProcesses()).isInstanceOf(List.class).asList().hasSize(1);
+        assertThat(tested.doGetProcesses(true)).isInstanceOf(List.class).asList().hasSize(1);
     }
 
     @Test
     void testDoGetProcessInfo() {
-        Object response = tested.doGetProcessInfo(PROCESS_ID);
+        Object response = tested.doGetProcessInfo(PROCESS_ID, VERSION);
         assertThat(response).isInstanceOf(Map.class);
         Map<String, Object> data = (Map<String, Object>) response;
         assertThat(data).containsKey("type").containsKey("id").containsKey("version").containsKey("description").containsKey("annotations").containsEntry("inputSchema", NullNode.instance)
@@ -241,9 +323,9 @@ class BaseProcessInstanceManagementResourceTest {
 
     @Test
     void testDoGetProcessNodes() {
-        Object response = tested.doGetProcessNodes(PROCESS_ID);
+        Object response = tested.doGetProcessNodes(PROCESS_ID, VERSION);
 
-        verify(processes).processById(PROCESS_ID);
+        verify(processes).processById(new KogitoProcessId(PROCESS_ID, VERSION));
         verify(process).get();
         verify(workflowProcess).getNodesRecursively();
 
@@ -257,7 +339,7 @@ class BaseProcessInstanceManagementResourceTest {
 
     @Test
     void testDoGetInstanceInError() {
-        Object response = tested.doGetInstanceInError(PROCESS_ID, PROCESS_INSTANCE_ID);
+        Object response = tested.doGetInstanceInError(PROCESS_ID, VERSION, PROCESS_INSTANCE_ID);
         verify(processInstance, times(2)).error();
         verify(error, times(0)).retrigger();
         verify(error, times(0)).skip();
@@ -271,7 +353,7 @@ class BaseProcessInstanceManagementResourceTest {
     @Test
     void testDoGetWorkItemsInProcessInstance(@Mock WorkItem workItem) {
         when(processInstance.workItems()).thenReturn(singletonList(workItem));
-        Object response = tested.doGetWorkItemsInProcessInstance(PROCESS_ID, PROCESS_INSTANCE_ID);
+        Object response = tested.doGetWorkItemsInProcessInstance(PROCESS_ID, VERSION, PROCESS_INSTANCE_ID);
         assertThat(response).isInstanceOf(List.class);
         assertThat(((List) response).get(0)).isEqualTo(workItem);
     }
@@ -279,7 +361,7 @@ class BaseProcessInstanceManagementResourceTest {
     @Test
     void testDoRetriggerInstanceInError() {
         mockProcessInstanceStatusActiveOnError().retrigger();
-        Object response = tested.doRetriggerInstanceInError(PROCESS_ID, PROCESS_INSTANCE_ID);
+        Object response = tested.doRetriggerInstanceInError(PROCESS_ID, VERSION, PROCESS_INSTANCE_ID);
         verify(processInstance, times(2)).error();
         verify(error, times(1)).retrigger();
         verify(error, times(0)).skip();
@@ -289,7 +371,7 @@ class BaseProcessInstanceManagementResourceTest {
     @Test
     void testDoSkipInstanceInError() {
         mockProcessInstanceStatusActiveOnError().skip();
-        Object response = tested.doSkipInstanceInError(PROCESS_ID, PROCESS_INSTANCE_ID);
+        Object response = tested.doSkipInstanceInError(PROCESS_ID, VERSION, PROCESS_INSTANCE_ID);
         verify(processInstance, times(2)).error();
         verify(error, times(0)).retrigger();
         verify(error, times(1)).skip();
@@ -299,7 +381,7 @@ class BaseProcessInstanceManagementResourceTest {
     @Test
     void testDoTriggerNodeInstanceId() {
         mockProcessInstanceStatusActive().triggerNode(NODE_ID);
-        Object response = tested.doTriggerNodeInstanceId(PROCESS_ID, PROCESS_INSTANCE_ID, NODE_ID);
+        Object response = tested.doTriggerNodeInstanceId(PROCESS_ID, VERSION, PROCESS_INSTANCE_ID, NODE_ID);
         verify(processInstance, times(0)).error();
         verify(processInstance, times(1)).triggerNode(NODE_ID);
         assertResultOk(response);
@@ -308,7 +390,7 @@ class BaseProcessInstanceManagementResourceTest {
     @Test
     void testDoRetriggerNodeInstanceId() {
         mockProcessInstanceStatusActive().retriggerNodeInstance(NODE_INSTANCE_ID);
-        Object response = tested.doRetriggerNodeInstanceId(PROCESS_ID, PROCESS_INSTANCE_ID, NODE_INSTANCE_ID);
+        Object response = tested.doRetriggerNodeInstanceId(PROCESS_ID, VERSION, PROCESS_INSTANCE_ID, NODE_INSTANCE_ID);
         verify(processInstance, times(0)).error();
         verify(processInstance, times(1)).retriggerNodeInstance(NODE_INSTANCE_ID);
         assertResultOk(response);
@@ -317,7 +399,7 @@ class BaseProcessInstanceManagementResourceTest {
     @Test
     void testDoCancelNodeInstanceId() {
         mockProcessInstanceStatusActive().cancelNodeInstance(anyString());
-        Object response = tested.doCancelNodeInstanceId(PROCESS_ID, PROCESS_INSTANCE_ID, NODE_INSTANCE_ID);
+        Object response = tested.doCancelNodeInstanceId(PROCESS_ID, VERSION, PROCESS_INSTANCE_ID, NODE_INSTANCE_ID);
         verify(processInstance, times(0)).error();
         verify(processInstance, times(1)).cancelNodeInstance(NODE_INSTANCE_ID);
         assertResultOk(response);
@@ -345,7 +427,7 @@ class BaseProcessInstanceManagementResourceTest {
     @Test
     void testDoCancelProcessInstanceId() {
         mockProcessInstanceStatusActive().abort();
-        Object response = tested.doCancelProcessInstanceId(PROCESS_ID, PROCESS_INSTANCE_ID);
+        Object response = tested.doCancelProcessInstanceId(PROCESS_ID, VERSION, PROCESS_INSTANCE_ID);
         verify(processInstance, times(0)).error();
         verify(processInstance, times(1)).abort();
         assertResultOk(response);
@@ -353,7 +435,7 @@ class BaseProcessInstanceManagementResourceTest {
 
     @Test
     void testGetProcessInstanceTimers() {
-        Object response = tested.doGetProcessInstanceTimers(PROCESS_ID, PROCESS_INSTANCE_ID);
+        tested.doGetProcessInstanceTimers(PROCESS_ID, VERSION, PROCESS_INSTANCE_ID);
         verify(processInstance, times(1)).timers();
     }
 }

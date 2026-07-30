@@ -24,30 +24,28 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.drools.codegen.common.GeneratedFile;
 import org.drools.codegen.common.GeneratedFileType;
 import org.drools.io.InternalResource;
-import org.jbpm.compiler.canonical.ModelMetaData;
 import org.jbpm.compiler.canonical.ProcessMetaData;
 import org.jbpm.compiler.canonical.ProcessToExecModelGenerator;
 import org.jbpm.compiler.canonical.TriggerMetaData;
 import org.jbpm.compiler.canonical.TriggerMetaData.TriggerType;
-import org.jbpm.compiler.canonical.WorkItemModelMetaData;
 import org.jbpm.process.core.impl.ProcessImpl;
 import org.jbpm.process.core.validation.ProcessValidatorRegistry;
-import org.jbpm.workflow.core.impl.WorkflowProcessImpl;
-import org.jbpm.workflow.instance.WorkflowProcessParameters;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.definition.process.Process;
-import org.kie.api.definition.process.WorkflowProcess;
 import org.kie.api.io.Resource;
 import org.kie.kogito.KogitoGAV;
 import org.kie.kogito.codegen.api.ApplicationSection;
@@ -120,8 +118,6 @@ public class ProcessCodegen extends AbstractGenerator {
         ProcessValidatorRegistry.getInstance().registerAdditonalValidator(JavaRuleFlowProcessValidator.getInstance());
     }
 
-    private final List<ProcessGenerator> processGenerators = new ArrayList<>();
-
     public static ProcessCodegen ofCollectedResources(KogitoBuildContext context, Collection<CollectedResource> resources) {
         Map<String, byte[]> processSVGMap = new HashMap<>();
         Map<String, Throwable> processesErrors = new HashMap<>();
@@ -130,9 +126,6 @@ public class ProcessCodegen extends AbstractGenerator {
                 useSvgAddon,
                 processSVGMap,
                 processesErrors);
-        if (processes.isEmpty() && context.getAddonsConfig().useSourceFiles()) { // Temporary hack for incubator-kie-issues#2060 */
-            processes.add(new GeneratedInfo<>(new DummyProcess()));
-        }
         if (useSvgAddon) {
             context.addContextAttribute(ContextAttributesConstants.PROCESS_AUTO_SVG_MAPPING, processSVGMap);
         }
@@ -251,21 +244,22 @@ public class ProcessCodegen extends AbstractGenerator {
         }
     }
 
-    private final Map<String, KogitoWorkflowProcess> processes;
+    private final List<ProcessGenerator> processGenerators = new ArrayList<>();
+    private final Map<KogitoProcessId, KogitoWorkflowProcess> processes;
     private final Set<GeneratedFile> generatedFiles = new HashSet<>();
 
     protected ProcessCodegen(KogitoBuildContext context, Collection<GeneratedInfo<KogitoWorkflowProcess>> processes) {
         super(context, GENERATOR_NAME, new ProcessConfigGenerator(context));
-        this.processes = new HashMap<>();
+        this.processes = new TreeMap<>(Comparator.reverseOrder());
         for (GeneratedInfo<KogitoWorkflowProcess> process : processes) {
-            if (this.processes.containsKey(process.info().getId())) {
+            if (this.processes.containsKey(process.info().getProcessId())) {
                 throw new ProcessCodegenException(
                         format("Duplicated item found with id %s. Please review the .%s files",
                                 process.info().getId(),
                                 process.info().getType().toLowerCase()));
             }
             generatedFiles.addAll(process.files());
-            this.processes.put(process.info().getId(), process.info());
+            this.processes.put(process.info().getProcessId(), process.info());
         }
     }
 
@@ -275,10 +269,6 @@ public class ProcessCodegen extends AbstractGenerator {
 
     public static String defaultProcessListenerConfigClass(String packageName) {
         return packageName + ".ProcessEventListenerConfig";
-    }
-
-    private boolean skipModelGeneration(WorkflowProcess process) {
-        return process.getType().equals(KogitoWorkflowProcess.SW_TYPE);
     }
 
     @Override
@@ -291,117 +281,66 @@ public class ProcessCodegen extends AbstractGenerator {
         Map<ProcessCloudEventMeta, MessageConsumerGenerator> megs = new HashMap<>(); // message endpoints/consumers
         List<MessageProducerGenerator> mpgs = new ArrayList<>(); // message producers
 
-        Map<String, ModelClassGenerator> processIdToModelGenerator = new HashMap<>();
-        Map<String, InputModelClassGenerator> processIdToInputModelGenerator = new HashMap<>();
-        Map<String, OutputModelClassGenerator> processIdToOutputModelGenerator = new HashMap<>();
-
-        Map<String, List<WorkItemModelMetaData>> processIdToWorkItemModel = new HashMap<>();
-        Map<String, ProcessMetaData> processIdToMetadata = new HashMap<>();
-
-        // first we generate all the data classes from variable declarations
-        for (WorkflowProcess workFlowProcess : processes.values()) {
-            if (workFlowProcess instanceof DummyProcess) {
-                continue; // Temporary hack for incubator-kie-issues#2060
-            }
-            // transaction is disabled by default for SW types
-            boolean defaultTransactionEnabled = !KogitoWorkflowProcess.SW_TYPE.equals(workFlowProcess.getType());
-            if (isTransactionEnabled(this, context(), defaultTransactionEnabled)) {
-                ((WorkflowProcessImpl) workFlowProcess).setMetaData(WorkflowProcessParameters.WORKFLOW_PARAM_TRANSACTIONS.getName(), "true");
-            }
-
-            if (!skipModelGeneration(workFlowProcess)) {
-                ModelClassGenerator mcg = new ModelClassGenerator(context(), workFlowProcess);
-                processIdToModelGenerator.put(workFlowProcess.getId(), mcg);
-
-                InputModelClassGenerator imcg = new InputModelClassGenerator(context(), workFlowProcess);
-                processIdToInputModelGenerator.put(workFlowProcess.getId(), imcg);
-
-                OutputModelClassGenerator omcg = new OutputModelClassGenerator(context(), workFlowProcess);
-                processIdToOutputModelGenerator.put(workFlowProcess.getId(), omcg);
-            }
-        }
-        boolean isServerless = false;
-        // then we generate work items task inputs and outputs if any
-        for (WorkflowProcess workFlowProcess : processes.values()) {
-            if (workFlowProcess instanceof DummyProcess) {
-                continue; // Temporary hack for incubator-kie-issues#2060
-            }
-            isServerless |= KogitoWorkflowProcess.SW_TYPE.equals(workFlowProcess.getType());
-            if (KogitoWorkflowProcess.SW_TYPE.equals(workFlowProcess.getType())) {
-                continue;
-            }
-            WorkItemModelClassGenerator utcg = new WorkItemModelClassGenerator(workFlowProcess);
-            processIdToWorkItemModel.put(workFlowProcess.getId(), utcg.generate());
-        }
-
+        Map<KogitoProcessId, ProcessMetaData> processIdToMetadata = new HashMap<>();
         // then we can instantiate the exec model generator
         // with the data classes that we have already resolved
         ProcessToExecModelGenerator execModelGenerator =
                 new ProcessToExecModelGenerator(context().getClassLoader());
 
         // collect all process descriptors (exec model)
-        for (KogitoWorkflowProcess workFlowProcess : processes.values()) {
-            if (workFlowProcess instanceof DummyProcess) {
-                continue; // Temporary hack for incubator-kie-issues#2060
-            }
+        for (Map.Entry<KogitoProcessId, KogitoWorkflowProcess> entry : processes.entrySet()) {
             ProcessExecutableModelGenerator execModelGen =
-                    new ProcessExecutableModelGenerator(workFlowProcess, execModelGenerator);
-            String packageName = workFlowProcess.getPackageName();
-            String id = workFlowProcess.getId();
+                    new ProcessExecutableModelGenerator(entry.getValue(), execModelGenerator, processes);
             try {
-                ProcessMetaData generate = execModelGen.generate();
-                processIdToMetadata.put(id, generate);
-                processExecutableModelGenerators.add(execModelGen);
+                processIdToMetadata.put(entry.getKey(), execModelGen.generate());
             } catch (RuntimeException e) {
-                throw new ProcessCodegenException(id, packageName, e);
+                throw new ProcessCodegenException(entry.getKey(), entry.getValue().getPackageName(), e);
             }
+            processExecutableModelGenerators.add(execModelGen);
         }
 
         // generate Process, ProcessInstance classes and the REST resource
         Collection<ChannelInfo> channelsInfo = ChannelMappingStrategy.getChannelMapping(context());
         LOGGER.debug("channels found {}", channelsInfo);
         List<TriggerMetaData> normalizedTriggers = new ArrayList<>();
+        Set<String> versionlessProcesess = new HashSet<>();
 
         for (ProcessExecutableModelGenerator execModelGen : processExecutableModelGenerators) {
             String classPrefix = sanitizeClassName(execModelGen.extractedProcessId());
-            KogitoWorkflowProcess workFlowProcess = execModelGen.process();
-            ModelClassGenerator modelClassGenerator =
-                    processIdToModelGenerator.getOrDefault(execModelGen.getProcessId(), new ModelClassGenerator(context(), workFlowProcess));
+            KogitoWorkflowProcess workflowProcess = execModelGen.process();
+            ModelClassGenerator modelClassGenerator = new ModelClassGenerator(context(), workflowProcess);
+            String className = modelClassGenerator.className();
 
             ProcessGenerator p = new ProcessGenerator(
                     context(),
-                    workFlowProcess,
+                    workflowProcess,
                     execModelGen,
                     classPrefix,
-                    modelClassGenerator.className(),
+                    className,
                     applicationCanonicalName());
 
             ProcessInstanceGenerator pi = new ProcessInstanceGenerator(
-                    workFlowProcess.getPackageName(),
+                    workflowProcess.getPackageName(),
                     classPrefix,
                     modelClassGenerator.generate());
 
-            ProcessMetaData metaData = processIdToMetadata.get(workFlowProcess.getId());
+            ProcessMetaData metaData = processIdToMetadata.get(workflowProcess.getProcessId());
             List<TriggerMetaData> currentNormalizedTriggers = normalizeTriggers(metaData.getTriggers(), channelsInfo);
             normalizedTriggers.addAll(currentNormalizedTriggers);
-
             //Creating and adding the ResourceGenerator for REST generation
             if (context().hasRest()) {
-                ProcessResourceGenerator processResourceGenerator = new ProcessResourceGenerator(
-                        context(),
-                        workFlowProcess,
-                        modelClassGenerator.className(),
-                        execModelGen.className(),
-                        applicationCanonicalName());
-
-                processResourceGenerator
-                        .withWorkItems(processIdToWorkItemModel.get(workFlowProcess.getId()))
-                        .withSignals(metaData.getSignals())
-                        .withTriggers(metaData.isStartable(), metaData.isDynamic(), metaData.getTriggers())
-                        .withTransaction(isTransactionEnabled(this, context()))
-                        .withFaultTolerance(isFaultToleranceEnabled(context()));
-
+                ProcessResourceGenerator processResourceGenerator = buildProcessResource(execModelGen, metaData, className, true);
                 rgs.add(processResourceGenerator);
+                if (!versionlessProcesess.contains(workflowProcess.getId())) {
+                    versionlessProcesess.add(workflowProcess.getId());
+                    processResourceGenerator = buildProcessResource(execModelGen, metaData, className, false);
+                    rgs.add(processResourceGenerator);
+
+                    if (workflowProcess.getProcessId().version() != null) {
+                        AliasGenerator aliasProducer = AliasGenerator.generate(context(), workflowProcess);
+                        storeFile(PRODUCER_TYPE, aliasProducer.path(), aliasProducer.code());
+                    }
+                }
             }
 
             // wiring events
@@ -410,9 +349,9 @@ public class ProcessCodegen extends AbstractGenerator {
                 if (trigger.getType().equals(TriggerMetaData.TriggerType.ConsumeMessage)) {
                     LOGGER.debug("Processing consumer trigger {}", trigger);
                     MessageConsumerGenerator messageConsumerGenerator =
-                            megs.computeIfAbsent(new ProcessCloudEventMeta(workFlowProcess.getId(), trigger), k -> new MessageConsumerGenerator(
+                            megs.computeIfAbsent(new ProcessCloudEventMeta(workflowProcess.getProcessId(), trigger), k -> new MessageConsumerGenerator(
                                     context(),
-                                    workFlowProcess,
+                                    workflowProcess,
                                     modelClassGenerator.className(),
                                     execModelGen.className(),
                                     applicationCanonicalName(),
@@ -422,7 +361,7 @@ public class ProcessCodegen extends AbstractGenerator {
                     LOGGER.debug("Processing producer trigger {}", trigger);
                     MessageProducerGenerator messageProducerGenerator = new MessageProducerGenerator(
                             context(),
-                            workFlowProcess,
+                            workflowProcess,
                             trigger);
                     mpgs.add(messageProducerGenerator);
                     metaData.addProducer(trigger.getName(), messageProducerGenerator.compilationUnit());
@@ -436,35 +375,6 @@ public class ProcessCodegen extends AbstractGenerator {
         }
 
         context().addContextAttribute(ContextAttributesConstants.PROCESS_TRIGGERS, normalizedTriggers);
-        // model
-        for (ModelClassGenerator modelClassGenerator : processIdToModelGenerator.values()) {
-            ModelMetaData mmd = modelClassGenerator.generate();
-            storeFile(MODEL_TYPE, modelClassGenerator.generatedFilePath(),
-                    mmd.generate());
-        }
-
-        for (InputModelClassGenerator modelClassGenerator : processIdToInputModelGenerator.values()) {
-            ModelMetaData mmd = modelClassGenerator.generate();
-            storeFile(MODEL_TYPE, modelClassGenerator.generatedFilePath(),
-                    mmd.generate());
-        }
-
-        for (OutputModelClassGenerator modelClassGenerator : processIdToOutputModelGenerator.values()) {
-            ModelMetaData mmd = modelClassGenerator.generate();
-            storeFile(MODEL_TYPE, modelClassGenerator.generatedFilePath(),
-                    mmd.generate());
-        }
-
-        for (List<WorkItemModelMetaData> utmd : processIdToWorkItemModel.values()) {
-
-            for (WorkItemModelMetaData ut : utmd) {
-                storeFile(MODEL_TYPE, WorkItemModelClassGenerator.generatedFilePath(ut.getInputModelClassName()), ut.generateInput());
-
-                storeFile(MODEL_TYPE, WorkItemModelClassGenerator.generatedFilePath(ut.getOutputModelClassName()), ut.generateOutput());
-
-                storeFile(MODEL_TYPE, WorkItemModelClassGenerator.generatedFilePath(ut.getTaskModelClassName()), ut.generateModel());
-            }
-        }
 
         //Generating the Producer classes for Dependency Injection
         StaticDependencyInjectionProducerGenerator staticDependencyInjectionProducerGenerator = StaticDependencyInjectionProducerGenerator.of(context());
@@ -476,17 +386,6 @@ public class ProcessCodegen extends AbstractGenerator {
         generateBusinessCalendarProducer();
 
         generateSourceFileProviderProducer();
-
-        if (isTransactionEnabled(this, context()) && !isServerless) {
-            String template = "ExceptionHandlerTransaction";
-            TemplatedGenerator generator = TemplatedGenerator.builder()
-                    .withTemplateBasePath("/class-templates/transaction/")
-                    .withFallbackContext(JavaKogitoBuildContext.CONTEXT_NAME)
-                    .withTargetTypeName(template)
-                    .build(context(), template);
-            CompilationUnit handler = generator.compilationUnitOrThrow();
-            storeFile(MODEL_TYPE, generator.generatedFilePath(), handler.toString());
-        }
 
         if (isTransactionEnabled(this, context())) {
             TemplatedGenerator generator = TemplatedGenerator.builder()
@@ -503,7 +402,6 @@ public class ProcessCodegen extends AbstractGenerator {
             for (ProcessResourceGenerator resourceGenerator : rgs) {
                 storeFile(REST, resourceGenerator.generatedFilePath(),
                         resourceGenerator.generate());
-                storeFile(MODEL_TYPE, WorkItemModelClassGenerator.generatedFilePath(resourceGenerator.getTaskModelFactoryClassName()), resourceGenerator.getTaskModelFactory());
             }
         }
 
@@ -567,6 +465,19 @@ public class ProcessCodegen extends AbstractGenerator {
         }
 
         return generatedFiles;
+    }
+
+    private ProcessResourceGenerator buildProcessResource(
+            ProcessExecutableModelGenerator execModelGen, ProcessMetaData metaData, String className, boolean inclVersion) {
+        return new ProcessResourceGenerator(
+                context(),
+                execModelGen.process(),
+                className,
+                execModelGen.className(),
+                applicationCanonicalName(), inclVersion).withSignals(metaData.getSignals())
+                        .withTriggers(metaData.isStartable(), metaData.isDynamic(), metaData.getTriggers())
+                        .withTransaction(isTransactionEnabled(this, context()))
+                        .withFaultTolerance(isFaultToleranceEnabled(context()));
     }
 
     private List<TriggerMetaData> normalizeTriggers(List<TriggerMetaData> triggers, Collection<ChannelInfo> channelsInfo) {

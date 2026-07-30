@@ -20,6 +20,8 @@ package org.kie.kogito.jobs.api;
 
 import java.time.ZonedDateTime;
 
+import org.kie.api.definition.process.KogitoProcessId;
+
 public class JobBuilder {
 
     private String id;
@@ -28,7 +30,7 @@ public class JobBuilder {
     private String callbackEndpoint;
     private String processInstanceId;
     private String rootProcessInstanceId;
-    private String processId;
+    private KogitoProcessId processId;
     private String rootProcessId;
     private Long repeatInterval;
     private Integer repeatLimit;
@@ -64,7 +66,7 @@ public class JobBuilder {
         return this;
     }
 
-    public JobBuilder processId(String processId) {
+    public JobBuilder processId(KogitoProcessId processId) {
         this.processId = processId;
         return this;
     }

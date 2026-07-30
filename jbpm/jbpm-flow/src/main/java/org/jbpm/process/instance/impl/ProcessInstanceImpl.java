@@ -34,6 +34,7 @@ import org.jbpm.process.instance.InternalProcessRuntime;
 import org.jbpm.process.instance.ProcessInstance;
 import org.jbpm.ruleflow.core.Metadata;
 import org.jbpm.workflow.core.WorkflowProcess;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.definition.process.Process;
 import org.kie.api.runtime.rule.Agenda;
 import org.kie.kogito.internal.process.runtime.KogitoProcessInstance;
@@ -64,6 +65,7 @@ public abstract class ProcessInstanceImpl implements ProcessInstance,
     private Map<String, List<String>> headers;
 
     private String processVersion;
+    private KogitoProcessId workflowId;
 
     @Override
     public String getId() {
@@ -103,7 +105,7 @@ public abstract class ProcessInstanceImpl implements ProcessInstance,
                 if (kruntime == null) {
                     throw new IllegalStateException("Process instance " + id + "[" + processId + "] is disconnected.");
                 }
-                this.process = kruntime.getKieBase().getProcess(processId);
+                this.process = kruntime.getKieBase().getProcess(new KogitoProcessId(processId, processVersion));
             } else {
                 XmlProcessDumper dumper = XmlProcessDumperFactory.newXmlProcessDumperFactory();
                 this.process = dumper.readProcess(processXml);
@@ -172,6 +174,14 @@ public abstract class ProcessInstanceImpl implements ProcessInstance,
     @Override
     public void setState(final int state) {
         internalSetState(state);
+    }
+
+    @Override
+    public KogitoProcessId getWorkflowId() {
+        if (workflowId == null) {
+            workflowId = new KogitoProcessId(id, processVersion);
+        }
+        return workflowId;
     }
 
     @Override

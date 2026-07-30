@@ -108,7 +108,7 @@ public class AsyncEventNodeInstance extends EventNodeInstance {
                                     .expirationTime(expirationTime)
                                     .processInstanceId(instance.getProcessInstance().getStringId())
                                     .rootProcessInstanceId(instance.getProcessInstance().getRootProcessInstanceId())
-                                    .processId(instance.getProcessInstance().getProcessId())
+                                    .processId(instance.getProcessInstance().getWorkflowId())
                                     .rootProcessId(instance.getProcessInstance().getRootProcessId())
                                     .nodeInstanceId(Optional.ofNullable(from).map(KogitoNodeInstance::getStringId).orElse(null))
                                     .build();

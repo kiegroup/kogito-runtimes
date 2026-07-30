@@ -21,6 +21,8 @@ package org.kie.kogito.source.files;
 import java.util.Collection;
 import java.util.Optional;
 
+import org.kie.api.definition.process.KogitoProcessId;
+
 public interface SourceFilesProvider {
 
     /**
@@ -37,7 +39,7 @@ public interface SourceFilesProvider {
      * @param processId the process identifier
      * @return the source files collection. The collection may be empty but not null.
      */
-    Collection<SourceFile> getProcessSourceFiles(String processId);
+    Collection<SourceFile> getProcessSourceFiles(KogitoProcessId processId);
 
     /**
      * Returns the source file for the given processId.
@@ -45,5 +47,5 @@ public interface SourceFilesProvider {
      * @param processId the process identifier
      * @return the source file.
      */
-    Optional<SourceFile> getProcessSourceFile(String processId);
+    Optional<SourceFile> getProcessSourceFile(KogitoProcessId processId);
 }

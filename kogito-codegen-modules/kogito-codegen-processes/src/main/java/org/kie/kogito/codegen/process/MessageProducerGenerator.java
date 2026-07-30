@@ -45,7 +45,6 @@ public class MessageProducerGenerator {
     private final String processName;
     protected final KogitoBuildContext context;
     protected WorkflowProcess process;
-    private String processId;
 
     protected TriggerMetaData trigger;
 
@@ -67,10 +66,8 @@ public class MessageProducerGenerator {
         this.process = process;
         this.trigger = trigger;
         this.processPackageName = process.getPackageName();
-        this.processId = process.getId();
-        this.processName = processId.substring(processId.lastIndexOf('.') + 1);
+        this.processName = process.getProcessId().toString();
         this.resourceClazzName = sanitizeClassName(processName) + "MessageProducer_" + trigger.getOwnerId();
-
         this.generator = TemplatedGenerator.builder()
                 .withTargetTypeName(resourceClazzName)
                 .withPackageName(processPackageName)

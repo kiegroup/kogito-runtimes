@@ -71,7 +71,6 @@ public class MessageConsumerGenerator {
     private final String processPackageName;
     private final String resourceClazzName;
     private final String processClazzName;
-    private String processId;
     private String dataClazzName;
     private final String processName;
     private final String appCanonicalName;
@@ -88,8 +87,7 @@ public class MessageConsumerGenerator {
         this.context = context;
         this.trigger = trigger;
         this.processPackageName = process.getPackageName();
-        this.processId = process.getId();
-        this.processName = processId.substring(processId.lastIndexOf('.') + 1);
+        this.processName = process.getProcessId().toString();
         this.resourceClazzName = sanitizeClassName(processName) + "MessageConsumer_" + trigger.getOwnerId();
         this.dataClazzName = modelfqcn.substring(modelfqcn.lastIndexOf('.') + 1);
         this.processClazzName = processfqcn;
@@ -148,7 +146,7 @@ public class MessageConsumerGenerator {
     }
 
     public static boolean isCorrelationField(FieldDeclaration fd) {
-        return fd.getVariable(0).getNameAsString().equals("correlation");//todo
+        return fd.getVariable(0).getNameAsString().equals("correlation");
     }
 
     private void generateModelMethods(ClassOrInterfaceDeclaration template) {

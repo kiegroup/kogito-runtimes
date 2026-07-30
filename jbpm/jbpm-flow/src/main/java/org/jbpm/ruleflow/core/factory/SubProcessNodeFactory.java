@@ -24,6 +24,7 @@ import org.jbpm.ruleflow.core.RuleFlowNodeContainerFactory;
 import org.jbpm.workflow.core.NodeContainer;
 import org.jbpm.workflow.core.node.SubProcessFactory;
 import org.jbpm.workflow.core.node.SubProcessNode;
+import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.api.definition.process.WorkflowElementIdentifier;
 import org.kie.kogito.Model;
 
@@ -49,7 +50,17 @@ public class SubProcessNodeFactory<T extends RuleFlowNodeContainerFactory<T, ?>>
     }
 
     public SubProcessNodeFactory<T> processId(final String processId) {
+        getSubProcessNode().setProcessId(new KogitoProcessId(processId));
+        return this;
+    }
+
+    public SubProcessNodeFactory<T> processId(final KogitoProcessId processId) {
         getSubProcessNode().setProcessId(processId);
+        return this;
+    }
+
+    public SubProcessNodeFactory<T> processId(final String processId, String version) {
+        getSubProcessNode().setProcessId(new KogitoProcessId(processId, version));
         return this;
     }
 

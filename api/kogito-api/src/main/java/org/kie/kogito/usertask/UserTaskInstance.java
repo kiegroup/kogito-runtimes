@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.kie.kogito.auth.IdentityProvider;
-import org.kie.kogito.jobs.descriptors.UserTaskInstanceJobDescription;
 import org.kie.kogito.usertask.lifecycle.UserTaskLifeCycle;
 import org.kie.kogito.usertask.lifecycle.UserTaskState;
 import org.kie.kogito.usertask.model.*;
@@ -125,8 +124,6 @@ public interface UserTaskInstance {
     Comment removeComment(Comment comment);
 
     Collection<Comment> getComments();
-
-    void trigger(UserTaskInstanceJobDescription userTaskInstanceJobDescription);
 
     Collection<DeadlineInfo<Notification>> getNotStartedDeadlines();
 
