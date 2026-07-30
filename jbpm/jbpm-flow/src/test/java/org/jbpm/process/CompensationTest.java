@@ -185,7 +185,6 @@ public class CompensationTest extends AbstractBaseTest {
 
         // run process
         kruntime = createKogitoProcessRuntime(process);
-        //TODO review if this should be id or a composition of id and version
         String compensationEvent = CompensationScope.IMPLICIT_COMPENSATION_PREFIX + processId.id();
 
         runCompensationBoundaryEventGeneralTest(kruntime, process, processId, workItemNames, eventList, compensationEvent);

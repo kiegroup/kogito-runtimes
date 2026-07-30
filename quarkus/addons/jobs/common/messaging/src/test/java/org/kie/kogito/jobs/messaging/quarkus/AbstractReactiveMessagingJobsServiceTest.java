@@ -74,7 +74,7 @@ public abstract class AbstractReactiveMessagingJobsServiceTest<T extends Abstrac
     protected static final String SERIALIZED_EVENT = "SERIALIZED_EVENT";
     protected static final String SERIALIZED_SECOND_EVENT = "SERIALIZED_SECOND_EVENT";
     protected static final String JOB_ID_STRING = "JOB_ID_STRING";
-    private static final String CALLBACK_ENDPOINT = SERVICE_URI + "/management/jobs/" + PROCESS_ID.id() + "/" + PROCESS_ID.version()
+    private static final String CALLBACK_ENDPOINT = SERVICE_URI + "/management/jobs/" + PROCESS_ID.id()
             + "/instances/" + PROCESS_INSTANCE_ID + "/timers/" + TIMER_ID;
     protected static final String ERROR = "ERROR";
     protected static final String FATAL_ERROR = "FATAL_ERROR";

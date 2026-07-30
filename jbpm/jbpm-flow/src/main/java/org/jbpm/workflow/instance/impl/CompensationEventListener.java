@@ -109,7 +109,7 @@ class CompensationEventListener implements KogitoEventListener {
             assert compensationScope != null : "Compensation scope for node [" + toCompensateNodeId + "] could not be found!";
 
             CompensationScopeInstance scopeInstance;
-            if (compensationScope.getContextContainerId().equals(process.getId())) {
+            if (compensationScope.getContextContainerId().equals(process.getId()) || compensationScope.getContextContainerId().equals(process.getProcessId().toString())) {
                 // process level compensation
                 scopeInstance = (CompensationScopeInstance) instance.getContextInstance(compensationScope.getType());
             } else {
