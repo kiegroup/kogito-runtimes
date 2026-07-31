@@ -90,23 +90,6 @@ public class DataIndexEventPublisher implements EventPublisher {
                             }
                         });
                 break;
-            case "UserTaskInstanceAssignmentDataEvent":
-            case "UserTaskInstanceAttachmentDataEvent":
-            case "UserTaskInstanceCommentDataEvent":
-            case "UserTaskInstanceDeadlineDataEvent":
-            case "UserTaskInstanceStateDataEvent":
-            case "UserTaskInstanceVariableDataEvent":
-                webClient.postAbs(dataIndexUrl.get() + "/tasks")
-                        .putHeader(CONTENT_TYPE, CLOUD_EVENTS_CONTENT_TYPE)
-                        .expect(ResponsePredicate.SC_ACCEPTED)
-                        .sendJson(event, result -> {
-                            if (result.failed()) {
-                                LOGGER.error("Failed to send message to Data Index", result.cause());
-                            } else {
-                                LOGGER.debug("Event published to Data Index");
-                            }
-                        });
-                break;
             default:
                 LOGGER.debug("Unknown type of event '{}', ignoring for this publisher", event.getType());
         }

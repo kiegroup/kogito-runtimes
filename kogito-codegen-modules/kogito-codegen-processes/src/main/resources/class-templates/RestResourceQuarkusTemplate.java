@@ -30,6 +30,7 @@ import jakarta.ws.rs.ClientErrorException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HEAD;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
@@ -76,6 +77,11 @@ public class $Type$Resource {
 
     @Inject
     IdentityProviderFactory identityProviderFactory;
+    
+    @HEAD
+    public Response checkVersion() {
+        return Response.ok().header("supportVersion","true").build();
+    }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
