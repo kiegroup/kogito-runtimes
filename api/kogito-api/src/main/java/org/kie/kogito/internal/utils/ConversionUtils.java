@@ -276,6 +276,6 @@ public class ConversionUtils {
         if (Objects.isNull(processId)) {
             return null;
         }
-        return processId.substring(processId.lastIndexOf('.') + 1);
+        return processId.substring(processId.lastIndexOf('.') + 1).replace(' ', '-');
     }
 }

@@ -23,9 +23,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.kie.api.runtime.process.ProcessInstance;
 import org.kie.kogito.event.process.ProcessInstanceEventMetadata;
 import org.kie.kogito.event.usertask.UserTaskInstanceEventMetadata;
 import org.kie.kogito.internal.process.runtime.KogitoWorkflowProcessInstance;
+import org.kie.kogito.internal.utils.ConversionUtils;
 import org.kie.kogito.usertask.UserTaskInstance;
 import org.kie.kogito.usertask.model.ProcessInfo;
 
@@ -70,15 +72,29 @@ public class AdapterHelper {
     }
 
     public static String extractRuntimeSource(String service, Map<String, String> metadata) {
-        return buildSource(service, metadata.get(ProcessInstanceEventMetadata.PROCESS_ID_META_DATA));
+        return buildSource(service, metadata.get(ProcessInstanceEventMetadata.PROCESS_ID_META_DATA), metadata.get(ProcessInstanceEventMetadata.PROCESS_VERSION_META_DATA));
     }
 
-    public static String buildSource(String service, String processId) {
-        if (processId == null) {
-            return null;
-        } else {
-            processId = processId.replace(" ", "-");
-            return service + "/" + (processId.contains(".") ? processId.substring(processId.lastIndexOf('.') + 1) : processId);
+    public static String buildSource(String service, ProcessInstance instance) {
+        return buildSource(service, instance.getProcessId(), instance.getProcessVersion());
+    }
+
+    public static String buildSource(String service, String id, String version) {
+        StringBuilder sb = new StringBuilder();
+        if (service != null) {
+            sb.append(service);
         }
+        if (id != null) {
+            appendSeparator(sb).append(ConversionUtils.sanitizeToSimpleName(id));
+            if (version != null) {
+                appendSeparator(sb).append(version);
+            }
+        }
+        return sb.toString();
+    }
+
+    private static StringBuilder appendSeparator(StringBuilder sb) {
+        int size = sb.length();
+        return size == 0 || sb.charAt(size - 1) != '/' ? sb.append('/') : sb;
     }
 }
