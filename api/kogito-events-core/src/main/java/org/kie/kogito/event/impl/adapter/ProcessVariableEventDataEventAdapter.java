@@ -67,7 +67,7 @@ public class ProcessVariableEventDataEventAdapter extends AbstractDataEventAdapt
 
         ProcessInstanceVariableEventBody body = builder.build();
         ProcessInstanceVariableDataEvent piEvent =
-                new ProcessInstanceVariableDataEvent(AdapterHelper.buildSource(getConfig().service(), event.getProcessInstance().getProcessId()), getConfig().addons().toString(),
+                new ProcessInstanceVariableDataEvent(AdapterHelper.buildSource(getConfig().service(), event.getProcessInstance()), getConfig().addons().toString(),
                         event.getEventIdentity(), metadata, body);
         piEvent.setKogitoBusinessKey(pi.getBusinessKey());
         return piEvent;

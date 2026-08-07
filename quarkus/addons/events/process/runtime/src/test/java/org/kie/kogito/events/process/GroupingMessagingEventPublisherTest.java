@@ -29,7 +29,6 @@ import org.kie.kogito.addon.quarkus.common.reactive.messaging.MessageDecoratorPr
 import org.kie.kogito.event.DataEvent;
 import org.kie.kogito.event.process.MultipleProcessInstanceDataEvent;
 import org.kie.kogito.event.process.ProcessInstanceDataEvent;
-import org.kie.kogito.event.usertask.MultipleUserTaskInstanceDataEvent;
 import org.kie.kogito.event.usertask.UserTaskInstanceDataEvent;
 import org.kie.kogito.events.config.EventsRuntimeConfig;
 import org.mockito.ArgumentCaptor;
@@ -65,9 +64,6 @@ public class GroupingMessagingEventPublisherTest {
     private MutinyEmitter<String> processDefinitionEventsEmitter;
 
     @Mock
-    private MutinyEmitter<String> userTasksEventsEmitter;
-
-    @Mock
     private EventsRuntimeConfig eventsRuntimeConfig;
 
     @Mock
@@ -81,9 +77,6 @@ public class GroupingMessagingEventPublisherTest {
 
     @Mock
     private AbstractMessagingEventPublisher.AbstractMessageEmitter processInstanceConsumer;
-
-    @Mock
-    private AbstractMessagingEventPublisher.AbstractMessageEmitter userTaskConsumer;
 
     @Mock
     private AbstractMessagingEventPublisher.AbstractMessageEmitter processDefinitionConsumer;
@@ -160,7 +153,6 @@ public class GroupingMessagingEventPublisherTest {
 
         // Mock getConsumer() to return different emitters based on event type
         doReturn(Optional.of(processInstanceConsumer)).when(groupingMessagingEventPublisher).getConsumer(processInstanceEvent);
-        doReturn(Optional.of(userTaskConsumer)).when(groupingMessagingEventPublisher).getConsumer(userTaskEvent);
 
         // Create a collection of events with different types (ProcessInstance and UserTask)
         Collection<DataEvent<?>> events = Arrays.asList(processInstanceEvent, userTaskEvent);
@@ -173,7 +165,6 @@ public class GroupingMessagingEventPublisherTest {
 
         // Capture and verify that the correct emitter was used for each event
         verify(groupingMessagingEventPublisher, times(1)).publishToTopic(eq(processInstanceConsumer), any(MultipleProcessInstanceDataEvent.class));
-        verify(groupingMessagingEventPublisher, times(1)).publishToTopic(eq(userTaskConsumer), any(MultipleUserTaskInstanceDataEvent.class));
     }
 
     @Test
@@ -192,8 +183,6 @@ public class GroupingMessagingEventPublisherTest {
         // Mock getConsumer() to return corresponding emitters for event types
         doReturn(Optional.of(processInstanceConsumer)).when(groupingMessagingEventPublisher).getConsumer(processInstanceEvent1);
         doReturn(Optional.of(processInstanceConsumer)).when(groupingMessagingEventPublisher).getConsumer(processInstanceEvent2);
-        doReturn(Optional.of(userTaskConsumer)).when(groupingMessagingEventPublisher).getConsumer(userTaskEvent1);
-        doReturn(Optional.of(userTaskConsumer)).when(groupingMessagingEventPublisher).getConsumer(userTaskEvent2);
 
         // Create a collection of events that would be grouped by channel
         Collection<DataEvent<?>> events = Arrays.asList(processInstanceEvent1, processInstanceEvent2, userTaskEvent1, userTaskEvent2);
@@ -206,7 +195,6 @@ public class GroupingMessagingEventPublisherTest {
 
         // Verify that two grouped publishToTopic calls are made: one for processInstanceConsumer, one for userTaskConsumer
         verify(groupingMessagingEventPublisher, times(1)).publishToTopic(eq(processInstanceConsumer), any(MultipleProcessInstanceDataEvent.class));
-        verify(groupingMessagingEventPublisher, times(1)).publishToTopic(eq(userTaskConsumer), any(MultipleUserTaskInstanceDataEvent.class));
 
         // Verify that the right number of events was grouped and passed to each emitter
         ArgumentCaptor<MultipleProcessInstanceDataEvent> captorPI = ArgumentCaptor.forClass(MultipleProcessInstanceDataEvent.class);
@@ -214,12 +202,6 @@ public class GroupingMessagingEventPublisherTest {
         verify(groupingMessagingEventPublisher, times(1)).publishToTopic(eq(processInstanceConsumer), captorPI.capture());
         MultipleProcessInstanceDataEvent groupedProcessInstanceEvents = captorPI.getValue();
         assertEquals(2, groupedProcessInstanceEvents.getData().size()); // both processInstanceEvents are grouped
-
-        ArgumentCaptor<MultipleUserTaskInstanceDataEvent> captorUT = ArgumentCaptor.forClass(MultipleUserTaskInstanceDataEvent.class);
-
-        verify(groupingMessagingEventPublisher, times(1)).publishToTopic(eq(userTaskConsumer), captorUT.capture());
-        MultipleUserTaskInstanceDataEvent groupedUserTaskEvents = captorUT.getValue();
-        assertEquals(2, groupedUserTaskEvents.getData().size()); // both userTaskEvents are grouped
     }
 
     @Test

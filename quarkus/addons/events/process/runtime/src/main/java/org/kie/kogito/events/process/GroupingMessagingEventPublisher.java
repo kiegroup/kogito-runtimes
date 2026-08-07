@@ -32,8 +32,6 @@ import org.kie.kogito.event.process.KogitoMarshallEventFlag;
 import org.kie.kogito.event.process.KogitoMarshallEventSupport;
 import org.kie.kogito.event.process.MultipleProcessInstanceDataEvent;
 import org.kie.kogito.event.process.ProcessInstanceDataEvent;
-import org.kie.kogito.event.usertask.MultipleUserTaskInstanceDataEvent;
-import org.kie.kogito.event.usertask.UserTaskInstanceDataEvent;
 
 import io.quarkus.arc.lookup.LookupIfProperty;
 
@@ -68,9 +66,7 @@ public class GroupingMessagingEventPublisher extends AbstractMessagingEventPubli
     private void publishEvents(Map.Entry<AbstractMessageEmitter, Collection> entry) {
         DataEvent<?> firstEvent = (DataEvent<?>) entry.getValue().iterator().next();
         URI source = firstEvent.getSource();
-        if (firstEvent instanceof UserTaskInstanceDataEvent) {
-            publishToTopic(entry.getKey(), new MultipleUserTaskInstanceDataEvent(source, (Collection<UserTaskInstanceDataEvent<?>>) entry.getValue()));
-        } else if (firstEvent instanceof ProcessInstanceDataEvent) {
+        if (firstEvent instanceof ProcessInstanceDataEvent) {
             MultipleProcessInstanceDataEvent sent = new MultipleProcessInstanceDataEvent(source, (Collection<ProcessInstanceDataEvent<? extends KogitoMarshallEventSupport>>) entry.getValue());
             if (binary) {
                 sent.setDataContentType(MultipleProcessInstanceDataEvent.BINARY_CONTENT_TYPE);

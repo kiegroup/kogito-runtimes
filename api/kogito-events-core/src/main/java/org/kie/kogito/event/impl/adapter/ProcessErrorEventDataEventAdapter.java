@@ -49,7 +49,7 @@ public class ProcessErrorEventDataEventAdapter extends AbstractDataEventAdapter 
                 .build();
         Map<String, Object> metadata = AdapterHelper.buildProcessMetadata((KogitoWorkflowProcessInstance) event.getProcessInstance());
         ProcessInstanceErrorDataEvent piEvent =
-                new ProcessInstanceErrorDataEvent(AdapterHelper.buildSource(getConfig().service(), event.getProcessInstance().getProcessId()), getConfig().addons().toString(),
+                new ProcessInstanceErrorDataEvent(AdapterHelper.buildSource(getConfig().service(), event.getProcessInstance()), getConfig().addons().toString(),
                         event.getEventIdentity(), metadata, errorBody);
         piEvent.setKogitoBusinessKey(pi.getBusinessKey());
         return piEvent;

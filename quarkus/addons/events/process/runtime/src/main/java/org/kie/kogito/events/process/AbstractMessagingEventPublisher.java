@@ -100,14 +100,6 @@ public abstract class AbstractMessagingEventPublisher implements EventPublisher 
             case "ProcessInstanceVariableDataEvent":
                 return eventsRuntimeConfig.isProcessInstancesEventsEnabled() ? Optional.of(processInstanceConsumer) : Optional.empty();
 
-            case "UserTaskInstanceAssignmentDataEvent":
-            case "UserTaskInstanceAttachmentDataEvent":
-            case "UserTaskInstanceCommentDataEvent":
-            case "UserTaskInstanceDeadlineDataEvent":
-            case "UserTaskInstanceStateDataEvent":
-            case "UserTaskInstanceVariableDataEvent":
-                return eventsRuntimeConfig.isUserTasksEventsEnabled() ? Optional.of(userTaskConsumer) : Optional.empty();
-
             default:
                 return Optional.empty();
         }
