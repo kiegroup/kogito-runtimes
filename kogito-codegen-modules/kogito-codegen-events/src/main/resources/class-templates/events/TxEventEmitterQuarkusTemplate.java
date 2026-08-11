@@ -20,15 +20,17 @@ package $Package$;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.event.Event;
-import jakarta.enterprise.event.Observes;
-import jakarta.enterprise.event.TransactionPhase;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.transaction.Status;
+import jakarta.transaction.Synchronization;
 import jakarta.transaction.Transactional;
+import jakarta.transaction.TransactionSynchronizationRegistry;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import org.kie.kogito.addon.quarkus.messaging.common.KogitoMessaging;
@@ -44,7 +46,6 @@ import org.kie.kogito.event.EventUnmarshaller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import io.quarkus.runtime.Startup;
 
 @Startup
@@ -59,33 +60,43 @@ public class $ClassName$ extends AbstractQuarkusCloudEventEmitter<$Type$> {
     Emitter<$Type$> emitter;
 
     @Inject
-    Event<EmitEventType> event;
-
-    @Inject
     MessageDecoratorProvider messageDecorator;
 
-    class EmitEventType {
-        DataEvent<?> data;
-
-        public EmitEventType(DataEvent<?> data) {
-            this.data = data;
-        }
-    }
-
-    public void observe(@Observes(during = TransactionPhase.AFTER_SUCCESS) EmitEventType emitEventType) {
-        logger.debug("publishing event {}", emitEventType.data);
-        try {
-            Message<$Type$> message = messageDecorator.decorate(getMessage(emitEventType.data));
-            emitter.send(message);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-    }
+    @Inject
+    TransactionSynchronizationRegistry txSyncRegistry;
 
     @Override
     @Transactional
+    @SuppressWarnings("unchecked")
     public void emit(DataEvent<?> dataEvent) {
-        event.fire(new EmitEventType(dataEvent));
+        List<DataEvent<?>> bufferedEvents = (List<DataEvent<?>>) txSyncRegistry.getResource(this);
+        if (bufferedEvents == null) {
+            bufferedEvents = new ArrayList<>();
+            txSyncRegistry.putResource(this, bufferedEvents);
+            final List<DataEvent<?>> events = bufferedEvents;
+            txSyncRegistry.registerInterposedSynchronization(new Synchronization() {
+                @Override
+                public void beforeCompletion() {
+                }
+
+                @Override
+                public void afterCompletion(int status) {
+                    if (status == Status.STATUS_COMMITTED) {
+                        for (DataEvent<?> event : events) {
+                            logger.debug("publishing event {}", event);
+                            try {
+                                Message<$Type$> message = messageDecorator.decorate(getMessage(event));
+                                emitter.send(message);
+                            } catch (IOException e) {
+                                logger.error("error while publishing event {}", event, e);
+                                throw new UncheckedIOException(e);
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        bufferedEvents.add(dataEvent);
     }
 
     protected EventMarshaller<$Type$> getEventMarshaller() {
