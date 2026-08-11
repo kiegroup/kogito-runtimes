@@ -32,11 +32,11 @@ import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.Application;
 import org.kie.kogito.event.EventBatch;
 import org.kie.kogito.event.impl.ProcessEventBatch;
+import org.kie.kogito.event.impl.adapter.AdapterHelper;
 import org.kie.kogito.event.process.NodeDefinition;
 import org.kie.kogito.event.process.ProcessDefinitionDataEvent;
 import org.kie.kogito.event.process.ProcessDefinitionEventBody;
 import org.kie.kogito.event.process.ProcessDefinitionEventBody.ProcessDefinitionEventBodyBuilder;
-import org.kie.kogito.internal.utils.ConversionUtils;
 import org.kie.kogito.process.Process;
 import org.kie.kogito.process.Processes;
 import org.kie.kogito.source.files.SourceFile;
@@ -116,9 +116,7 @@ public class ProcessDefinitionEventRegistry {
     }
 
     private static String getEndpoint(String endpoint, Process<?> p) {
-        //sanitize process path in case of fqdn org.acme.ProcessExample -> ProcessExample
-        String processPath = ConversionUtils.sanitizeToSimpleName(p.id());
-        return endpoint + "/" + processPath;
+        return AdapterHelper.buildSource(endpoint, p.id(), p.version());
     }
 
     private List<NodeDefinition> getNodesDefinitions(Process<?> p) {

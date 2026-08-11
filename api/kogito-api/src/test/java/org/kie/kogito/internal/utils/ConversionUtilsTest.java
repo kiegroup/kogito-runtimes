@@ -142,12 +142,13 @@ class ConversionUtilsTest {
 
     @Test
     public void testSanitizeToSimpleName() {
-        String nameFull = "org.acme.ProcessTest1";
+        String nameFull = "org.acme.Process Test1";
         String nameSimple = "ProcessTest2";
         String nameEmpty = "";
-        assertThat(sanitizeToSimpleName(nameFull)).isEqualTo("ProcessTest1");
+        assertThat(sanitizeToSimpleName(nameFull)).isEqualTo("Process-Test1");
         assertThat(sanitizeToSimpleName(nameSimple)).isEqualTo("ProcessTest2");
         assertThat(sanitizeToSimpleName(nameEmpty)).isEqualTo("");
         assertThat(sanitizeToSimpleName(null)).isNull();
     }
+
 }
