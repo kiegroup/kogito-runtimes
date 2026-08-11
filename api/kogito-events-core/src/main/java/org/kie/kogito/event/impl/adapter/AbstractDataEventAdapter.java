@@ -107,7 +107,7 @@ public abstract class AbstractDataEventAdapter implements DataEventAdapter {
 
         ProcessInstanceStateEventBody body = builder.build();
         ProcessInstanceStateDataEvent piEvent =
-                new ProcessInstanceStateDataEvent(AdapterHelper.buildSource(getConfig().service(), event.getProcessInstance().getProcessId()), getConfig().addons().toString(),
+                new ProcessInstanceStateDataEvent(AdapterHelper.buildSource(getConfig().service(), event.getProcessInstance()), getConfig().addons().toString(),
                         event.getEventIdentity(), metadata, body);
         piEvent.setKogitoBusinessKey(pi.getBusinessKey());
         return piEvent;
@@ -160,7 +160,7 @@ public abstract class AbstractDataEventAdapter implements DataEventAdapter {
         }
 
         ProcessInstanceNodeEventBody body = builder.build();
-        ProcessInstanceNodeDataEvent piEvent = new ProcessInstanceNodeDataEvent(AdapterHelper.buildSource(getConfig().service(), pi.getProcessId()),
+        ProcessInstanceNodeDataEvent piEvent = new ProcessInstanceNodeDataEvent(AdapterHelper.buildSource(getConfig().service(), pi),
                 getConfig().addons().toString(), event.getEventIdentity(), metadata, body);
         piEvent.setKogitoBusinessKey(pi.getBusinessKey());
         return piEvent;

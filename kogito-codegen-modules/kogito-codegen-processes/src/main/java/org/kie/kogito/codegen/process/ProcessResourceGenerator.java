@@ -45,6 +45,7 @@ import org.kie.kogito.codegen.core.CodegenUtils;
 import org.kie.kogito.codegen.core.GeneratorConfig;
 import org.kie.kogito.codegen.faultTolerance.FaultToleranceAnnotator;
 import org.kie.kogito.internal.process.runtime.KogitoWorkflowProcess;
+import org.kie.kogito.internal.utils.ConversionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,9 +120,10 @@ public class ProcessResourceGenerator {
         this.process = process;
         if (inclVersion) {
             this.processName = process.getProcessId().toString();
-            this.path = process.getId() + "/" + process.getVersion();
+            this.path = ConversionUtils.sanitizeToSimpleName(process.getId()) + "/" + process.getVersion();
         } else {
-            this.processName = this.path = process.getId();
+            this.processName = process.getId();
+            this.path = ConversionUtils.sanitizeToSimpleName(process.getId());
         }
         this.resourceClazzName = sanitizeClassName(processName + "Resource");
         this.relativePath = process.getPackageName().replace(".", "/") + "/" + resourceClazzName + ".java";

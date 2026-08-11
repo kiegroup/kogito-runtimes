@@ -55,7 +55,7 @@ public class ProcessInstanceEventBatchTest {
 
     @Test
     public void testNoProcessIdDefined() {
-        assertThat(AdapterHelper.extractRuntimeSource("http://localhost:8080", emptyMap())).isNull();
+        assertThat(AdapterHelper.extractRuntimeSource("http://localhost:8080", emptyMap())).isEqualTo("http://localhost:8080");
     }
 
     @Test
