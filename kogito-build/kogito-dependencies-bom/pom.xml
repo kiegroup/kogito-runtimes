@@ -101,6 +101,7 @@
 
     <version.io.smallrye.reactive.mutiny-vertx-web-client>3.21.6</version.io.smallrye.reactive.mutiny-vertx-web-client>
 
+    <version.io.vertx>4.5.31</version.io.vertx>
     <version.io.grpc>1.81.0</version.io.grpc>
 
     <version.io.quarkus.camel>3.33.2</version.io.quarkus.camel>
@@ -1178,10 +1179,12 @@
       <dependency>
         <groupId>io.vertx</groupId>
         <artifactId>vertx-pg-client</artifactId>
+        <version>${version.io.vertx}</version>
       </dependency>
       <dependency>
         <groupId>io.vertx</groupId>
         <artifactId>vertx-web</artifactId>
+        <version>${version.io.vertx}</version>
       </dependency>
 
       <!-- predictions/machine learning related -->
