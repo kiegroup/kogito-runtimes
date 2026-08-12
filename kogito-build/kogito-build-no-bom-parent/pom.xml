@@ -1143,5 +1143,38 @@
         </plugins>
       </build>
     </profile>
+
+    <profile>
+      <!--
+        Enables resolution of artifacts from the Maven Central Snapshots repository.
+        Used by the nightly CI to test against quarkus-openapi-generator SNAPSHOT builds.
+        Activate with: -Pcentral-snapshots
+      -->
+      <id>central-snapshots</id>
+      <repositories>
+        <repository>
+          <id>central-snapshots</id>
+          <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+          <releases>
+            <enabled>false</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>central-snapshots</id>
+          <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+          <releases>
+            <enabled>false</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
   </profiles>
 </project>
