@@ -1147,8 +1147,8 @@
     <profile>
       <!--
         Enables resolution of artifacts from the Maven Central Snapshots repository.
-        Used by the nightly CI to test against quarkus-openapi-generator SNAPSHOT builds.
-        Activate with: -Pcentral-snapshots
+        For local development use: activate with -Pcentral-snapshots.
+        CI uses .github/quarkus-openapi-generator-snapshot-settings.xml instead (via - -settings).
       -->
       <id>central-snapshots</id>
       <repositories>
