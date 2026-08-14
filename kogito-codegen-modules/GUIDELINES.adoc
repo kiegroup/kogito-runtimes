@@ -31,7 +31,7 @@ under the License.
 - A *Template* is a Java class named `<Something><Runtime>Template.java`.
 Templates are located under `src/main/resources/class-templates/`.
 - A template should/must be parsed using `org.kie.kogito.codegen.api.template.TemplatedGenerator` utility class
-- `<Runtime>` is to have platform specific templates: `Quarkus`/`Spring`/`Java`
+- `<Runtime>` is to have platform specific templates: `Quarkus`/`Java`
 - A Template class may contain *placeholders*. 
 - By convention a placeholder is a string delimited by $-marks. `$PlaceHolder$`.
 
@@ -78,7 +78,7 @@ u.findAll(
 
 
 1. Move shared, non-dynamic code to plain (abstract) classes
-2. Specialize runtime-specific annotation/behavior (Quarkus vs. Spring) using templates if possible (inherit or call library methods) 
+2. Specialize runtime-specific annotation/behavior (Quarkus) using templates if possible (inherit or call library methods)
 3. Templates should be framework-specific
 
 ### Framework-Specific Templates
@@ -86,27 +86,7 @@ u.findAll(
 A framework-specific template reads like a regular class.
 There may be placeholders.
 
-
-.Framework-Specific Template
-====
-
-.ApplicationConfigSpringTemplate.java:
-[source,java]
-----
-@org.springframework.stereotype.Component
-public class ApplicationConfig extends org.kie.kogito.StaticConfig {
-
-    @org.springframework.beans.factory.annotation.Autowired
-    public ApplicationConfig(
-            Collection<org.kie.kogito.KogitoConfig> configs) {
-        super($Addons$, configs);
-    }
-    ...
-----
-
-where `org.kie.kogito.StaticConfig` is a plain class. In this case there are no placeholders.
-
-There are also:
+There are:
 
 - `ApplicationConfigQuarkusTemplate` for Quarkus (CDI)
 - `ApplicationConfigJavaTemplate` for non-DI cases
@@ -123,7 +103,7 @@ then there may be an opportunity for **promoting it to a plain shared class**.
 WARNING: We describe this technique because it is being used, but, whenever possible, you should prefer Framework-Specific Templates + Shared Code.
 
 A framework-agnostic template is "customized" using an *Annotator*. 
-We provide an Annotator for Spring and one for Quarkus (CDI). Annotators decorate methods of a template using framework-specific annotations.
+We provide an Annotator for Quarkus (CDI). Annotators decorate methods of a template using framework-specific annotations.
 
 These templates are used when the generated code is largely the same for all frameworks we support, and only the annotations are different. However:
 
@@ -210,7 +190,7 @@ The remaining logic should only deal with selecting and replacing placeholders.
 .Avoiding Conditional Logic
 ====
 Consider the case when you want to declare a specific type
-for a field, depending whether we are generating code for Spring or CDI.
+for a field, depending whether we are generating code for CDI.
 
 .MyClassTemplate.java: 
 [source,java]
@@ -235,23 +215,11 @@ u.findAll(FieldDeclaration.class,
                         .getNameAsString().equals("$InjectTarget$"))
     .forEach(p -> {
         VariableDeclarator vd = p.getVariable(0);
-        if (isSpring()) {
-            vd.setType("java.util.List<WorkItemHandler>");
-        } else {
-            vd.setType("jakarta.enterprise.inject.Instance<WorkItemHandler>");
-        }
+        vd.setType("jakarta.enterprise.inject.Instance<WorkItemHandler>");
     });
 ----
 
 instead, write a framework-specific templates:
-
-.MyClassSpringTemplate.java:
-[source,java]
-----
-public class MyClass {
-    List<WorkItemHandler> injected;
-}
-----
 
 .MyClassQuarkusTemplate.java:
 [source,java]
@@ -278,44 +246,6 @@ CompilationUnit u = TemplatedGenerator.builder()
 
 - Favor Constructor Injection and avoid `@PostConstruct`. Initialization logic should go in the constructor.
 - REST endpoints are the exception:  use field injection, but avoid inheritance; you should try and avoid `@PostConstruct`
-
-
-
-.Mixed Usage of Injection
-====
-
-Consider the following example.
-
-
-[source,java]
-----
-@org.springframework.stereotype.Component("Travelers")
-public class TravelersProcess extends AbstractProcess<TravelersModel> {
-
-    // field injection
-    @org.springframework.beans.factory.annotation.Autowired(required = false)
-    Collection<WorkItemHandler> handlers;
-
-    Application app;
-
-    // field injection
-    @org.springframework.beans.factory.annotation.Autowired()
-    org.kie.kogito.test.TravelersMessageProducer_7 producer_7;
-
-    // constructor injection
-    @org.springframework.beans.factory.annotation.Autowired()
-    public TravelersProcess(org.kie.kogito.app.Application app) {
-        super(app.config().get(org.kie.kogito.process.ProcessConfig.class));
-        this.app = app;
-    }
-
-    // post construct method that delegates to a non-final 
-    // super-class method
-    @jakarta.annotation.PostConstruct()
-    public void init() {
-        this.activate();
-    }
-----
 
 ====
 

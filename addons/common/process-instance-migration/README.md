@@ -106,13 +106,6 @@ Add this section to your `pom.xml` file:
      <artifactId>kie-addons-quarkus-process-instance-migration</artifactId>
   </dependency>
 ```
-2. Springboot:
-```xml
- <dependency>
-     <groupId>org.kie</groupId>
-      <artifactId>kie-addons-springboot-process-instance-migration</artifactId>
-</dependency>
-```
 
 ## Examples
 

@@ -30,9 +30,6 @@
         <mxCell id="u1L84OjjxpePEOPUQG9X-2" value="kogito-dependencies-bom" style="shape=module;align=left;spacingLeft=20;align=center;verticalAlign=top;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
           <mxGeometry x="310" y="60" width="170" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="u1L84OjjxpePEOPUQG9X-3" value="kogito-springboot-bom" style="shape=module;align=left;spacingLeft=20;align=center;verticalAlign=top;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
-          <mxGeometry x="170" y="440" width="170" height="70" as="geometry" />
-        </mxCell>
         <mxCell id="u1L84OjjxpePEOPUQG9X-4" value="kogito-quarkus-bom" style="shape=module;align=left;spacingLeft=20;align=center;verticalAlign=top;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
           <mxGeometry x="460" y="440" width="170" height="70" as="geometry" />
         </mxCell>
@@ -66,9 +63,6 @@
               <mxPoint x="170" y="225" />
             </Array>
           </mxGeometry>
-        </mxCell>
-        <mxCell id="u1L84OjjxpePEOPUQG9X-20" value="spring-boot-dependencies&#xa;(Spring Framework)" style="shape=module;align=left;spacingLeft=20;align=center;verticalAlign=top;dashed=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
-          <mxGeometry x="110" y="570" width="200" height="40" as="geometry" />
         </mxCell>
         <mxCell id="u1L84OjjxpePEOPUQG9X-21" value="Use" style="endArrow=open;endSize=12;dashed=1;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="u1L84OjjxpePEOPUQG9X-3" target="u1L84OjjxpePEOPUQG9X-20" edge="1">
           <mxGeometry width="160" relative="1" as="geometry">

@@ -40,7 +40,7 @@ the [Open API](https://github.com/kiegroup/kogito-runtimes/tree/main/kogito-work
 
 To avoid round trips to the Kubernetes server every time, each runtime implementation adds a cache layer in between
 calls. This cache is highly customizable since its configuration is exposed by the target runtime. For more details
-please see the [Quarkus](../../../quarkus/addons/kubernetes) and [Spring Boot](../../../springboot/addons/kubernetes) add-on implementations.
+please see the [Quarkus](../../../quarkus/addons/kubernetes) add-on implementations.
 
 ### Usage
 

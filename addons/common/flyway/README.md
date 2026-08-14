@@ -25,7 +25,7 @@ This add-on is a utility intended to help bootstrapping the application Data Bas
 when more than one`extension` or `add-on` that require persistence co-exist in the same application.
 
 This add-on will be using a managed Flyway to initialize and upgrade each `extension`/`add-on` DB 
-instead of using the Platform (Quarkus/Springboot) specific Flyway integration, by this we achieve:
+instead of using the Platform (Quarkus) specific Flyway integration, by this we achieve:
 * Simple setups in the `application.properties`. No need to configure Flyway unless the customer requires for its 
     own needs.
 * Component-Based DB Management: the DB management (via Flyway `migrations`) will be executed independently by component 
@@ -142,7 +142,7 @@ import org.kie.flyway.initializer.KieFlywayInitializer;
                 .migrate();
 ```
 
-> NOTE: The platform-specific add-ons (Quarkus/Spring-Boot) will be in charge to obtain the DataSource and DataBase type 
+> NOTE: The platform-specific add-ons (Quarkus) will be in charge to obtain the DataSource and DataBase type 
 > and correctly configure the `KieFlywayInitializer` according to the `application.properties` and use it on during the application startup.
 
 

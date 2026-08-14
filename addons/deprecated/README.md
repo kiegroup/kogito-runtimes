@@ -52,32 +52,7 @@ them in your project.
 | REST Exception Handler  | kogito-rest-exception-handler-quarkus       | kie-addons-quarkus-rest-exception-handler        | 1.8.0  | 
 | Task Management         | task-management-quarkus-addon               | jbpm-addons-quarkus-task-management              | 1.8.0  | 
 | Task Notification       | task-notification-quarkus-addon             | jbpm-addons-quarkus-task-notification            | 1.8.0  | 
-| Tracing Decision        | tracing-decision-quarkus-addon              | kie-addons-quarkus-tracing-decision              | 1.8.0  | 
-
-#### Spring Boot Add-ons
-
-| Add-On Description      | Deprecated Artifact ID                         | New Artifact ID                                | Since  | 
-|-------------------------|------------------------------------------------|------------------------------------------------|--------|
-| Cloud Events            | kogito-cloudevents-spring-boot-addon           | kie-addons-springboot-messaging                | 1.8.0  |
-| Events Decisions        | kogito-event-driven-decisions-springboot-addon | kie-addons-springboot-events-decisions         | 1.8.0  |
-| Events Kafka            | kogito-events-spring-boot-addon                | kie-addons-springboot-events-process-kafka     | 1.8.0  |
-| Explainability          | explainability-springboot-addon                | kie-addons-springboot-explainability           | 1.8.0  | 
-| Jobs Management         | jobs-management-springboot-addon               | kogito-addons-springboot-jobs-management       | 1.8.0  |
-| Mail                    | mail-springboot-addon                          | jbpm-addons-springboot-mail                    | 1.8.0  |
-| Monitoring Core         | monitoring-core-springboot-addon               | kie-addons-springboot-monitoring-core          | 1.8.0  | 
-| Monitoring Elastic      | monitoring-elastic-springboot-addon            | kie-addons-springboot-monitoring-elastic       | 1.8.0  | 
-| Monitoring Prometheus   | monitoring-prometheus-springboot-addon         | kie-addons-springboot-monitoring-prometheus    | 1.8.0  |
-| Process Management      | process-management-springboot-addon            | kie-addons-springboot-process-management       | 1.8.0  | 
-| Process SVG             | process-svg-springboot-addon                   | kie-addons-springboot-process-svg              | 1.8.0  |
-| Persistence File System | kogito-addons-persistence-filesystem           | kie-addons-springboot-persistence-filesystem   | 1.21.0 |
-| Persistence Infinispan  | kogito-addons-persistence-infinispan           | kie-addons-springboot-persistence-infinispan   | 1.21.0 |
-| Persistence JDBC        | kogito-addons-persistence-jdbc                 | kie-addons-springboot-persistence-jdbc         | 1.21.0 |
-| Persistence MongoDB     | kogito-addons-persistence-mongodb              | kie-addons-springboot-persistence-mongodb      | 1.21.0 |
-| Persistence Postgresql  | kogito-addons-persistence-postgresql           | kie-addons-springboot-persistence-postgresql   | 1.21.0 |
-| REST Exception Handler  | kogito-rest-exception-handler-springboot       | kie-addons-springboot-rest-exception-handler   | 1.8.0  | 
-| Task Management         | task-management-springboot-addon               | jbpm-addons-springboot-task-management         | 1.8.0  | 
-| Task Notification       | task-notification-springboot-addon             | jbpm-addons-springboot-task-notification       | 1.8.0  | 
-| Tracing Decision        | tracing-decision-springboot-addon              | kie-addons-springboot-tracing-decision         | 1.8.0  | 
+| Tracing Decision        | tracing-decision-quarkus-addon              | kie-addons-quarkus-tracing-decision              | 1.8.0  |
 
 #### Common Add-ons
 

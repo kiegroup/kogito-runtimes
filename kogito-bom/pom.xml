@@ -486,17 +486,6 @@
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-kubernetes</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-kubernetes</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
 
       <dependency>
         <groupId>org.kie</groupId>
@@ -528,17 +517,6 @@
       <dependency>
         <groupId>org.kie</groupId>
         <artifactId>kie-addons-quarkus-messaging-deployment</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-messaging</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-messaging</artifactId>
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
@@ -700,17 +678,6 @@
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-monitoring-prometheus</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-monitoring-prometheus</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
 
        <dependency>
         <groupId>org.kie</groupId>
@@ -754,17 +721,6 @@
       </dependency>
       <dependency>
         <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-monitoring-core</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-monitoring-core</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
         <artifactId>kie-addons-monitoring-elastic</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -793,17 +749,6 @@
       <dependency>
         <groupId>org.kie</groupId>
         <artifactId>kie-addons-quarkus-monitoring-elastic-deployment</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-monitoring-elastic</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-monitoring-elastic</artifactId>
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
@@ -834,17 +779,6 @@
       </dependency>
       <dependency>
         <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-persistence-infinispan</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-persistence-infinispan</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
         <artifactId>kie-addons-persistence-rocksdb</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -917,17 +851,6 @@
       <dependency>
         <groupId>org.kie</groupId>
         <artifactId>kie-addons-quarkus-persistence-jdbc</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-persistence-jdbc</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-persistence-jdbc</artifactId>
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
@@ -1010,17 +933,6 @@
       </dependency>
       <dependency>
         <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-persistence-postgresql</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-persistence-postgresql</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
         <artifactId>kie-addons-quarkus-persistence-filesystem</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -1067,34 +979,12 @@
       </dependency>
       <dependency>
         <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-persistence-filesystem</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-persistence-filesystem</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
         <artifactId>kie-addons-persistence-mongodb</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.kie</groupId>
         <artifactId>kie-addons-persistence-mongodb</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-persistence-mongodb</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-persistence-mongodb</artifactId>
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
@@ -1128,17 +1018,6 @@
       <dependency>
         <groupId>org.kie</groupId>
         <artifactId>kie-addons-quarkus-events-process-deployment</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-events-process-kafka</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-events-process-kafka</artifactId>
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
@@ -1206,17 +1085,6 @@
       <dependency>
         <groupId>org.kie</groupId>
         <artifactId>kie-addons-quarkus-process-instance-migration-deployment</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-process-instance-migration</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-process-instance-migration</artifactId>
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
@@ -1310,17 +1178,6 @@
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-source-files</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-source-files</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
 
       <!--  Token Exchange addon    -->
       <dependency>
@@ -1346,17 +1203,6 @@
         <classifier>sources</classifier>
       </dependency>
 
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-process-management</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-process-management</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
      <dependency>
         <groupId>org.jbpm</groupId>
         <artifactId>jbpm-addons-mail</artifactId>
@@ -1391,17 +1237,6 @@
         <classifier>sources</classifier>
       </dependency>
       <dependency>
-        <groupId>org.jbpm</groupId>
-        <artifactId>jbpm-addons-springboot-mail</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jbpm</groupId>
-        <artifactId>jbpm-addons-springboot-mail</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-      <dependency>
         <groupId>org.kie</groupId>
         <artifactId>kie-addons-rest-exception-handler</artifactId>
         <version>${project.version}</version>
@@ -1420,33 +1255,11 @@
       <dependency>
         <groupId>org.kie</groupId>
         <artifactId>kie-addons-quarkus-rest-exception-handler</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-rest-exception-handler</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-rest-exception-handler</artifactId>
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
 
       <!-- Process SVG addon     -->
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-common-auth</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-common-auth</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
       <dependency>
         <groupId>org.kie</groupId>
         <artifactId>kie-addons-process-svg</artifactId>
@@ -1483,17 +1296,6 @@
       <dependency>
         <groupId>org.kie</groupId>
         <artifactId>kie-addons-quarkus-process-svg-deployment</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-process-svg</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-process-svg</artifactId>
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
@@ -1653,17 +1455,6 @@
         <classifier>sources</classifier>
       </dependency>
       <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kogito-addons-springboot-jobs-management</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kogito-addons-springboot-jobs-management</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-      <dependency>
           <groupId>org.kie</groupId>
           <artifactId>kogito-addons-quarkus-jobs</artifactId>
           <version>${project.version}</version>
@@ -1715,37 +1506,27 @@
         <classifier>sources</classifier>
       </dependency>
 
-	  <!-- Jobs -->
-	  <dependency>
-		<groupId>org.kie</groupId>
-		<artifactId>jobs-common-embedded</artifactId>
-		<version>${project.version}</version>
-	  </dependency>
-	  <dependency>
-		<groupId>org.kie</groupId>
-		<artifactId>kogito-addons-common-embedded-jobs-jpa</artifactId>
-		<version>${project.version}</version>
-  	  </dependency>
-	  <dependency>
-		<groupId>org.kie</groupId>
-		<artifactId>kogito-addons-quarkus-embedded-jobs-jpa</artifactId>
-		<version>${project.version}</version>
-	  </dependency>
-	  <dependency>
-		<groupId>org.kie</groupId>
-		<artifactId>kogito-addons-springboot-embedded-jobs-jpa</artifactId>
-		<version>${project.version}</version>
-	  </dependency>
-	  <dependency>
-		<groupId>org.kie</groupId>
-		<artifactId>kogito-addons-quarkus-embedded-jobs</artifactId>
-		<version>${project.version}</version>
-	  </dependency>
-	  <dependency>
-		<groupId>org.kie</groupId>
-		<artifactId>kogito-addons-springboot-embedded-jobs</artifactId>
-		<version>${project.version}</version>
-	  </dependency>
+      <!-- Jobs -->
+      <dependency>
+        <groupId>org.kie</groupId>
+        <artifactId>jobs-common-embedded</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.kie</groupId>
+        <artifactId>kogito-addons-common-embedded-jobs-jpa</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.kie</groupId>
+        <artifactId>kogito-addons-quarkus-embedded-jobs-jpa</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.kie</groupId>
+        <artifactId>kogito-addons-quarkus-embedded-jobs</artifactId>
+        <version>${project.version}</version>
+      </dependency>
 
 	  <!-- Flyway Add-on-->
       <dependency>
@@ -1778,17 +1559,6 @@
       <dependency>
         <groupId>org.kie</groupId>
         <artifactId>kie-addons-quarkus-flyway-deployment</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-flyway</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-flyway</artifactId>
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
@@ -2278,40 +2048,7 @@
         <classifier>sources</classifier>
       </dependency>
 
-			<!-- spring boot starter -->
-      <dependency>
-        <groupId>org.jbpm</groupId>
-        <artifactId>jbpm-with-drools-spring-boot-starter</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.drools</groupId>
-        <artifactId>drools-rules-spring-boot-starter</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jbpm</groupId>
-        <artifactId>jbpm-spring-boot-starter</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jbpm</groupId>
-        <artifactId>jbpm-spring-boot-starter</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-      <dependency>
-        <groupId>org.drools</groupId>
-        <artifactId>drools-decisions-spring-boot-starter</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-predictions-spring-boot-starter</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-			<!-- Quarkus extension -->
+      <!-- Quarkus extension -->
       <dependency>
         <groupId>org.jbpm</groupId>
         <artifactId>jbpm-with-drools-quarkus</artifactId>
@@ -2742,17 +2479,6 @@
       </dependency>
       <dependency>
         <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-tracing-decision</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-tracing-decision</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
         <artifactId>kie-addons-tracing-typedvalue-api</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -2763,7 +2489,7 @@
         <classifier>sources</classifier>
       </dependency>
 
-			<!-- Explainability -->
+      <!-- Explainability -->
       <dependency>
         <groupId>org.kie</groupId>
         <artifactId>kie-addons-explainability</artifactId>
@@ -2772,18 +2498,6 @@
       <dependency>
         <groupId>org.kie</groupId>
         <artifactId>kie-addons-explainability</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-explainability</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-explainability</artifactId>
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
@@ -2845,19 +2559,8 @@
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-events-decisions</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-events-decisions</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
 
-			<!-- event-driven predictions -->
+      <!-- event-driven predictions -->
       <dependency>
         <groupId>org.kie</groupId>
         <artifactId>kie-addons-events-predictions</artifactId>
@@ -2891,19 +2594,8 @@
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-events-predictions</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-addons-springboot-events-predictions</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
 
-			<!-- event-driven rules -->
+      <!-- event-driven rules -->
       <dependency>
         <groupId>org.drools</groupId>
         <artifactId>drools-addons-events-rules</artifactId>
@@ -2934,17 +2626,6 @@
       <dependency>
         <groupId>org.drools</groupId>
         <artifactId>drools-addons-quarkus-events-rules-deployment</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-      </dependency>
-      <dependency>
-        <groupId>org.drools</groupId>
-        <artifactId>drools-addons-springboot-events-rules</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.drools</groupId>
-        <artifactId>drools-addons-springboot-events-rules</artifactId>
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
