@@ -17,7 +17,7 @@
 -- under the License.
 --
 
--- To be used with kie-addons-quarkus-persistence-jdbc for Quarkus or kie-addons-springboot-persistence-jdbc for SpringBoot
+-- To be used with kie-addons-quarkus-persistence-jdbc for Quarkus
 CREATE TABLE process_instances
 (
     id              character(36)     NOT NULL,

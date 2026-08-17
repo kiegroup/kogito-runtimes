@@ -139,11 +139,6 @@
     </extensions>
     <pluginManagement>
       <plugins>
-        <plugin>       
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-maven-plugin</artifactId>
-            <version>${version.org.springframework.boot}</version>                      
-        </plugin>
         <plugin>
             <groupId>com.societegenerale.commons</groupId>
             <artifactId>arch-unit-maven-plugin</artifactId>
@@ -1029,15 +1024,12 @@
                               <exclude name="**/target/classes/org/kie/kogito/app/**/*.class"/>
                               <exclude name="**/target/classes/org/drools/project/model/**/*.class"/>
                               <!-- To avoid a complaint about duplicate classes created by code generation in IT tests. -->
-                              <exclude name="**/it/integration-tests-springboot-it/target/classes/**/*.class"/>
-                              <exclude name="**/it/integration-tests-springboot-kakfa-it/target/classes/**/*.class"/>
                               <exclude name="**/it/integration-tests-kogito-plugin-it/target/classes/**/*.class"/>
                               <exclude name="**/apps-integration-tests/**/target/classes/**/*.class"/>
                               <exclude name="**/integration-tests/**/target/classes/**/*.class"/>
                               <exclude name="**/integration-test/**/target/classes/**/*.class"/>
                               <exclude name="**/integration-test-legacy/**/target/classes/**/*.class"/>
                               <exclude name="**/quarkus/cloudevents/integration-tests/target/classes/**/*.class"/>
-                              <exclude name="**/it/cloudevents-spring-boot-addon-it-invoked/target/classes/**/*.class"/>
                             </fileset>
                           </classfiles>
                           <sourcefiles encoding="UTF-8">
