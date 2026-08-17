@@ -168,17 +168,17 @@
 
     <version.tomcat.embed.core>10.1.55</version.tomcat.embed.core>
     <version.org.hibernate>7.2.19.Final</version.org.hibernate>
-    <version.com.graphql-java>24.3</version.com.graphql-java>
     <version.com.github.zafarkhaja>0.10.2</version.com.github.zafarkhaja>
   </properties>
 
   <dependencyManagement>
     <dependencies>
-      <!-- Force spring boot to be in sync with quarkus for graphql-java dependencies -->
       <dependency>
-        <groupId>com.graphql-java</groupId>
-        <artifactId>graphql-java</artifactId>
-        <version>${version.com.graphql-java}</version>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-bom</artifactId>
+        <version>${version.io.quarkus}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
 
       <!-- These versions are overrides for transitive dependencies, to fix security vulnerabilities. -->
@@ -1172,16 +1172,6 @@
         <groupId>org.rocksdb</groupId>
         <artifactId>rocksdbjni</artifactId>
         <version>${version.org.rocksdb}</version>
-      </dependency>
-
-      <!-- Vertx libraries, including PostgreSQL client -->
-      <dependency>
-        <groupId>io.vertx</groupId>
-        <artifactId>vertx-pg-client</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>io.vertx</groupId>
-        <artifactId>vertx-web</artifactId>
       </dependency>
 
       <!-- predictions/machine learning related -->
