@@ -36,12 +36,6 @@ quarkus.datasource.username=postgres
 quarkus.datasource.password=changeme
 quarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/kogito
 
-# On Spring Boot
-spring.datasource.username=kogito-user
-spring.datasource.password=kogito-pass
-spring.datasource.url=jdbc:postgresql://localhost:5432/kogito
-```
-
 Example configuration for oracle
 ```
 # On Quarkus
@@ -50,10 +44,6 @@ quarkus.datasource.username=kogito-user
 quarkus.datasource.password=kogito-user
 quarkus.datasource.jdbc.url=jdbc:oracle:thin:@localhost:1521:kogito
 
-# On Spring Boot
-spring.datasource.username=workflow
-spring.datasource.password=workflow
-spring.datasource.url=jdbc:oracle:thin:@localhost:1521:kogito
 ```
 
 ## Auto DLL creation

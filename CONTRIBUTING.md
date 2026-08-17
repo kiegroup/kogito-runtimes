@@ -35,7 +35,7 @@ modified, such other license.
 
 Kogito uses [Issues](https://github.com/apache/incubator-kie-kogito-runtimes/issues).
 
-If you believe you found a bug, please indicate a way to reproduce it, what you are seeing and what you would expect to see. Don't forget to indicate your Kogito, Java, Maven, Quarkus/Spring, GraalVM version. 
+If you believe you found a bug, please indicate a way to reproduce it, what you are seeing and what you would expect to see. Don't forget to indicate your Kogito, Java, Maven, Quarkus, GraalVM version. 
 
 ### Checking an issue is fixed in main
 

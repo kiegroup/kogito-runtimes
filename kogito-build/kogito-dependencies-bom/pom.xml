@@ -34,16 +34,9 @@
   <description>Third-party dependencies used by Kogito</description>
 
   <properties>
-    <!-- These versions are overrides for transitive dependencies, to fix security vulnerabilities.
-       They need to be checked with Quarkus and Spring Boot upgrades and eventually removed, if they are not needed anymore. -->
-    <version.angus.mail>2.0.5</version.angus.mail>
-    <!-- End of various transitive overrides. -->
-
     <!-- this version property is used in plugins but also in dependencies too -->
     <version.io.quarkus>3.33.3</version.io.quarkus>
     <version.io.quarkus.quarkus-test>${version.io.quarkus}</version.io.quarkus.quarkus-test>
-    <version.org.springframework>6.2.19</version.org.springframework>
-    <version.org.springframework.boot>3.5.12</version.org.springframework.boot>
     <version.org.apache.kafka>4.1.2</version.org.apache.kafka>
 
     <version.org.bouncycastle.bc.jdk18on>1.84</version.org.bouncycastle.bc.jdk18on>
@@ -84,7 +77,7 @@
     <version.io.cloudevents>3.0.0</version.io.cloudevents>
     <!--
     We add Fabric8 here to use as a basis for Addons/Kubernetes
-    Don't add as a management dependency because it will break SpringBoot and Quarkus
+    Don't add as a management dependency because it will break Quarkus
     Kubernetes addons since they use a different version.
     -->
     <version.io.fabric8.kubernetes-client>7.5.2</version.io.fabric8.kubernetes-client>
@@ -166,7 +159,6 @@
     <version.com.google.guava>33.5.0-jre</version.com.google.guava>
     <version.apache.commons.commons-compress>1.28.0</version.apache.commons.commons-compress>
 
-    <version.tomcat.embed.core>10.1.55</version.tomcat.embed.core>
     <version.org.hibernate>7.2.19.Final</version.org.hibernate>
     <version.com.github.zafarkhaja>0.10.2</version.com.github.zafarkhaja>
   </properties>
@@ -179,138 +171,6 @@
         <version>${version.io.quarkus}</version>
         <type>pom</type>
         <scope>import</scope>
-      </dependency>
-
-      <!-- These versions are overrides for transitive dependencies, to fix security vulnerabilities. -->
-      <dependency>
-        <groupId>org.eclipse.angus</groupId>
-        <artifactId>angus-mail</artifactId>
-        <version>${version.angus.mail}</version>
-      </dependency>
-      <!-- End of various transitive overrides. -->
-
-      <!-- Not directly used, but used to override transitive versions of Spring dependencies dependencies to fix vulnerabilities -->
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-aop</artifactId>
-        <version>${version.org.springframework}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-aspects</artifactId>
-        <version>${version.org.springframework}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-beans</artifactId>
-        <version>${version.org.springframework}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-context</artifactId>
-        <version>${version.org.springframework}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-context-indexer</artifactId>
-        <version>${version.org.springframework}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-context-support</artifactId>
-        <version>${version.org.springframework}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-core</artifactId>
-        <version>${version.org.springframework}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-core-test</artifactId>
-        <version>${version.org.springframework}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-expression</artifactId>
-        <version>${version.org.springframework}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-instrument</artifactId>
-        <version>${version.org.springframework}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-jcl</artifactId>
-        <version>${version.org.springframework}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-jdbc</artifactId>
-        <version>${version.org.springframework}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-jms</artifactId>
-        <version>${version.org.springframework}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-messaging</artifactId>
-        <version>${version.org.springframework}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-orm</artifactId>
-        <version>${version.org.springframework}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-oxm</artifactId>
-        <version>${version.org.springframework}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-r2dbc</artifactId>
-        <version>${version.org.springframework}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-test</artifactId>
-        <version>${version.org.springframework}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-tx</artifactId>
-        <version>${version.org.springframework}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-web</artifactId>
-        <version>${version.org.springframework}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-webflux</artifactId>
-        <version>${version.org.springframework}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-webmvc</artifactId>
-        <version>${version.org.springframework}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-websocket</artifactId>
-        <version>${version.org.springframework}</version>
-      </dependency>
-
-      <!-- Not directly used, but used to override transitive versions from other dependencies to fix vulnerabilities -->
-      <dependency>
-        <groupId>org.apache.tomcat.embed</groupId>
-        <artifactId>tomcat-embed-core</artifactId>
-        <version>${version.tomcat.embed.core}</version>
       </dependency>
 
       <!-- Not directly used, but a vulnerable version has been brought from com.dajudge.kindcontainer dependency -->
@@ -616,11 +476,6 @@
       <dependency>
         <groupId>io.smallrye</groupId>
         <artifactId>smallrye-open-api-jaxrs</artifactId>
-        <version>${version.io.smallrye-open-api}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.smallrye</groupId>
-        <artifactId>smallrye-open-api-spring</artifactId>
         <version>${version.io.smallrye-open-api}</version>
       </dependency>
       <dependency>
