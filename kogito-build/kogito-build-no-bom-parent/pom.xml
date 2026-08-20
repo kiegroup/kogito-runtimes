@@ -1135,5 +1135,38 @@
         </plugins>
       </build>
     </profile>
+
+    <profile>
+      <!--
+        Enables resolution of artifacts from the Maven Central Snapshots repository.
+        For local development use: activate with -Pcentral-snapshots.
+        CI uses .github/quarkus-openapi-generator-snapshot-settings.xml instead (via - -settings).
+      -->
+      <id>central-snapshots</id>
+      <repositories>
+        <repository>
+          <id>central-snapshots</id>
+          <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+          <releases>
+            <enabled>false</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>central-snapshots</id>
+          <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+          <releases>
+            <enabled>false</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
   </profiles>
 </project>
