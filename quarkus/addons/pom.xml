@@ -52,7 +52,6 @@
     <module>microprofile-config-service-catalog</module>
     <module>jobs</module>
     <module>monitoring</module>
-    <module>dynamic</module>
     <module>jwt-parser</module>
     <module>token-exchange</module>
     <module>openapi</module>
