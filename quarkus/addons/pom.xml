@@ -52,7 +52,12 @@
     <module>microprofile-config-service-catalog</module>
     <module>jobs</module>
     <module>monitoring</module>
-    <module>dynamic</module>
+    <!--
+      The 'dynamic' add-on (kie-addons-quarkus-process-dynamic) is an experimental,
+      non-production module and is intentionally excluded from the build/release reactor.
+      It is NOT compiled or deployed. See quarkus/addons/dynamic/runtime/README.md.
+    -->
+    <!-- <module>dynamic</module> -->
     <module>jwt-parser</module>
     <module>token-exchange</module>
     <module>openapi</module>

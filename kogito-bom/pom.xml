@@ -1111,6 +1111,14 @@
         <classifier>sources</classifier>
       </dependency>
       
+      <!--
+        The process-dynamic add-on artifacts (kie-addons-process-dynamic,
+        kie-addons-quarkus-process-dynamic, kie-addons-quarkus-process-dynamic-deployment)
+        are experimental and no longer built/deployed. Their dependencyManagement entries are
+        commented out to avoid advertising artifacts that are not published.
+        See quarkus/addons/dynamic/runtime/README.md.
+      -->
+      <!--
       <dependency>
         <groupId>org.kie</groupId>
         <artifactId>kie-addons-process-dynamic</artifactId>
@@ -1144,6 +1152,7 @@
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
+      -->
 
       <dependency>
         <groupId>org.kie</groupId>
