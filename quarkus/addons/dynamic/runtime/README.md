@@ -40,7 +40,7 @@ only, and is intentionally left out of the build so it cannot be published or sh
 
 ## Building it locally (experiment only)
 
-Because the module is commented out of the reactor
-(`quarkus/addons/pom.xml` and `addons/common/pom.xml`), it is not built by a normal
-`mvn install`. To build it in isolation for experimentation, re-enable those `<module>`
-entries locally — **do not** commit that change or ship the resulting artifacts.
+Because the module is commented out of the reactor (`quarkus/addons/pom.xml` and `addons/common/pom.xml`), it is not built by a normal `mvn install`. To build it locally for experimentation without modifying the reactor, ensure the parent modules are installed (for example, run a normal build once) and then run:
+`mvn -f quarkus/addons/dynamic/runtime/pom.xml install`
+`mvn -f addons/common/process-dynamic/pom.xml install`
+Do not publish or ship the resulting artifacts.
