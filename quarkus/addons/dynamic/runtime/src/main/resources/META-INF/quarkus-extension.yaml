@@ -17,8 +17,8 @@
 # under the License.
 #
 
-name: KIE Process Instance Dynamic Calls  Add-On
-description: Allow dynamic invocations over existing process instances
+name: KIE Process Instance Dynamic Calls  Add-On (Experimental - not for production)
+description: "Experimental add-on for dynamic invocations over existing process instances. Not intended for production use."
 metadata:
   keywords:
     - KIE
@@ -29,4 +29,5 @@ metadata:
   categories:
     - "business-automation"
     - "cloud"
-  status: "stable"
+  status: "experimental"
+  unlisted: true
