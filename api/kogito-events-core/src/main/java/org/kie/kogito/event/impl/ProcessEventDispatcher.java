@@ -46,6 +46,19 @@ public class ProcessEventDispatcher<M extends Model, D> implements EventDispatch
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProcessEventDispatcher.class);
 
+    /**
+     * When set to {@code true}, incoming events may use the {@code kogitostartfromnode} CloudEvent
+     * extension to start a new process instance at an arbitrary node of the process graph,
+     * bypassing every node (gateways, validations, authorization tasks) that precedes it.
+     * Defaults to {@code false}: the extension is rejected and the event is ignored.
+     * <p>
+     * Resolved from the system property {@value #ALLOW_START_FROM_NODE_PROPERTY} or, when the
+     * property is absent, from the {@code KOGITO_EVENTS_ALLOW_START_FROM_NODE} environment variable.
+     */
+    public static final String ALLOW_START_FROM_NODE_PROPERTY = "kogito.events.allow-start-from-node";
+
+    private final boolean allowStartFromNode;
+
     private final Set<String> correlationKeys;
 
     private final ProcessService processService;
@@ -60,6 +73,15 @@ public class ProcessEventDispatcher<M extends Model, D> implements EventDispatch
         this.processService = processService;
         this.correlationKeys = correlationKeys;
         this.dataResolver = dataResolver;
+        this.allowStartFromNode = resolveAllowStartFromNode();
+    }
+
+    private static boolean resolveAllowStartFromNode() {
+        String value = System.getProperty(ALLOW_START_FROM_NODE_PROPERTY);
+        if (value == null) {
+            value = System.getenv("KOGITO_EVENTS_ALLOW_START_FROM_NODE");
+        }
+        return Boolean.parseBoolean(value);
     }
 
     @Override
@@ -182,13 +204,21 @@ public class ProcessEventDispatcher<M extends Model, D> implements EventDispatch
         if (modelConverter.isEmpty()) {
             return null;
         }
+        String startFromNode = event.getKogitoStartFromNode();
+        if (startFromNode != null && !startFromNode.isBlank() && !allowStartFromNode) {
+            LOGGER.warn("Rejecting event with trigger '{}' for process {}: it requests to start execution from node '{}' (kogitostartfromnode) "
+                    + "but starting process instances at arbitrary nodes is disabled. Set {}=true (system property, or the "
+                    + "KOGITO_EVENTS_ALLOW_START_FROM_NODE environment variable) to allow it only if every event source is trusted.",
+                    trigger, process.id(), startFromNode, ALLOW_START_FROM_NODE_PROPERTY);
+            return null;
+        }
         LOGGER.info("Starting new process of type {} with signal '{}' for event {}", process.id(), trigger, event);
         return processService.createProcessInstance(
                 process,
                 event.getKogitoBusinessKey(),
                 modelConverter.get().apply(dataResolver.apply(event)),
                 headersFromEvent(event),
-                event.getKogitoStartFromNode(),
+                startFromNode,
                 trigger,
                 event.getKogitoProcessInstanceId(),
                 compositeCorrelation(event).orElse(null));
