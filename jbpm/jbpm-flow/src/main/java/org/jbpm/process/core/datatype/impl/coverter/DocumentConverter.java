@@ -18,9 +18,13 @@
  */
 package org.jbpm.process.core.datatype.impl.coverter;
 
+import java.io.StringReader;
 import java.util.function.Function;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.xml.sax.InputSource;
 
 public class DocumentConverter implements Function<String, Object> {
 
@@ -28,9 +32,19 @@ public class DocumentConverter implements Function<String, Object> {
     public Object apply(String xml) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setExpandEntityReferences(false);
+            // to be compliant, completely disable DOCTYPE declaration:
+            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            // and completely disable external entities declarations:
+            factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
             factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-            return factory.newDocumentBuilder().parse(xml);
+            // and prohibit the use of all protocols by external entities:
+            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+            // and disable entity expansion (not sufficient on its own, see JDK-8206132)
+            factory.setExpandEntityReferences(false);
+            // parse the string CONTENT; DocumentBuilder.parse(String) would treat it as a URI
+            return factory.newDocumentBuilder().parse(new InputSource(new StringReader(xml)));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
