@@ -42,7 +42,12 @@
     <module>process-svg</module>
     <module>process-management</module>
     <module>process-instance-migration</module>
-    <module>process-dynamic</module>
+    <!--
+      The 'process-dynamic' add-on (kie-addons-process-dynamic) is an experimental,
+      non-production module and is intentionally excluded from the build/release reactor.
+      It is NOT compiled or deployed. See quarkus/addons/dynamic/runtime/README.md.
+    -->
+    <!-- <module>process-dynamic</module> -->
     <module>knative</module>
     <module>kubernetes</module>
     <module>kubernetes-service-catalog</module>
