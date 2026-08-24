@@ -211,6 +211,37 @@ class ProcessEventDispatcherTest {
     }
 
     @Test
+    void testStartFromNodeRejectedByDefault() throws Exception {
+        EventDispatcher<DummyModel, TestEvent> dispatcher = new ProcessEventDispatcher<>(process, modelConverter(), processService, null, o -> o.getData());
+        TestCloudEvent<TestEvent> event = new TestCloudEvent<>(new TestEvent("pepe"), DUMMY_TOPIC);
+        event.setKogitoStartFromNode("_maliciousNode");
+
+        ProcessInstance<DummyModel> instance = dispatcher.dispatch(DUMMY_TOPIC, event);
+
+        assertThat(instance).isNull();
+        verify(processService, never()).createProcessInstance(eq(process), any(), any(DummyModel.class), any(), any(), any(), any(), any());
+    }
+
+    @Test
+    void testStartFromNodeAllowedWhenOptedIn() throws Exception {
+        System.setProperty(ProcessEventDispatcher.ALLOW_START_FROM_NODE_PROPERTY, "true");
+        try {
+            EventDispatcher<DummyModel, TestEvent> dispatcher = new ProcessEventDispatcher<>(process, modelConverter(), processService, null, o -> o.getData());
+            TestCloudEvent<TestEvent> event = new TestCloudEvent<>(new TestEvent("pepe"), DUMMY_TOPIC);
+            event.setKogitoStartFromNode("someNode");
+
+            ProcessInstance<DummyModel> instance = dispatcher.dispatch(DUMMY_TOPIC, event);
+
+            ArgumentCaptor<String> startFromNode = ArgumentCaptor.forClass(String.class);
+            verify(processService, times(1)).createProcessInstance(eq(process), any(), any(DummyModel.class), any(), startFromNode.capture(), any(), any(), any());
+            assertThat(startFromNode.getValue()).isEqualTo("someNode");
+            assertThat(instance).isEqualTo(processInstance);
+        } finally {
+            System.clearProperty(ProcessEventDispatcher.ALLOW_START_FROM_NODE_PROPERTY);
+        }
+    }
+
+    @Test
     void testSigCloudEventWithCorrelation() throws Exception {
         String userId = "userId";
         String name = "name";
