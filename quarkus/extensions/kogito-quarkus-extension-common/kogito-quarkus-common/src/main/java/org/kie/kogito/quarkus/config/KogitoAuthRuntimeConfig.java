@@ -28,8 +28,18 @@ public interface KogitoAuthRuntimeConfig {
 
     /**
      * Enables using the application security context when resolving current User Identity.
+     * <p>
+     * When {@code true} (the default), the acting identity for process and user-task operations is taken
+     * from the authenticated security context. The {@code user}/{@code group} REST query parameters are
+     * then only honored for callers that hold one of the roles listed in
+     * {@code kogito.security.auth.impersonation.allowed-for-roles}.
+     * <p>
+     * Setting this to {@code false} restores the legacy behavior in which the {@code user}/{@code group}
+     * query parameters are trusted verbatim as the acting identity. That effectively disables task-level
+     * authorization for any caller able to reach the REST API (CWE-639) and must not be used in
+     * production deployments.
      */
-    @WithDefault("false")
+    @WithDefault("true")
     boolean enabled();
 
     /**

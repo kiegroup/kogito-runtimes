@@ -27,7 +27,9 @@ import java.util.Collection;
 public interface IdentityProviderFactory {
 
     /**
-     * Enables (true) using the application security context when resolving current User Identity. Defaults to false.
+     * Enables (true) using the application security context when resolving current User Identity. Defaults to true.
+     * Disabling it makes the runtime trust caller-supplied {@code user}/{@code group} request parameters verbatim
+     * and is only intended for local development.
      */
     String KOGITO_SECURITY_AUTH_ENABLED = "kogito.security.auth.enabled";
 
