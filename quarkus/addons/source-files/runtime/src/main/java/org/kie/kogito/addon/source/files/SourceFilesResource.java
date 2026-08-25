@@ -26,11 +26,13 @@ import org.kie.api.definition.process.KogitoProcessId;
 import org.kie.kogito.source.files.SourceFile;
 import org.kie.kogito.source.files.SourceFilesProvider;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+@RolesAllowed("source-files-client")
 @Path("/management/processes/")
 public class SourceFilesResource extends BaseSourceFilesResource<Response> {
 
