@@ -52,6 +52,8 @@
        <artifactId>quarkus-resteasy-jackson</artifactId>
        <scope>provided</scope>
     </dependency>
+    <!-- Version explicit: this module is excluded from the reactor, so Quarkus bootstrap cannot
+         resolve the managed version from the BOM chain without an explicit declaration. -->
     <dependency>
       <groupId>org.kie</groupId>
       <artifactId>kie-addons-process-dynamic</artifactId>
