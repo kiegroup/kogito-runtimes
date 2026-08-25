@@ -70,4 +70,13 @@ class ProcessInstanceDynamicCallsResourceTest {
     void testEffectiveHostDefaultsToLocalhostWhenUnspecified() {
         assertThat(ProcessInstanceDynamicCallsResource.resolveEffectiveHost(info(null, null))).isEqualTo("localhost");
     }
+
+    @Test
+    void testEffectiveHostFallsBackToHostFieldWhenEndpointUrlHasEmptyHost() {
+        // "http:/path" is a valid URL whose getHost() returns "". RestWorkItemHandler falls back
+        // to the explicit host field in this case, so resolveEffectiveHost must do the same —
+        // otherwise a crafted endpoint can bypass the SSRF allowlist check.
+        assertThat(ProcessInstanceDynamicCallsResource.resolveEffectiveHost(info("192.168.1.100", "http:/path")))
+                .isEqualTo("192.168.1.100");
+    }
 }

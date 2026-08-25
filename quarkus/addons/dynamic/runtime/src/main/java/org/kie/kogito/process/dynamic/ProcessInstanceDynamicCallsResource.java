@@ -116,7 +116,14 @@ public class ProcessInstanceDynamicCallsResource {
         String host = input.getHost();
         if (input.getEndpoint() != null) {
             try {
-                host = new URL(input.getEndpoint()).getHost();
+                String urlHost = new URL(input.getEndpoint()).getHost();
+                // Only override when the parsed URL carries a non-blank host. An endpoint like
+                // "http:/path" parses successfully but returns an empty host; in that case
+                // RestWorkItemHandler falls back to the explicit host field, so we must too —
+                // otherwise a crafted endpoint can bypass the SSRF allowlist check.
+                if (urlHost != null && !urlHost.isBlank()) {
+                    host = urlHost;
+                }
             } catch (MalformedURLException ex) {
                 // not an absolute URL, endpoint is a path relative to the host parameter
             }

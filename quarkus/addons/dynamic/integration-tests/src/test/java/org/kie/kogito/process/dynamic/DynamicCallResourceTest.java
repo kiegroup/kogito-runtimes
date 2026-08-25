@@ -23,6 +23,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -38,8 +39,12 @@ public class DynamicCallResourceTest {
 
     @BeforeAll
     static void authenticate() {
-        // the /_dynamic resource requires an authenticated caller
         RestAssured.authentication = RestAssured.preemptive().basic("tester", "secret");
+    }
+
+    @AfterAll
+    static void resetAuth() {
+        RestAssured.authentication = RestAssured.DEFAULT_AUTH;
     }
 
     @Test
