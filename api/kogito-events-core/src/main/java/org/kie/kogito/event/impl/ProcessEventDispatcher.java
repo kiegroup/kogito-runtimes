@@ -50,7 +50,8 @@ public class ProcessEventDispatcher<M extends Model, D> implements EventDispatch
      * When set to {@code true}, incoming events may use the {@code kogitoprocstartfrom} CloudEvent
      * extension to start a new process instance at an arbitrary node of the process graph,
      * bypassing every node (gateways, validations, authorization tasks) that precedes it.
-     * Defaults to {@code false}: the extension is rejected and the event is ignored.
+     * Defaults to {@code false}: the extension value is dropped and the event is processed normally
+     * from the default start node, so existing process instances are still created.
      * <p>
      * Resolved from the system property {@value #ALLOW_START_FROM_NODE_PROPERTY} or, when the
      * property is absent, from the {@code KOGITO_EVENTS_ALLOW_START_FROM_NODE} environment variable.
@@ -206,11 +207,11 @@ public class ProcessEventDispatcher<M extends Model, D> implements EventDispatch
         }
         String startFromNode = event.getKogitoStartFromNode();
         if (startFromNode != null && !startFromNode.isBlank() && !allowStartFromNode) {
-            LOGGER.warn("Rejecting event with trigger '{}' for process {}: it requests to start execution from node '{}' (kogitoprocstartfrom) "
-                    + "but starting process instances at arbitrary nodes is disabled. Set {}=true (system property, or the "
+            LOGGER.warn("Dropping kogitoprocstartfrom='{}' on event with trigger '{}' for process {}: starting from arbitrary nodes is disabled. "
+                    + "The process instance will be created from the default start node. Set {}=true (system property, or the "
                     + "KOGITO_EVENTS_ALLOW_START_FROM_NODE environment variable) to allow it only if every event source is trusted.",
-                    trigger, process.id(), startFromNode, ALLOW_START_FROM_NODE_PROPERTY);
-            return null;
+                    startFromNode, trigger, process.id(), ALLOW_START_FROM_NODE_PROPERTY);
+            startFromNode = null;
         }
         LOGGER.info("Starting new process of type {} with signal '{}' for event {}", process.id(), trigger, event);
         return processService.createProcessInstance(

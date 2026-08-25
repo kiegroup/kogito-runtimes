@@ -211,15 +211,18 @@ class ProcessEventDispatcherTest {
     }
 
     @Test
-    void testStartFromNodeRejectedByDefault() throws Exception {
+    void testStartFromNodeExtensionDroppedByDefault() throws Exception {
         EventDispatcher<DummyModel, TestEvent> dispatcher = new ProcessEventDispatcher<>(process, modelConverter(), processService, null, o -> o.getData());
         TestCloudEvent<TestEvent> event = new TestCloudEvent<>(new TestEvent("pepe"), DUMMY_TOPIC);
         event.setKogitoStartFromNode("_maliciousNode");
 
         ProcessInstance<DummyModel> instance = dispatcher.dispatch(DUMMY_TOPIC, event);
 
-        assertThat(instance).isNull();
-        verify(processService, never()).createProcessInstance(eq(process), any(), any(DummyModel.class), any(), any(), any(), any(), any());
+        // The extension is dropped — the event is still processed and an instance is created from the default start node.
+        ArgumentCaptor<String> startFromNodeCaptor = ArgumentCaptor.forClass(String.class);
+        verify(processService, times(1)).createProcessInstance(eq(process), any(), any(DummyModel.class), any(), startFromNodeCaptor.capture(), any(), any(), any());
+        assertThat(startFromNodeCaptor.getValue()).isNull();
+        assertThat(instance).isEqualTo(processInstance);
     }
 
     @Test
