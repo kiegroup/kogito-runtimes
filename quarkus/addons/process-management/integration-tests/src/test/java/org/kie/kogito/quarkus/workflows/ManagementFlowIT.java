@@ -50,4 +50,11 @@ class ManagementFlowIT {
         given().contentType(ContentType.JSON).accept(ContentType.JSON).get("management/processes/parallel")
                 .then().statusCode(200).body("annotations", is(Arrays.asList("Football", "Betis")));
     }
+
+    @Test
+    void testManagementMutationRequiresAuthentication() {
+        given().contentType(ContentType.JSON).accept(ContentType.JSON)
+                .post("management/processes/parallel/instances/any-id/skip")
+                .then().statusCode(401);
+    }
 }
