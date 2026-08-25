@@ -21,6 +21,7 @@ package org.kie.kogito.auth.impl;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.kie.kogito.auth.IdentityProvider;
@@ -41,6 +42,14 @@ public class IdentityProviderFactoryImpl implements IdentityProviderFactory {
     public IdentityProviderFactoryImpl(IdentityProvider identityProvider, KogitoAuthConfig config) {
         this.identityProvider = identityProvider;
         this.config = config;
+        if (!config.isEnabled()) {
+            warnAuthDisabledOnce();
+        }
+    }
+
+    /** Package-private hook so unit tests can reset the once-per-JVM flag without reflective access. */
+    static void resetAuthDisabledWarnedForTesting() {
+        AUTH_DISABLED_WARNED.set(false);
     }
 
     private static void warnAuthDisabledOnce() {
@@ -56,13 +65,12 @@ public class IdentityProviderFactoryImpl implements IdentityProviderFactory {
     public IdentityProvider getOrImpersonateIdentity(String user, Collection<String> roles) {
 
         if (!config.isEnabled()) {
-            warnAuthDisabledOnce();
             return IdentityProviders.of(user, roles);
         }
 
         if (!Collections.disjoint(config.getRolesThatAllowImpersonation(), identityProvider.getRoles())
                 && user != null && !user.isBlank()
-                && !identityProvider.getName().equals(user)) {
+                && !Objects.equals(identityProvider.getName(), user)) {
             return IdentityProviders.of(user, roles);
         }
 
@@ -73,7 +81,6 @@ public class IdentityProviderFactoryImpl implements IdentityProviderFactory {
     public IdentityProvider getIdentity(String user, Collection<String> roles) {
 
         if (!config.isEnabled()) {
-            warnAuthDisabledOnce();
             return IdentityProviders.of(user, roles);
         }
         return identityProvider;

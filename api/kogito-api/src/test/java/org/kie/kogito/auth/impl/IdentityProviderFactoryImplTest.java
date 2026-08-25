@@ -19,10 +19,8 @@
 
 package org.kie.kogito.auth.impl;
 
-import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -49,11 +47,8 @@ public class IdentityProviderFactoryImplTest {
     private ListAppender<ILoggingEvent> logAppender;
 
     @BeforeEach
-    public void setUp() throws Exception {
-        // The "auth disabled" warning is emitted at most once per JVM via a static flag; reset it so each
-        // test starts from a clean slate and the once-semantics can be asserted deterministically.
-        resetAuthDisabledWarnedFlag();
-
+    public void setUp() {
+        IdentityProviderFactoryImpl.resetAuthDisabledWarnedForTesting();
         implLogger = (Logger) LoggerFactory.getLogger(IdentityProviderFactoryImpl.class);
         logAppender = new ListAppender<>();
         logAppender.start();
@@ -61,17 +56,11 @@ public class IdentityProviderFactoryImplTest {
     }
 
     @AfterEach
-    public void tearDown() throws Exception {
+    public void tearDown() {
         if (implLogger != null && logAppender != null) {
             implLogger.detachAppender(logAppender);
         }
-        resetAuthDisabledWarnedFlag();
-    }
-
-    private static void resetAuthDisabledWarnedFlag() throws Exception {
-        Field field = IdentityProviderFactoryImpl.class.getDeclaredField("AUTH_DISABLED_WARNED");
-        field.setAccessible(true);
-        ((AtomicBoolean) field.get(null)).set(false);
+        IdentityProviderFactoryImpl.resetAuthDisabledWarnedForTesting();
     }
 
     private long warnCount() {
@@ -214,24 +203,21 @@ public class IdentityProviderFactoryImplTest {
     @Test
     public void testWarnsOnceWhenAuthDisabled() {
         KogitoAuthConfig config = new KogitoAuthConfig(false, KOGITO_IDENTITY_IMPERSONATOR_ROLES);
-        IdentityProviderFactoryImpl identityProviderFactory = new IdentityProviderFactoryImpl(IdentityProviders.of(KOGITO_IDENTITY_USER, KOGITO_IDENTITY_ROLES), config);
+        // The warn fires at construction time, not lazily on first call.
+        new IdentityProviderFactoryImpl(IdentityProviders.of(KOGITO_IDENTITY_USER, KOGITO_IDENTITY_ROLES), config);
+        Assertions.assertThat(warnCount()).isEqualTo(1);
 
-        // Multiple identity resolutions with auth disabled must still emit the warning only once.
-        identityProviderFactory.getOrImpersonateIdentity(TEST_USER, TEST_ROLES);
-        identityProviderFactory.getIdentity(TEST_USER, TEST_ROLES);
-        identityProviderFactory.getOrImpersonateIdentity(TEST_USER, TEST_ROLES);
-
+        // A second factory with auth still disabled must not emit the warning again.
+        new IdentityProviderFactoryImpl(IdentityProviders.of(KOGITO_IDENTITY_USER, KOGITO_IDENTITY_ROLES), config);
         Assertions.assertThat(warnCount()).isEqualTo(1);
     }
 
     @Test
     public void testDoesNotWarnWhenAuthEnabled() {
         KogitoAuthConfig config = new KogitoAuthConfig(true, KOGITO_IDENTITY_IMPERSONATOR_ROLES);
-        IdentityProviderFactoryImpl identityProviderFactory = new IdentityProviderFactoryImpl(IdentityProviders.of(KOGITO_IDENTITY_USER, KOGITO_IDENTITY_ROLES), config);
-
-        identityProviderFactory.getOrImpersonateIdentity(TEST_USER, TEST_ROLES);
-        identityProviderFactory.getIdentity(TEST_USER, TEST_ROLES);
-
+        IdentityProviderFactoryImpl factory = new IdentityProviderFactoryImpl(IdentityProviders.of(KOGITO_IDENTITY_USER, KOGITO_IDENTITY_ROLES), config);
+        factory.getOrImpersonateIdentity(TEST_USER, TEST_ROLES);
+        factory.getIdentity(TEST_USER, TEST_ROLES);
         Assertions.assertThat(warnCount()).isZero();
     }
 
