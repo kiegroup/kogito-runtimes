@@ -39,11 +39,23 @@ public class ProcessInstanceDynamicCallHelper {
     }
 
     public static void executeRestCall(RestWorkItemHandler handler, Collection<Process<?>> processes, String processId, String processInstanceId, RestCallInfo input) {
+        executeRestCall(handler, processes, processId, processInstanceId, input, false);
+    }
+
+    public static void executeRestCall(RestWorkItemHandler handler, Collection<Process<?>> processes, String processId, String processInstanceId, RestCallInfo input,
+            boolean allowMarkInstanceDynamic) {
         Process<?> processDef = processes.stream().filter(p -> p.id().equals(processId)).findAny().orElseThrow(() -> new IllegalArgumentException("Cannot find process " + processId));
         AbstractProcessInstance<?> processInstance = findProcessInstance(processDef, processInstanceId);
         processInstance.executeInWorkflowProcessInstanceWrite(pi -> {
             WorkflowProcessImpl process = (WorkflowProcessImpl) pi.getProcess();
             if (!process.isDynamic()) {
+                // whether a process accepts ad-hoc work items is a property of the process definition;
+                // flipping it on behalf of a request must be explicitly enabled by the deployer
+                if (!allowMarkInstanceDynamic) {
+                    throw new IllegalArgumentException(
+                            "Process " + processId + " is not dynamic. Dynamic REST calls are only supported for processes declared as dynamic (ad-hoc) in their definition, "
+                                    + "or when the deployment explicitly allows marking instances dynamic (kogito.dynamic.mark-instances-dynamic=true)");
+                }
                 process.setDynamic(true);
             }
             InternalKnowledgeRuntime runtime = pi.getKnowledgeRuntime();
