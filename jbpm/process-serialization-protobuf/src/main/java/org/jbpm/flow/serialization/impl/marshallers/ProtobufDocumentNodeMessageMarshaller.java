@@ -21,6 +21,7 @@ package org.jbpm.flow.serialization.impl.marshallers;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -71,8 +72,7 @@ public class ProtobufDocumentNodeMessageMarshaller implements ObjectMarshallerSt
     public Object unmarshall(Any data) {
         try {
             KogitoTypesProtobuf.Document storedValue = data.unpack(KogitoTypesProtobuf.Document.class);
-            StringBuilder xmlStringBuilder = new StringBuilder(storedValue.getContent());
-            ByteArrayInputStream input = new ByteArrayInputStream(xmlStringBuilder.toString().getBytes("UTF-8"));
+            ByteArrayInputStream input = new ByteArrayInputStream(storedValue.getContent().getBytes(StandardCharsets.UTF_8));
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             // to be compliant, completely disable DOCTYPE declaration:
             factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);

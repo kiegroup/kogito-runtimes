@@ -46,7 +46,7 @@ public class DocumentConverter implements Function<String, Object> {
             // parse the string CONTENT; DocumentBuilder.parse(String) would treat it as a URI
             return factory.newDocumentBuilder().parse(new InputSource(new StringReader(xml)));
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to parse XML document variable", e);
         }
     }
 

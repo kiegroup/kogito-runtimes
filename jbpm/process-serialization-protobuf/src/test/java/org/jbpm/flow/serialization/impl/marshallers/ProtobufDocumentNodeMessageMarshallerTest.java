@@ -54,6 +54,7 @@ class ProtobufDocumentNodeMessageMarshallerTest {
                 .build());
 
         assertThatThrownBy(() -> marshaller.unmarshall(data))
-                .isInstanceOf(ProcessInstanceMarshallerException.class);
+                .isInstanceOf(ProcessInstanceMarshallerException.class)
+                .cause().isInstanceOf(org.xml.sax.SAXParseException.class);
     }
 }

@@ -45,6 +45,8 @@ class DocumentConverterTest {
                 + "<root>&x;</root>";
 
         assertThatThrownBy(() -> converter.apply(xmlWithDoctype))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Failed to parse XML document variable")
+                .cause().isInstanceOf(org.xml.sax.SAXParseException.class);
     }
 }
