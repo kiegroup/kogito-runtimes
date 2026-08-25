@@ -23,9 +23,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
 import static io.restassured.RestAssured.*;
@@ -33,6 +35,41 @@ import static org.hamcrest.Matchers.containsString;
 
 @QuarkusTest
 public class DynamicCallResourceTest {
+
+    @BeforeAll
+    static void authenticate() {
+        // the /_dynamic resource requires an authenticated caller
+        RestAssured.authentication = RestAssured.preemptive().basic("tester", "secret");
+    }
+
+    @Test
+    void testDynamicCallRequiresAuthentication() {
+        String id = createDynamicWaitProcessInstance();
+
+        given()
+                .auth().none()
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .body(Map.of("endpoint", "/example/{processInstanceId}", "port", 8081, "method", "post", "outputExpression", "{message}"))
+                .when()
+                .post("/_dynamic/dynamicWait/" + id + "/rest")
+                .then()
+                .statusCode(401);
+    }
+
+    @Test
+    void testDynamicCallToDisallowedHostIsRejected() {
+        String id = createDynamicWaitProcessInstance();
+
+        given()
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .body(Map.of("host", "169.254.169.254", "endpoint", "/latest/meta-data", "port", 80, "method", "get", "outputExpression", "{message}"))
+                .when()
+                .post("/_dynamic/dynamicWait/" + id + "/rest")
+                .then()
+                .statusCode(403);
+    }
 
     @Test
     void testDynamicCall() {

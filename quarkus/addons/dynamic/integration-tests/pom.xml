@@ -55,6 +55,10 @@ under the License.
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-resteasy-client-oidc-filter</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-elytron-security-properties-file</artifactId>
+    </dependency>
      <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-junit</artifactId>
