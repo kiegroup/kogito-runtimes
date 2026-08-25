@@ -21,14 +21,15 @@ package org.kie.kogito.process.migration;
 import org.kie.kogito.Application;
 import org.kie.kogito.process.Processes;
 
-import jakarta.annotation.security.RolesAllowed;
+import io.quarkus.security.Authenticated;
+
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@RolesAllowed("**")
+@Authenticated
 @Path("/management/processes/")
 public class ProcessInstanceMigrationResource extends BaseProcessInstanceMigrationResource<Response> {
 
