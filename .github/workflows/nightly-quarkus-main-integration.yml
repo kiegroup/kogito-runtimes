@@ -15,6 +15,11 @@ concurrency:
   group: nightly-quarkus-openapi-generator-snapshot
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  packages: read
+  issues: write
+
 env:
   JAVA_VERSION: 17
   MAVEN_VERSION: '3.9.11'
@@ -58,6 +63,9 @@ jobs:
       # the BOM so every downstream module picks it up without further changes.
       - name: Pin quarkus-openapi-generator to ${{ env.OPENAPI_GENERATOR_VERSION }}
         working-directory: kogito-runtimes
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mvn ${{ env.MAVEN_ARGS }} \
             --settings ${{ env.SNAPSHOT_SETTINGS }} \
@@ -69,6 +77,9 @@ jobs:
 
       - name: Build kogito-runtimes (install, skip slow checks)
         working-directory: kogito-runtimes
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mvn ${{ env.MAVEN_ARGS }} \
             --settings ${{ env.SNAPSHOT_SETTINGS }} \
@@ -116,6 +127,9 @@ jobs:
 
       - name: Run OpenAPI client integration tests
         working-directory: kogito-runtimes/quarkus/integration-tests/integration-tests-quarkus-openapi-client
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mvn ${{ env.MAVEN_ARGS }} \
             --settings ${{ env.SNAPSHOT_SETTINGS }} \
@@ -169,6 +183,9 @@ jobs:
 
       - name: Run serverless-workflow-examples integration tests
         working-directory: kogito-examples/serverless-workflow-examples
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mvn ${{ env.MAVEN_ARGS }} \
             --settings ${{ env.SNAPSHOT_SETTINGS }} \
