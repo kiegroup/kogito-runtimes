@@ -19,14 +19,9 @@
 
 package org.kie.kogito.quarkus.auth;
 
-import java.util.List;
-
 import org.kie.kogito.auth.IdentityProvider;
 import org.kie.kogito.auth.IdentityProviderFactory;
 import org.kie.kogito.auth.impl.IdentityProviderFactoryImpl;
-import org.kie.kogito.auth.impl.KogitoAuthConfig;
-import org.kie.kogito.quarkus.config.KogitoRuntimeConfig;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;
@@ -34,23 +29,19 @@ import jakarta.inject.Inject;
 @ApplicationScoped
 public class QuarkusIdentityProviderFactoryProducer {
 
-    private final KogitoRuntimeConfig config;
     private final IdentityProvider identityProvider;
 
     QuarkusIdentityProviderFactoryProducer() {
-        this(null, null);
+        this(null);
     }
 
     @Inject
-    public QuarkusIdentityProviderFactoryProducer(KogitoRuntimeConfig config, IdentityProvider identityProvider) {
-        this.config = config;
+    public QuarkusIdentityProviderFactoryProducer(IdentityProvider identityProvider) {
         this.identityProvider = identityProvider;
     }
 
     @Produces
     public IdentityProviderFactory get() {
-        String[] rolesThatAllowImpersonation = config.authConfig().rolesThatAllowImpersonation().map(value -> value.split(",")).orElse(new String[] {});
-
-        return new IdentityProviderFactoryImpl(identityProvider, new KogitoAuthConfig(config.authConfig().enabled(), List.of(rolesThatAllowImpersonation)));
+        return new IdentityProviderFactoryImpl(identityProvider);
     }
 }

@@ -24,7 +24,7 @@ import org.kie.kogito.uow.UnitOfWorkManager;
 public class LegacyInMemoryJobService extends InMemoryJobService {
 
     public LegacyInMemoryJobService(KogitoProcessRuntime runtime, UnitOfWorkManager unitOfWorkManager) {
-        registerJobExecutorFactory(new LegacyInMemoryJobExecutorFactory(new InMemoryJobContext(runtime, unitOfWorkManager, null, null)));
+        registerJobExecutorFactory(new LegacyInMemoryJobExecutorFactory(new InMemoryJobContext(runtime, unitOfWorkManager, null)));
     }
 
 }

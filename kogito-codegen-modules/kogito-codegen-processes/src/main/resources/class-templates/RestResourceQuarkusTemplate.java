@@ -60,8 +60,6 @@ import org.kie.kogito.process.Process;
 import org.kie.kogito.process.ProcessInstance;
 import org.kie.kogito.process.ProcessService;
 import org.kie.kogito.process.workitem.TaskModel;
-import org.kie.kogito.auth.IdentityProviderFactory;
-import org.kie.kogito.auth.SecurityPolicy;
 
 import jakarta.ws.rs.core.StreamingOutput;
 
@@ -75,9 +73,6 @@ public class $Type$Resource {
     @Inject
     ProcessService processService;
 
-    @Inject
-    IdentityProviderFactory identityProviderFactory;
-    
     @HEAD
     public Response checkVersion() {
         return Response.ok().header("supportVersion","true").build();
