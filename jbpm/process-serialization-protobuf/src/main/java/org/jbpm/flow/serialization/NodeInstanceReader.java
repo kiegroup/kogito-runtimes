@@ -21,7 +21,7 @@ package org.jbpm.flow.serialization;
 import org.kie.api.runtime.process.NodeInstance;
 
 import com.google.protobuf.Any;
-import com.google.protobuf.GeneratedMessageV3;
+import com.google.protobuf.GeneratedMessage;
 
 public interface NodeInstanceReader extends Comparable<NodeInstanceReader> {
     Integer DEFAULT_ORDER = 10;
@@ -35,7 +35,7 @@ public interface NodeInstanceReader extends Comparable<NodeInstanceReader> {
         return this.order().compareTo(that.order());
     }
 
-    Class<? extends GeneratedMessageV3> type();
+    Class<? extends GeneratedMessage> type();
 
     default boolean accept(Any value) {
         return value.is(type());

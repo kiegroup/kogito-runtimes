@@ -24,7 +24,7 @@ import org.jbpm.flow.serialization.protobuf.KogitoNodeInstanceContentsProtobuf.T
 import org.jbpm.workflow.instance.node.TimerNodeInstance;
 import org.kie.api.runtime.process.NodeInstance;
 
-import com.google.protobuf.GeneratedMessageV3.Builder;
+import com.google.protobuf.GeneratedMessage.Builder;
 
 public class TimerNodeInstanceWriter implements NodeInstanceWriter {
 

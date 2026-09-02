@@ -26,7 +26,7 @@ import org.jbpm.flow.serialization.protobuf.KogitoNodeInstanceContentsProtobuf.S
 import org.jbpm.workflow.instance.node.StateNodeInstance;
 import org.kie.api.runtime.process.NodeInstance;
 
-import com.google.protobuf.GeneratedMessageV3.Builder;
+import com.google.protobuf.GeneratedMessage.Builder;
 
 public class StateNodeInstanceWriter implements NodeInstanceWriter {
 
