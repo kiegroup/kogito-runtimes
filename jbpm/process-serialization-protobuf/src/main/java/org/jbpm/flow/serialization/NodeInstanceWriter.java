@@ -20,7 +20,7 @@ package org.jbpm.flow.serialization;
 
 import org.kie.api.runtime.process.NodeInstance;
 
-import com.google.protobuf.GeneratedMessageV3;
+import com.google.protobuf.GeneratedMessage;
 
 public interface NodeInstanceWriter extends Comparable<NodeInstanceWriter> {
     Integer DEFAULT_ORDER = 10;
@@ -36,6 +36,6 @@ public interface NodeInstanceWriter extends Comparable<NodeInstanceWriter> {
 
     boolean accept(NodeInstance value);
 
-    GeneratedMessageV3.Builder<?> write(MarshallerWriterContext writer, NodeInstance value);
+    GeneratedMessage.Builder<?> write(MarshallerWriterContext writer, NodeInstance value);
 
 }

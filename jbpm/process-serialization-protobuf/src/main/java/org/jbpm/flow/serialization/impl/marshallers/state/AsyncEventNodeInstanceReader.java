@@ -26,7 +26,7 @@ import org.jbpm.workflow.core.node.AsyncEventNodeInstance;
 import org.kie.api.runtime.process.NodeInstance;
 
 import com.google.protobuf.Any;
-import com.google.protobuf.GeneratedMessageV3;
+import com.google.protobuf.GeneratedMessage;
 
 public class AsyncEventNodeInstanceReader implements NodeInstanceReader {
 
@@ -48,7 +48,7 @@ public class AsyncEventNodeInstanceReader implements NodeInstanceReader {
     }
 
     @Override
-    public Class<? extends GeneratedMessageV3> type() {
+    public Class<? extends GeneratedMessage> type() {
         return AsyncEventNodeInstanceContent.class;
     }
 

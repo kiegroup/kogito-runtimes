@@ -25,7 +25,7 @@ import org.jbpm.workflow.instance.node.EventNodeInstance;
 import org.kie.api.runtime.process.NodeInstance;
 
 import com.google.protobuf.Any;
-import com.google.protobuf.GeneratedMessageV3;
+import com.google.protobuf.GeneratedMessage;
 
 public class EventNodeInstanceReader implements NodeInstanceReader {
 
@@ -40,7 +40,7 @@ public class EventNodeInstanceReader implements NodeInstanceReader {
     }
 
     @Override
-    public Class<? extends GeneratedMessageV3> type() {
+    public Class<? extends GeneratedMessage> type() {
         return EventNodeInstanceContent.class;
     }
 }

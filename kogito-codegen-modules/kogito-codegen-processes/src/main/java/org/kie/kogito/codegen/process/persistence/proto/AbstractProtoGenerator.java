@@ -36,7 +36,6 @@ import java.util.stream.Collectors;
 import org.drools.codegen.common.GeneratedFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,7 +46,7 @@ public abstract class AbstractProtoGenerator<T> implements ProtoGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractProtoGenerator.class);
 
-    protected static final List<String> PROTO_BUILTINS = List.of(JsonNode.class.getName(), Document.class.getName());
+    protected static final List<String> PROTO_BUILTINS = List.of(JsonNode.class.getName());
     private static final String GENERATED_PROTO_RES_PATH = "persistence/protobuf/";
     private static final String LISTING_FILE = "list.json";
 

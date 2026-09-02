@@ -29,7 +29,7 @@ import org.jbpm.workflow.instance.node.WorkItemNodeInstance;
 import org.kie.api.runtime.process.NodeInstance;
 import org.kie.kogito.internal.process.workitem.KogitoWorkItem;
 
-import com.google.protobuf.GeneratedMessageV3.Builder;
+import com.google.protobuf.GeneratedMessage.Builder;
 
 public class WorkItemNodeInstanceWriter implements NodeInstanceWriter {
 
