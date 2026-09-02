@@ -26,7 +26,7 @@ import org.jbpm.workflow.instance.node.TimerNodeInstance;
 import org.kie.api.runtime.process.NodeInstance;
 
 import com.google.protobuf.Any;
-import com.google.protobuf.GeneratedMessageV3;
+import com.google.protobuf.GeneratedMessage;
 
 public class TimerNodeInstanceReader implements NodeInstanceReader {
 
@@ -48,7 +48,7 @@ public class TimerNodeInstanceReader implements NodeInstanceReader {
     }
 
     @Override
-    public Class<? extends GeneratedMessageV3> type() {
+    public Class<? extends GeneratedMessage> type() {
         return TimerNodeInstanceContent.class;
     }
 }

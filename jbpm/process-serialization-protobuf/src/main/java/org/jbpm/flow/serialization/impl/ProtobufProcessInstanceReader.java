@@ -57,7 +57,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.protobuf.Descriptors.FieldDescriptor;
-import com.google.protobuf.GeneratedMessageV3;
+import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.util.JsonFormat;
 
 import static org.jbpm.flow.serialization.protobuf.ProtobufTypeRegistryFactory.protobufTypeRegistryFactoryInstance;
@@ -227,7 +227,7 @@ public class ProtobufProcessInstanceReader {
             setCommonNodeInstanceData(ruleFlowProcessInstance, parent, nodeInstance, result);
 
             LOGGER.debug("Node {} content {}", reader.type(), nodeContentProtobuf);
-            GeneratedMessageV3 content = nodeContentProtobuf.unpack(reader.type());
+            GeneratedMessage content = nodeContentProtobuf.unpack(reader.type());
             LOGGER.debug("Node instance being reading {}", result);
             FieldDescriptor fieldDescriptor = getContextField(content);
             if (fieldDescriptor != null) {
@@ -255,7 +255,7 @@ public class ProtobufProcessInstanceReader {
         }
     }
 
-    public FieldDescriptor getContextField(GeneratedMessageV3 message) {
+    public FieldDescriptor getContextField(GeneratedMessage message) {
         for (FieldDescriptor field : message.getDescriptorForType().getFields()) {
             if ("context".equals(field.getName())) {
                 return field;

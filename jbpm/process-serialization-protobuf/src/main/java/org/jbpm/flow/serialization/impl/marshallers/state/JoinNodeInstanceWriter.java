@@ -33,7 +33,7 @@ import org.kie.api.runtime.process.NodeInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.protobuf.GeneratedMessageV3.Builder;
+import com.google.protobuf.GeneratedMessage.Builder;
 
 public class JoinNodeInstanceWriter implements NodeInstanceWriter {
 

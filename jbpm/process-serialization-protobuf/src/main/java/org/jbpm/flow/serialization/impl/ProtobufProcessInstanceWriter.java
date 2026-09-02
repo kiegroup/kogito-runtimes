@@ -62,7 +62,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.protobuf.Any;
 import com.google.protobuf.Descriptors.FieldDescriptor;
-import com.google.protobuf.GeneratedMessageV3;
+import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.util.JsonFormat;
 
 import static org.jbpm.flow.serialization.MarshallerContextName.MARSHALLER_FORMAT;
@@ -254,7 +254,7 @@ public class ProtobufProcessInstanceWriter {
         }
 
         LOGGER.debug("Node writer {}", writer);
-        GeneratedMessageV3.Builder<?> builder = writer.write(context, nodeInstance);
+        GeneratedMessage.Builder<?> builder = writer.write(context, nodeInstance);
 
         LOGGER.debug("Node instance being writing {}", nodeInstance);
         FieldDescriptor fieldContext = getContextField(builder);
@@ -266,7 +266,7 @@ public class ProtobufProcessInstanceWriter {
         return Any.pack(builder.build());
     }
 
-    public FieldDescriptor getContextField(GeneratedMessageV3.Builder<?> builder) {
+    public FieldDescriptor getContextField(GeneratedMessage.Builder<?> builder) {
         for (FieldDescriptor field : builder.getDescriptorForType().getFields()) {
             if ("context".equals(field.getName())) {
                 return field;

@@ -26,7 +26,7 @@ import org.jbpm.workflow.instance.node.ForEachNodeInstance;
 import org.kie.api.runtime.process.NodeInstance;
 
 import com.google.protobuf.Any;
-import com.google.protobuf.GeneratedMessageV3;
+import com.google.protobuf.GeneratedMessage;
 
 public class ForEachNodeInstanceReader implements NodeInstanceReader {
 
@@ -56,7 +56,7 @@ public class ForEachNodeInstanceReader implements NodeInstanceReader {
     }
 
     @Override
-    public Class<? extends GeneratedMessageV3> type() {
+    public Class<? extends GeneratedMessage> type() {
         return ForEachNodeInstanceContent.class;
     }
 }

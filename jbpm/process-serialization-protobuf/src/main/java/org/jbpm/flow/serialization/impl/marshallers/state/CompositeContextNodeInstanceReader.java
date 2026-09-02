@@ -30,7 +30,7 @@ import org.jbpm.workflow.instance.node.CompositeContextNodeInstance;
 import org.kie.api.runtime.process.NodeInstance;
 
 import com.google.protobuf.Any;
-import com.google.protobuf.GeneratedMessageV3;
+import com.google.protobuf.GeneratedMessage;
 
 public class CompositeContextNodeInstanceReader implements NodeInstanceReader {
 
@@ -67,7 +67,7 @@ public class CompositeContextNodeInstanceReader implements NodeInstanceReader {
     }
 
     @Override
-    public Class<? extends GeneratedMessageV3> type() {
+    public Class<? extends GeneratedMessage> type() {
         return CompositeContextNodeInstanceContent.class;
     }
 }
