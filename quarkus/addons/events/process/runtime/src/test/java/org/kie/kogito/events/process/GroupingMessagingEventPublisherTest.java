@@ -29,7 +29,6 @@ import org.kie.kogito.addon.quarkus.common.reactive.messaging.MessageDecoratorPr
 import org.kie.kogito.event.DataEvent;
 import org.kie.kogito.event.process.MultipleProcessInstanceDataEvent;
 import org.kie.kogito.event.process.ProcessInstanceDataEvent;
-import org.kie.kogito.event.usertask.UserTaskInstanceDataEvent;
 import org.kie.kogito.events.config.EventsRuntimeConfig;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
@@ -148,14 +147,11 @@ public class GroupingMessagingEventPublisherTest {
         DataEvent<String> processInstanceEvent = mock(ProcessInstanceDataEvent.class);
         when(processInstanceEvent.getType()).thenReturn("ProcessInstanceStateDataEvent");
 
-        DataEvent<String> userTaskEvent = mock(UserTaskInstanceDataEvent.class);
-        when(userTaskEvent.getType()).thenReturn("UserTaskInstanceStateDataEvent");
-
         // Mock getConsumer() to return different emitters based on event type
         doReturn(Optional.of(processInstanceConsumer)).when(groupingMessagingEventPublisher).getConsumer(processInstanceEvent);
 
         // Create a collection of events with different types (ProcessInstance and UserTask)
-        Collection<DataEvent<?>> events = Arrays.asList(processInstanceEvent, userTaskEvent);
+        Collection<DataEvent<?>> events = Arrays.asList(processInstanceEvent);
 
         // Spy on the publisher's internal method to verify the calls
         doNothing().when(groupingMessagingEventPublisher).publishToTopic(any(), any());
@@ -172,20 +168,16 @@ public class GroupingMessagingEventPublisherTest {
         // Create multiple events of different types
         DataEvent<String> processInstanceEvent1 = mock(ProcessInstanceDataEvent.class);
         DataEvent<String> processInstanceEvent2 = mock(ProcessInstanceDataEvent.class);
-        DataEvent<String> userTaskEvent1 = mock(UserTaskInstanceDataEvent.class);
-        DataEvent<String> userTaskEvent2 = mock(UserTaskInstanceDataEvent.class);
 
         when(processInstanceEvent1.getType()).thenReturn("ProcessInstanceStateDataEvent");
         when(processInstanceEvent2.getType()).thenReturn("ProcessInstanceStateDataEvent");
-        when(userTaskEvent1.getType()).thenReturn("UserTaskInstanceStateDataEvent");
-        when(userTaskEvent2.getType()).thenReturn("UserTaskInstanceStateDataEvent");
 
         // Mock getConsumer() to return corresponding emitters for event types
         doReturn(Optional.of(processInstanceConsumer)).when(groupingMessagingEventPublisher).getConsumer(processInstanceEvent1);
         doReturn(Optional.of(processInstanceConsumer)).when(groupingMessagingEventPublisher).getConsumer(processInstanceEvent2);
 
         // Create a collection of events that would be grouped by channel
-        Collection<DataEvent<?>> events = Arrays.asList(processInstanceEvent1, processInstanceEvent2, userTaskEvent1, userTaskEvent2);
+        Collection<DataEvent<?>> events = Arrays.asList(processInstanceEvent1, processInstanceEvent2);
 
         // Spy on the internal publishToTopic to verify grouping
         doNothing().when(groupingMessagingEventPublisher).publishToTopic(any(), any());

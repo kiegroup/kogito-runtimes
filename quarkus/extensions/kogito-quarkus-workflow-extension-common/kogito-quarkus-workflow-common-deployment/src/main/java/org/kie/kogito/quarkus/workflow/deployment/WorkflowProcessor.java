@@ -42,7 +42,6 @@ import org.jbpm.flow.serialization.protobuf.KogitoWorkItemsProtobuf;
 import org.jbpm.process.core.context.exception.ExceptionScope;
 import org.kie.kogito.Model;
 import org.kie.kogito.ProcessInput;
-import org.kie.kogito.UserTask;
 import org.kie.kogito.codegen.api.context.KogitoBuildContext;
 import org.kie.kogito.codegen.json.JsonSchemaGenerator;
 import org.kie.kogito.codegen.process.ProcessContainerGenerator;
@@ -251,8 +250,7 @@ public abstract class WorkflowProcessor {
         List<AnnotationInstance> annotations = new ArrayList<>();
 
         annotations.addAll(index.getAnnotations(DotName.createSimple(ProcessInput.class.getCanonicalName())));
-        annotations.addAll(index.getAnnotations(DotName.createSimple(UserTask.class.getCanonicalName())));
-
+      
         List<Class<?>> annotatedClasses = annotations.stream()
                 .map(ann -> loadClassFromAnnotation(ann, cl))
                 .filter(Optional::isPresent)

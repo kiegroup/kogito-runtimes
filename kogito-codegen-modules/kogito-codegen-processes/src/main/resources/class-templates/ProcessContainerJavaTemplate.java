@@ -44,7 +44,7 @@ public class Processes implements org.kie.kogito.process.Processes {
         UnitOfWorkManager unitOfWorkManager = this.application.config().get(ProcessConfig.class).unitOfWorkManager();
         if (jobsService instanceof InMemoryJobService) {
             InMemoryJobService inMemoryJobService = (InMemoryJobService) jobsService;
-            InMemoryJobContext context = new InMemoryJobContext(null, unitOfWorkManager, this, null);
+            InMemoryJobContext context = new InMemoryJobContext(null, unitOfWorkManager, this);
             inMemoryJobService.registerJobExecutorFactory(new InMemoryProcessJobExecutorFactory(context));
         }
     }
