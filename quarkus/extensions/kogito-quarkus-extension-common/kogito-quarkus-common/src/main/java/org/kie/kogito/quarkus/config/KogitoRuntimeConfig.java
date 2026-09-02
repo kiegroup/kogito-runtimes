@@ -50,9 +50,4 @@ public interface KogitoRuntimeConfig {
     @WithDefault("1000")
     short processInstanceLimit();
 
-    /**
-     * Auth Configuration
-     */
-    @WithName("security.auth")
-    KogitoAuthRuntimeConfig authConfig();
 }

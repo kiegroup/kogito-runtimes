@@ -35,7 +35,6 @@ import org.kie.kogito.event.AbstractDataEvent;
 import org.kie.kogito.event.DataEventFactory;
 import org.kie.kogito.event.cloudevents.CloudEventExtensionConstants;
 import org.kie.kogito.event.serializer.MultipleProcessDataInstanceConverterFactory;
-import org.kie.kogito.event.usertask.UserTaskInstanceStateDataEvent;
 import org.kie.kogito.jackson.utils.JsonObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -389,32 +388,6 @@ class ProcessEventsTest {
         assertThat(data.getProcessVersion()).isEqualTo(PROCESS_INSTANCE_VERSION);
         assertThat(data.getEventUser()).isEqualTo(SUBJECT);
         assertThat(data.getEventDate()).isEqualTo(toDate(TIME));
-    }
-
-    @Test
-    void userTaskInstanceDataEvent() throws Exception {
-        UserTaskInstanceStateDataEvent event = new UserTaskInstanceStateDataEvent();
-        setBaseEventValues(event, USER_TASK_INSTANCE_EVENT_TYPE);
-        event.addExtensionAttribute(CloudEventExtensionConstants.PROCESS_USER_TASK_INSTANCE_ID, PROCESS_USER_TASK_INSTANCE_ID);
-        event.addExtensionAttribute(CloudEventExtensionConstants.PROCESS_USER_TASK_INSTANCE_STATE, PROCESS_USER_TASK_INSTANCE_STATE);
-        setAdditionalExtensions(event);
-
-        assertExtensionNames(event, BASE_EXTENSION_NAMES,
-                CloudEventExtensionConstants.PROCESS_USER_TASK_INSTANCE_ID, CloudEventExtensionConstants.PROCESS_USER_TASK_INSTANCE_STATE,
-                EXTENSION_1, EXTENSION_2);
-
-        String json = OBJECT_MAPPER.writeValueAsString(event);
-        assertExtensionsNotDuplicated(json, event.getExtensionNames());
-
-        UserTaskInstanceStateDataEvent deserializedEvent = OBJECT_MAPPER.readValue(json, UserTaskInstanceStateDataEvent.class);
-        assertBaseEventValues(deserializedEvent, USER_TASK_INSTANCE_EVENT_TYPE);
-        assertThat(deserializedEvent.getExtension(EXTENSION_1)).isEqualTo(EXTENSION_1_VALUE);
-        assertThat(deserializedEvent.getExtension(EXTENSION_2)).isEqualTo(EXTENSION_2_VALUE);
-        assertThat(deserializedEvent.getExtension(CloudEventExtensionConstants.PROCESS_USER_TASK_INSTANCE_ID)).isEqualTo(PROCESS_USER_TASK_INSTANCE_ID);
-        assertThat(deserializedEvent.getExtension(CloudEventExtensionConstants.PROCESS_USER_TASK_INSTANCE_STATE)).isEqualTo(PROCESS_USER_TASK_INSTANCE_STATE);
-        assertExtensionNames(deserializedEvent, BASE_EXTENSION_NAMES,
-                CloudEventExtensionConstants.PROCESS_USER_TASK_INSTANCE_ID, CloudEventExtensionConstants.PROCESS_USER_TASK_INSTANCE_STATE,
-                EXTENSION_1, EXTENSION_2);
     }
 
     @Test

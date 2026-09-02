@@ -21,15 +21,11 @@ package org.kie.kogito.event.impl.adapter;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import org.kie.api.runtime.process.ProcessInstance;
 import org.kie.kogito.event.process.ProcessInstanceEventMetadata;
-import org.kie.kogito.event.usertask.UserTaskInstanceEventMetadata;
 import org.kie.kogito.internal.process.runtime.KogitoWorkflowProcessInstance;
 import org.kie.kogito.internal.utils.ConversionUtils;
-import org.kie.kogito.usertask.UserTaskInstance;
-import org.kie.kogito.usertask.model.ProcessInfo;
 
 public class AdapterHelper {
 
@@ -43,31 +39,6 @@ public class AdapterHelper {
         metadata.put(ProcessInstanceEventMetadata.PARENT_PROCESS_INSTANCE_ID_META_DATA, pi.getParentProcessInstanceId());
         metadata.put(ProcessInstanceEventMetadata.ROOT_PROCESS_ID_META_DATA, pi.getRootProcessId());
         metadata.put(ProcessInstanceEventMetadata.ROOT_PROCESS_INSTANCE_ID_META_DATA, pi.getRootProcessInstanceId());
-        return metadata;
-    }
-
-    public static Map<String, Object> buildUserTaskMetadata(UserTaskInstance uti) {
-
-        Map<String, Object> metadata = new HashMap<>();
-
-        Optional<ProcessInfo> optionalProcessInfo = Optional.ofNullable(uti.getProcessInfo());
-
-        // Conditionally adding process info metadata, it will only be available after the user task has been completely initialized
-        optionalProcessInfo.ifPresent(processInfo -> {
-            metadata.put(ProcessInstanceEventMetadata.PROCESS_INSTANCE_ID_META_DATA, processInfo.getProcessInstanceId());
-            metadata.put(ProcessInstanceEventMetadata.PROCESS_VERSION_META_DATA, processInfo.getProcessVersion());
-            metadata.put(ProcessInstanceEventMetadata.PROCESS_ID_META_DATA, processInfo.getProcessId());
-            metadata.put(ProcessInstanceEventMetadata.PARENT_PROCESS_INSTANCE_ID_META_DATA, processInfo.getParentProcessInstanceId());
-            metadata.put(ProcessInstanceEventMetadata.ROOT_PROCESS_ID_META_DATA, processInfo.getRootProcessId());
-            metadata.put(ProcessInstanceEventMetadata.ROOT_PROCESS_INSTANCE_ID_META_DATA, processInfo.getRootProcessInstanceId());
-            metadata.put(ProcessInstanceEventMetadata.PROCESS_INSTANCE_STATE_META_DATA, String.valueOf(uti.getMetadata().get("ProcessInstanceState")));
-            metadata.put(ProcessInstanceEventMetadata.PROCESS_TYPE_META_DATA, uti.getMetadata().get("ProcessType"));
-        });
-
-        metadata.put(UserTaskInstanceEventMetadata.USER_TASK_INSTANCE_ID_META_DATA, uti.getId());
-        metadata.put(UserTaskInstanceEventMetadata.USER_TASK_INSTANCE_REFERENCE_ID_META_DATA, uti.getUserTask().getReferenceName());
-        metadata.put(UserTaskInstanceEventMetadata.USER_TASK_INSTANCE_STATE_META_DATA, uti.getStatus().getName());
-
         return metadata;
     }
 

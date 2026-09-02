@@ -32,7 +32,6 @@ import org.kie.kogito.services.jobs.impl.InMemoryJobService;
 import org.kie.kogito.services.jobs.impl.InMemoryProcessJobExecutorFactory;
 import org.kie.kogito.services.uow.StaticUnitOfWorkManger;
 import org.kie.kogito.uow.UnitOfWorkManager;
-import org.kie.kogito.usertask.UserTasks;
 
 import io.quarkus.arc.DefaultBean;
 import io.quarkus.arc.properties.IfBuildProperty;
@@ -63,8 +62,8 @@ public class KogitoBeanProducer {
 
     @DefaultBean
     @Produces
-    JobsService jobsService(Instance<Processes> processes, Instance<UserTasks> userTasks, UnitOfWorkManager uowm, ScheduledExecutorService executor) {
-        InMemoryJobContext context = new InMemoryJobContext(null, uowm, processes.isResolvable() ? processes.get() : null, userTasks.isResolvable() ? userTasks.get() : null);
+    JobsService jobsService(Instance<Processes> processes, UnitOfWorkManager uowm, ScheduledExecutorService executor) {
+        InMemoryJobContext context = new InMemoryJobContext(null, uowm, processes.isResolvable() ? processes.get() : null);
         InMemoryJobService inMemoryJobService = new InMemoryJobService(executor);
         inMemoryJobService.registerJobExecutorFactory(new InMemoryProcessJobExecutorFactory(context));
         return inMemoryJobService;
