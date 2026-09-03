@@ -19,7 +19,6 @@
 package org.kie.kogito.event.serializer;
 
 import org.kie.kogito.event.process.ProcessInstanceDataEvent;
-import org.kie.kogito.event.usertask.UserTaskInstanceDataEvent;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
@@ -32,6 +31,5 @@ public class KogitoSerializationModule extends SimpleModule {
         setSerializerModifier(new MultipleProcessDataInstanceBeanSerializerModifier());
         setDeserializerModifier(new MultipleProcessDataInstanceBeanDeserializerModifier());
         addDeserializer(ProcessInstanceDataEvent.class, new JsonProcessInstanceDataEventDeserializer());
-        addDeserializer(UserTaskInstanceDataEvent.class, new JsonUserTaskInstanceDataEventDeserializer());
     }
 }

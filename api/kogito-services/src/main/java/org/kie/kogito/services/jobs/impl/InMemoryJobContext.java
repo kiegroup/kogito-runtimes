@@ -21,8 +21,7 @@ package org.kie.kogito.services.jobs.impl;
 import org.kie.kogito.internal.process.runtime.KogitoProcessRuntime;
 import org.kie.kogito.process.Processes;
 import org.kie.kogito.uow.UnitOfWorkManager;
-import org.kie.kogito.usertask.UserTasks;
 
-public record InMemoryJobContext(KogitoProcessRuntime runtime, UnitOfWorkManager unitOfWorkManager, Processes processes, UserTasks userTasks) {
+public record InMemoryJobContext(KogitoProcessRuntime runtime, UnitOfWorkManager unitOfWorkManager, Processes processes) {
 
 }

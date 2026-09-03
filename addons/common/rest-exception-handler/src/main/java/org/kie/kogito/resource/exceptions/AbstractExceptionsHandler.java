@@ -37,9 +37,6 @@ import org.kie.kogito.process.ProcessInstanceDuplicatedException;
 import org.kie.kogito.process.ProcessInstanceExecutionException;
 import org.kie.kogito.process.ProcessInstanceNotFoundException;
 import org.kie.kogito.process.VariableViolationException;
-import org.kie.kogito.usertask.UserTaskInstanceNotAuthorizedException;
-import org.kie.kogito.usertask.UserTaskInstanceNotFoundException;
-import org.kie.kogito.usertask.lifecycle.UserTaskTransitionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,9 +67,6 @@ public abstract class AbstractExceptionsHandler<T> {
     protected AbstractExceptionsHandler(Iterable<ExceptionHandler> errorHandlers) {
         List<RestExceptionHandler<? extends Throwable, T>> handlers = List.<RestExceptionHandler<? extends Throwable, T>> of(
                 newExceptionHandler(InvalidLifeCyclePhaseException.class, this::badRequest),
-                newExceptionHandler(UserTaskTransitionException.class, this::badRequest),
-                newExceptionHandler(UserTaskInstanceNotFoundException.class, this::notFound),
-                newExceptionHandler(UserTaskInstanceNotAuthorizedException.class, this::forbidden),
                 newExceptionHandler(InvalidTransitionException.class, this::badRequest),
                 newExceptionHandler(NodeInstanceNotFoundException.class, nodeInstanceNotFoundMessageException(), this::notFound),
                 newExceptionHandler(NodeNotFoundException.class, nodeNotFoundMessageException(), this::notFound),

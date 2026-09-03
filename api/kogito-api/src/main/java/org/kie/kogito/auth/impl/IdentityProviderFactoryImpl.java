@@ -20,44 +20,20 @@
 package org.kie.kogito.auth.impl;
 
 import java.util.Collection;
-import java.util.Collections;
 
 import org.kie.kogito.auth.IdentityProvider;
 import org.kie.kogito.auth.IdentityProviderFactory;
-import org.kie.kogito.auth.IdentityProviders;
 
 public class IdentityProviderFactoryImpl implements IdentityProviderFactory {
 
     private final IdentityProvider identityProvider;
-    private final KogitoAuthConfig config;
 
-    public IdentityProviderFactoryImpl(IdentityProvider identityProvider, KogitoAuthConfig config) {
+    public IdentityProviderFactoryImpl(IdentityProvider identityProvider) {
         this.identityProvider = identityProvider;
-        this.config = config;
-    }
-
-    @Override
-    public IdentityProvider getOrImpersonateIdentity(String user, Collection<String> roles) {
-
-        if (!config.isEnabled()) {
-            return IdentityProviders.of(user, roles);
-        }
-
-        if (!Collections.disjoint(config.getRolesThatAllowImpersonation(), identityProvider.getRoles())
-                && user != null && !user.isBlank()
-                && !identityProvider.getName().equals(user)) {
-            return IdentityProviders.of(user, roles);
-        }
-
-        return identityProvider;
     }
 
     @Override
     public IdentityProvider getIdentity(String user, Collection<String> roles) {
-
-        if (!config.isEnabled()) {
-            return IdentityProviders.of(user, roles);
-        }
         return identityProvider;
     }
 }

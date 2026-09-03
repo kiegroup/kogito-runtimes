@@ -249,7 +249,7 @@ public class StaticWorkflowApplication extends StaticApplication implements Auto
         super(new StaticConfig(new Addons(Collections.emptySet()), new StaticProcessConfig(new CachedWorkItemHandlerConfig(),
                 new DefaultProcessEventListenerConfig(listeners), manager, jobsService), new StaticConfigBean()));
         if (jobsService instanceof InMemoryJobService inMemoryJobService) {
-            inMemoryJobService.registerJobExecutorFactory(new InMemoryProcessJobExecutorFactory(new InMemoryJobContext(null, manager, processes, null)));
+            inMemoryJobService.registerJobExecutorFactory(new InMemoryProcessJobExecutorFactory(new InMemoryJobContext(null, manager, processes)));
         }
         if (!properties.isEmpty()) {
             ConfigResolverHolder.setConfigResolver(MultiSourceConfigResolver.withSystemProperties(properties));

@@ -24,7 +24,7 @@ import org.jbpm.flow.serialization.protobuf.KogitoNodeInstanceContentsProtobuf.A
 import org.jbpm.workflow.core.node.AsyncEventNodeInstance;
 import org.kie.api.runtime.process.NodeInstance;
 
-import com.google.protobuf.GeneratedMessageV3.Builder;
+import com.google.protobuf.GeneratedMessage.Builder;
 
 public class AsyncEventNodeInstanceWriter implements NodeInstanceWriter {
 
