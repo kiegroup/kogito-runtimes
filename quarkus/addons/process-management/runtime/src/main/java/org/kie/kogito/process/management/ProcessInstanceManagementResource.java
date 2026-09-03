@@ -21,6 +21,8 @@ package org.kie.kogito.process.management;
 import org.kie.kogito.Application;
 import org.kie.kogito.process.Processes;
 
+import io.quarkus.security.Authenticated;
+
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -114,6 +116,7 @@ public class ProcessInstanceManagementResource extends BaseProcessInstanceManage
     }
 
     @Override
+    @Authenticated
     @POST
     @Path("{processId}/{version}/instances/{processInstanceId}/retrigger")
     @Produces(MediaType.APPLICATION_JSON)
@@ -122,6 +125,7 @@ public class ProcessInstanceManagementResource extends BaseProcessInstanceManage
     }
 
     @Override
+    @Authenticated
     @POST
     @Path("{processId}/{version}/instances/{processInstanceId}/skip")
     @Produces(MediaType.APPLICATION_JSON)
@@ -130,6 +134,7 @@ public class ProcessInstanceManagementResource extends BaseProcessInstanceManage
     }
 
     @Override
+    @Authenticated
     @POST
     @Path("{processId}/{version}/instances/{processInstanceId}/nodes/{nodeId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -139,6 +144,7 @@ public class ProcessInstanceManagementResource extends BaseProcessInstanceManage
     }
 
     @Override
+    @Authenticated
     @POST
     @Path("{processId}/{version}/instances/{processInstanceId}/nodeInstances/{nodeInstanceId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -148,6 +154,7 @@ public class ProcessInstanceManagementResource extends BaseProcessInstanceManage
     }
 
     @Override
+    @Authenticated
     @DELETE
     @Path("{processId}/{version}/instances/{processInstanceId}/nodeInstances/{nodeInstanceId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -166,6 +173,7 @@ public class ProcessInstanceManagementResource extends BaseProcessInstanceManage
     }
 
     @Override
+    @Authenticated
     @DELETE
     @Path("{processId}/{version}/instances/{processInstanceId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -174,6 +182,7 @@ public class ProcessInstanceManagementResource extends BaseProcessInstanceManage
     }
 
     @Override
+    @Authenticated
     @PATCH
     @Path("{processId}/{version}/instances/{processInstanceId}/nodeInstances/{nodeInstanceId}/sla")
     @Produces(MediaType.APPLICATION_JSON)
@@ -184,6 +193,7 @@ public class ProcessInstanceManagementResource extends BaseProcessInstanceManage
     }
 
     @Override
+    @Authenticated
     @PATCH
     @Path("{processId}/{version}/instances/{processInstanceId}/sla")
     @Produces(MediaType.APPLICATION_JSON)
@@ -233,6 +243,7 @@ public class ProcessInstanceManagementResource extends BaseProcessInstanceManage
     }
 
     @Override
+    @Authenticated
     @POST
     @Path("{processId}/instances/{processInstanceId}/retrigger")
     @Produces(MediaType.APPLICATION_JSON)
@@ -241,6 +252,7 @@ public class ProcessInstanceManagementResource extends BaseProcessInstanceManage
     }
 
     @Override
+    @Authenticated
     @POST
     @Path("{processId}/instances/{processInstanceId}/skip")
     @Produces(MediaType.APPLICATION_JSON)
@@ -249,6 +261,7 @@ public class ProcessInstanceManagementResource extends BaseProcessInstanceManage
     }
 
     @Override
+    @Authenticated
     @POST
     @Path("{processId}/instances/{processInstanceId}/nodes/{nodeId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -257,6 +270,7 @@ public class ProcessInstanceManagementResource extends BaseProcessInstanceManage
     }
 
     @Override
+    @Authenticated
     @POST
     @Path("{processId}/instances/{processInstanceId}/nodeInstances/{nodeInstanceId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -265,6 +279,7 @@ public class ProcessInstanceManagementResource extends BaseProcessInstanceManage
     }
 
     @Override
+    @Authenticated
     @DELETE
     @Path("{processId}/instances/{processInstanceId}/nodeInstances/{nodeInstanceId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -281,6 +296,7 @@ public class ProcessInstanceManagementResource extends BaseProcessInstanceManage
     }
 
     @Override
+    @Authenticated
     @DELETE
     @Path("{processId}/instances/{processInstanceId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -289,6 +305,7 @@ public class ProcessInstanceManagementResource extends BaseProcessInstanceManage
     }
 
     @Override
+    @Authenticated
     @PATCH
     @Path("{processId}/instances/{processInstanceId}/nodeInstances/{nodeInstanceId}/sla")
     @Produces(MediaType.APPLICATION_JSON)
@@ -298,6 +315,7 @@ public class ProcessInstanceManagementResource extends BaseProcessInstanceManage
     }
 
     @Override
+    @Authenticated
     @PATCH
     @Path("{processId}/instances/{processInstanceId}/sla")
     @Produces(MediaType.APPLICATION_JSON)
