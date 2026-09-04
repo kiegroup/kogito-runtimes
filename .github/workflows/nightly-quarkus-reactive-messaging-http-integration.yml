@@ -39,25 +39,16 @@ jobs:
     timeout-minutes: 120
 
     steps:
-      - name: Clean Disk Space
-        uses: kiegroup/kie-ci/.ci/actions/ubuntu-disk-space@main
-
-      - name: Set up Java ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v5
-        with:
-          java-version: ${{ env.JAVA_VERSION }}
-          distribution: temurin
-          check-latest: true
-
-      - name: Set up Maven ${{ env.MAVEN_VERSION }}
-        uses: stCarolas/setup-maven@v5
-        with:
-          maven-version: ${{ env.MAVEN_VERSION }}
-
       - name: Checkout kogito-runtimes
         uses: actions/checkout@v7
         with:
           path: kogito-runtimes
+
+      - name: Nightly setup
+        uses: ./kogito-runtimes/.github/actions/nightly-setup
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          maven-version: ${{ env.MAVEN_VERSION }}
 
       # Pin version.io.quarkiverse.reactivemessaging.http to the target SNAPSHOT in
       # the BOM so every downstream module picks it up without further changes.
@@ -99,31 +90,17 @@ jobs:
     timeout-minutes: 60
 
     steps:
-      - name: Clean Disk Space
-        uses: kiegroup/kie-ci/.ci/actions/ubuntu-disk-space@main
-
-      - name: Set up Java ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v5
-        with:
-          java-version: ${{ env.JAVA_VERSION }}
-          distribution: temurin
-          check-latest: true
-
-      - name: Set up Maven ${{ env.MAVEN_VERSION }}
-        uses: stCarolas/setup-maven@v5
-        with:
-          maven-version: ${{ env.MAVEN_VERSION }}
-
-      - name: Restore Maven cache
-        uses: actions/cache/restore@v6
-        with:
-          path: ~/.m2/repository
-          key: nightly-rmhttp-snapshot-m2-${{ github.run_id }}
-
       - name: Checkout kogito-runtimes
         uses: actions/checkout@v7
         with:
           path: kogito-runtimes
+
+      - name: Nightly setup
+        uses: ./kogito-runtimes/.github/actions/nightly-setup
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          maven-version: ${{ env.MAVEN_VERSION }}
+          cache-key: nightly-rmhttp-snapshot-m2-${{ github.run_id }}
 
       # Modules that consume io.quarkiverse.reactivemessaging.http (the "quarkus-http"
       # connector and OutgoingHttpMetadata). The kogito-runtimes artifacts they depend
@@ -162,31 +139,17 @@ jobs:
     timeout-minutes: 120
 
     steps:
-      - name: Clean Disk Space
-        uses: kiegroup/kie-ci/.ci/actions/ubuntu-disk-space@main
-
-      - name: Set up Java ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v5
-        with:
-          java-version: ${{ env.JAVA_VERSION }}
-          distribution: temurin
-          check-latest: true
-
-      - name: Set up Maven ${{ env.MAVEN_VERSION }}
-        uses: stCarolas/setup-maven@v5
-        with:
-          maven-version: ${{ env.MAVEN_VERSION }}
-
-      - name: Restore Maven cache
-        uses: actions/cache/restore@v6
-        with:
-          path: ~/.m2/repository
-          key: nightly-rmhttp-snapshot-m2-${{ github.run_id }}
-
       - name: Checkout kogito-runtimes
         uses: actions/checkout@v7
         with:
           path: kogito-runtimes
+
+      - name: Nightly setup
+        uses: ./kogito-runtimes/.github/actions/nightly-setup
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          maven-version: ${{ env.MAVEN_VERSION }}
+          cache-key: nightly-rmhttp-snapshot-m2-${{ github.run_id }}
 
       - name: Checkout kogito-examples
         uses: actions/checkout@v7
