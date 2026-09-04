@@ -1,0 +1,46 @@
+name: Nightly workflow setup
+description: >-
+  Common setup shared by the kogito-runtimes nightly SNAPSHOT integration
+  workflows: cleans runner disk space, installs the JDK and Maven, and
+  optionally restores the local Maven repository cache produced by the
+  build job.
+
+inputs:
+  java-version:
+    description: JDK version to install
+    required: true
+  maven-version:
+    description: Maven version to install
+    required: true
+  cache-key:
+    description: >-
+      actions/cache key to restore ~/.m2/repository from. Leave empty (the
+      default) to skip the restore, e.g. in the job that first populates
+      the cache.
+    required: false
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    - name: Clean Disk Space
+      uses: kiegroup/kie-ci/.ci/actions/ubuntu-disk-space@main
+
+    - name: Set up Java ${{ inputs.java-version }}
+      uses: actions/setup-java@v6
+      with:
+        java-version: ${{ inputs.java-version }}
+        distribution: temurin
+        check-latest: true
+
+    - name: Set up Maven ${{ inputs.maven-version }}
+      uses: stCarolas/setup-maven@v5
+      with:
+        maven-version: ${{ inputs.maven-version }}
+
+    - name: Restore Maven cache
+      if: inputs.cache-key != ''
+      uses: actions/cache/restore@v6
+      with:
+        path: ~/.m2/repository
+        key: ${{ inputs.cache-key }}

@@ -1140,7 +1140,7 @@
       <!--
         Enables resolution of artifacts from the Maven Central Snapshots repository.
         For local development use: activate with -Pcentral-snapshots.
-        CI uses .github/quarkus-openapi-generator-snapshot-settings.xml instead (via - -settings).
+        CI uses .github/central-snapshot-settings.xml instead (via - -settings).
       -->
       <id>central-snapshots</id>
       <repositories>

@@ -1,15 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Maven settings used by the nightly quarkus-openapi-generator SNAPSHOT integration workflow.
-  Activates the Maven Central Snapshots repository so that SNAPSHOT versions of
-  io.quarkiverse.openapi.generator:quarkus-openapi-generator (and its transitive
-  SNAPSHOT dependencies) are resolved automatically without modifying any POM.
-
-  Also carries credentials for the "github" server id (GitHub Packages), matching
-  the repository declared in the project POM. The mvn "settings" flag on the
-  command line replaces the settings.xml that actions/setup-java generates,
-  which would otherwise drop those credentials.
--->
 <settings xmlns="http://maven.apache.org/SETTINGS/1.2.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.2.0
