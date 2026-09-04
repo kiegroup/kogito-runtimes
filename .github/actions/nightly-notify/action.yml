@@ -1,0 +1,50 @@
+name: Nightly tracking issue
+description: >-
+  Creates, comments on, reopens, or closes the tracking issue for a nightly
+  SNAPSHOT compatibility workflow. One issue is reused per label across its
+  whole lifecycle: created and commented on while failing, closed once the
+  run is green again, reopened if it regresses afterwards.
+
+inputs:
+  status:
+    description: "'success' or 'failure' — outcome of the nightly run"
+    required: true
+  label:
+    description: Issue label identifying the tracking issue
+    required: true
+  version:
+    description: The SNAPSHOT version that was tested
+    required: true
+  project-name:
+    description: Human-readable name of the upstream project
+    required: true
+  project-url:
+    description: URL of the upstream project repository
+    required: true
+  jobs-json:
+    description: >-
+      JSON array of {id, result} for the jobs the run depended on. Used to
+      list failed/skipped jobs when reporting a failure; ignored on success.
+    required: false
+    default: '[]'
+  github-token:
+    description: Token used to read and write issues
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Create, comment on, reopen, or close the tracking issue
+      uses: actions/github-script@v9
+      env:
+        NIGHTLY_STATUS: ${{ inputs.status }}
+        NIGHTLY_LABEL: ${{ inputs.label }}
+        NIGHTLY_VERSION: ${{ inputs.version }}
+        NIGHTLY_PROJECT_NAME: ${{ inputs.project-name }}
+        NIGHTLY_PROJECT_URL: ${{ inputs.project-url }}
+        NIGHTLY_JOBS_JSON: ${{ inputs.jobs-json }}
+      with:
+        github-token: ${{ inputs.github-token }}
+        script: |
+          const script = require('${{ github.action_path }}/notify.js');
+          await script({ github, context, core });
