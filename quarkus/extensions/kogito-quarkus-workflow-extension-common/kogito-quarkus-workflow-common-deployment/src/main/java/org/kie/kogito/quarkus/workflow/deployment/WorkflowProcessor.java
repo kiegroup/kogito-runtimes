@@ -250,7 +250,7 @@ public abstract class WorkflowProcessor {
         List<AnnotationInstance> annotations = new ArrayList<>();
 
         annotations.addAll(index.getAnnotations(DotName.createSimple(ProcessInput.class.getCanonicalName())));
-      
+
         List<Class<?>> annotatedClasses = annotations.stream()
                 .map(ann -> loadClassFromAnnotation(ann, cl))
                 .filter(Optional::isPresent)
