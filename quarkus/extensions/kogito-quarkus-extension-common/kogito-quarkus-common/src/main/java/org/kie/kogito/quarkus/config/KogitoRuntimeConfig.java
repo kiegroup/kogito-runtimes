@@ -50,4 +50,13 @@ public interface KogitoRuntimeConfig {
     @WithDefault("1000")
     short processInstanceLimit();
 
+    /**
+     * Determines if it should be allowed to start a workflow from an arbitrary node
+     * 
+     * @return true if the functionality is allowed, false otherwise.
+     */
+    @WithName("process.startFrom.enabled")
+    @WithDefault("true")
+    boolean startFromEnabled();
+
 }

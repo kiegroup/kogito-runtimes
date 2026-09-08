@@ -22,6 +22,7 @@ package org.kie.kogito.quarkus.auth;
 import org.kie.kogito.auth.IdentityProvider;
 import org.kie.kogito.auth.IdentityProviderFactory;
 import org.kie.kogito.auth.impl.IdentityProviderFactoryImpl;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;

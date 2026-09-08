@@ -53,6 +53,11 @@ public class ConfigBean extends StaticConfigBean {
     }
 
     @Override
+    public boolean startFromEnabled() {
+        return runtimeConfig.get().startFromEnabled();
+    }
+
+    @Override
     public Optional<KogitoGAV> getGav() {
         return Optional.ofNullable(gav.get());
     }

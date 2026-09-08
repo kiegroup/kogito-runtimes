@@ -39,6 +39,7 @@ import org.kie.kogito.internal.process.runtime.KogitoNode;
 import org.kie.kogito.internal.process.workitem.KogitoWorkItemHandler;
 import org.kie.kogito.internal.process.workitem.Policy;
 import org.kie.kogito.internal.process.workitem.WorkItemNotFoundException;
+import org.kie.kogito.internal.utils.ConversionUtils;
 import org.kie.kogito.process.Process;
 import org.kie.kogito.process.ProcessInstance;
 import org.kie.kogito.process.ProcessInstanceNotFoundException;
@@ -85,7 +86,7 @@ public class ProcessServiceImpl implements ProcessService {
             CompositeCorrelation correlation) {
         return UnitOfWorkExecutor.executeInUnitOfWork(application.unitOfWorkManager(), () -> {
             ProcessInstance<T> pi = process.createInstance(businessKey, correlation, model);
-            if (startFromNodeId != null) {
+            if (!ConversionUtils.isEmpty(startFromNodeId) && application.config().get(ConfigBean.class).startFromEnabled()) {
                 pi.startFrom(startFromNodeId, kogitoReferenceId, headers);
             } else {
                 pi.start(trigger, kogitoReferenceId, headers);

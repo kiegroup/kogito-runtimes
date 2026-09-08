@@ -38,4 +38,9 @@ public interface ConfigBean extends KogitoConfig {
     default short processInstanceLimit() {
         return 1000;
     }
+
+    default boolean startFromEnabled() {
+        return true;
+    }
+
 }
