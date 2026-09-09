@@ -21,12 +21,15 @@ package org.kie.kogito.process.migration;
 import org.kie.kogito.Application;
 import org.kie.kogito.process.Processes;
 
+import io.quarkus.security.Authenticated;
+
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+@Authenticated
 @Path("/management/processes/")
 public class ProcessInstanceMigrationResource extends BaseProcessInstanceMigrationResource<Response> {
 
@@ -79,18 +82,19 @@ public class ProcessInstanceMigrationResource extends BaseProcessInstanceMigrati
     public Response migrateAllInstances(@PathParam("processId") String processId, ProcessMigrationSpec migrationSpec) {
         return doMigrateAllInstances(processId, null, migrationSpec);
     }
-    
+
     @POST
     @Path("{processId}/{version}/instances/{processInstanceId}/migrate")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response migrateInstance(@PathParam("processId") String processId, @PathParam("version") String version, @PathParam("processInstanceId") String processInstanceId, ProcessMigrationSpec migrationSpec) {
+    public Response migrateInstance(@PathParam("processId") String processId, @PathParam("version") String version, @PathParam("processInstanceId") String processInstanceId,
+            ProcessMigrationSpec migrationSpec) {
         return doMigrateInstance(processId, version, migrationSpec, processInstanceId);
     }
 
     @POST
     @Path("{processId}/{version}/migrate")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response migrateAllInstances(@PathParam("processId") String processId, @PathParam("version") String version,  ProcessMigrationSpec migrationSpec) {
+    public Response migrateAllInstances(@PathParam("processId") String processId, @PathParam("version") String version, ProcessMigrationSpec migrationSpec) {
         return doMigrateAllInstances(processId, version, migrationSpec);
     }
 }

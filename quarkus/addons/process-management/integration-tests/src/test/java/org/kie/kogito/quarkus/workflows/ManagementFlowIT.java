@@ -50,4 +50,22 @@ class ManagementFlowIT {
         given().contentType(ContentType.JSON).accept(ContentType.JSON).get("management/processes/parallel")
                 .then().statusCode(200).body("annotations", is(Arrays.asList("Football", "Betis")));
     }
+
+    @Test
+    void testManagementMutationRequiresAuthentication() {
+        given().contentType(ContentType.JSON).accept(ContentType.JSON)
+                .post("management/processes/parallel/instances/any-id/skip")
+                .then().statusCode(401);
+    }
+
+    @Test
+    void testAuthenticatedCallerCanReachMutationEndpoint() {
+        // Authenticated caller with a valid credential must pass the security layer.
+        // The instance ID does not exist, so the runtime returns 404 (not 401/403),
+        // proving authentication succeeded and the request reached business logic.
+        given().auth().preemptive().basic("admin", "secret")
+                .contentType(ContentType.JSON).accept(ContentType.JSON)
+                .post("management/processes/parallel/instances/non-existent-id/skip")
+                .then().statusCode(404);
+    }
 }
