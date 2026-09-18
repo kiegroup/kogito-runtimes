@@ -22,7 +22,7 @@ permissions:
 
 env:
   JAVA_VERSION: 17
-  MAVEN_VERSION: '3.9.11'
+  MAVEN_VERSION: '3.9.16'
   RMHTTP_VERSION: ${{ github.event.inputs.rmhttp_version || '999-SNAPSHOT' }}
   # Absolute path so it resolves correctly regardless of the step's working-directory.
   SNAPSHOT_SETTINGS: ${{ github.workspace }}/kogito-runtimes/.github/central-snapshot-settings.xml
