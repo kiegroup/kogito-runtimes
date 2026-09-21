@@ -36,7 +36,7 @@ jobs:
       - name: Checkout Drools repository on integration branch
         uses: actions/checkout@v7
         with:
-          repository: apache/incubator-kie
+          repository: kiegroup/drools
           path: drools
           ref: ${{ env.INTEGRATION_BRANCH }}
       
@@ -75,7 +75,7 @@ jobs:
       - name: Checkout drools repository on integration branch
         uses: actions/checkout@v7
         with:
-          repository: apache/incubator-kie
+          repository: kiegroup/drools
           path: drools
           ref: ${{ env.INTEGRATION_BRANCH }}
 
