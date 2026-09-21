@@ -26,16 +26,13 @@ jobs:
     env:
       INTEGRATION_BRANCH: main-integration-quarkus-main
     steps:
-      - name: Install yq
-        run: sudo add-apt-repository ppa:rmescandon/yq && sudo apt update && sudo apt install yq -y
-
       - name: Set up Java
         uses: actions/setup-java@v6
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: temurin
           check-latest: true
-      
+
       - name: Checkout Drools repository on integration branch
         uses: actions/checkout@v7
         with:
@@ -68,9 +65,6 @@ jobs:
     env:
       INTEGRATION_BRANCH: main-integration-quarkus-lts
     steps:
-      - name: Install yq
-        run: sudo add-apt-repository ppa:rmescandon/yq && sudo apt update && sudo apt install yq -y
-
       - name: Set up Java
         uses: actions/setup-java@v6
         with:
