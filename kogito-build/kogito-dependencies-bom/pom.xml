@@ -57,8 +57,6 @@
     <version.com.github.victools>4.38.0</version.com.github.victools>
     <version.org.wiremock>3.13.2</version.org.wiremock>
     <version.com.google.protobuf>4.33.2</version.com.google.protobuf>
-    <!-- We don't use gson directly. This is just to align versions of transitive dependencies -->
-<!--    <version.com.google.gson>2.13.2</version.com.google.gson>-->
     <!-- currently required for integration test only -->
     <version.com.sun.xml.bind.core>4.0.8</version.com.sun.xml.bind.core>
     <version.com.sun.activation>2.0.3</version.com.sun.activation>
@@ -219,12 +217,6 @@
         <artifactId>protobuf-java-util</artifactId>
         <version>${version.com.google.protobuf}</version>
       </dependency>
-
-<!--      <dependency>-->
-<!--        <groupId>com.google.code.gson</groupId>-->
-<!--        <artifactId>gson</artifactId>-->
-<!--        <version>${version.com.google.gson}</version>-->
-<!--      </dependency>-->
 
       <dependency>
         <groupId>ch.qos.logback</groupId>
