@@ -22,9 +22,9 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.jbpm.workflow.core.WorkflowModelValidator;
@@ -35,10 +35,10 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.NullNode;
-import com.networknt.schema.JsonSchema;
-import com.networknt.schema.JsonSchemaFactory;
-import com.networknt.schema.SpecVersion.VersionFlag;
-import com.networknt.schema.ValidationMessage;
+import com.networknt.schema.Error;
+import com.networknt.schema.Schema;
+import com.networknt.schema.SchemaRegistry;
+import com.networknt.schema.SpecificationVersion;
 
 public class JsonSchemaValidator implements WorkflowModelValidator, Externalizable {
 
@@ -49,7 +49,7 @@ public class JsonSchemaValidator implements WorkflowModelValidator, Externalizab
     @SuppressWarnings("squid:S1948") // sonar apparently does not realize that if a class implements externalizable, it is not mandatory for all each attributes to be serializable
     protected JsonNode jsonNode;
     protected boolean failOnValidationErrors;
-    private final transient AtomicReference<JsonSchema> schemaObject = new AtomicReference<>();
+    private final transient AtomicReference<Schema> schemaObject = new AtomicReference<>();
 
     public JsonSchemaValidator() {
         // for serialization purposes
@@ -62,7 +62,7 @@ public class JsonSchemaValidator implements WorkflowModelValidator, Externalizab
 
     @Override
     public void validate(Map<String, Object> model) {
-        Set<ValidationMessage> report =
+        List<Error> report =
                 getSchema().validate((JsonNode) model.getOrDefault(SWFConstants.DEFAULT_WORKFLOW_VAR, NullNode.instance));
         if (!report.isEmpty()) {
             StringBuilder sb = new StringBuilder("There are JsonSchema validation errors:");
@@ -80,10 +80,10 @@ public class JsonSchemaValidator implements WorkflowModelValidator, Externalizab
         return JsonNode.class.isAssignableFrom(clazz) ? Optional.of(clazz.cast(getSchema().getSchemaNode())) : Optional.empty();
     }
 
-    private JsonSchema getSchema() {
-        JsonSchema result = schemaObject.get();
+    private Schema getSchema() {
+        Schema result = schemaObject.get();
         if (result == null) {
-            result = JsonSchemaFactory.getInstance(VersionFlag.V7).getSchema(jsonNode);
+            result = SchemaRegistry.withDefaultDialect(SpecificationVersion.DRAFT_7).getSchema(jsonNode);
             schemaObject.set(result);
         }
         return result;

@@ -142,7 +142,7 @@ public class ServerlessWorkflowAssetsProcessor extends WorkflowProcessor {
 
     @BuildStep(onlyIf = NativeOrNativeSourcesBuild.class)
     public void registerJsonValidatorSubclassesForReflection(CombinedIndexBuildItem combinedIndexBuildItem, BuildProducer<ReflectiveClassBuildItem> reflectiveClass) {
-        combinedIndexBuildItem.getComputingIndex().getAllKnownImplementors(DotName.createSimple("com.networknt.schema.JsonValidator"))
+        combinedIndexBuildItem.getComputingIndex().getAllKnownImplementors(DotName.createSimple("com.networknt.schema.keyword.KeywordValidator"))
                 .forEach(c -> reflectiveClass.produce(new ReflectiveClassBuildItem(true, true, c.name().toString())));
     }
 
