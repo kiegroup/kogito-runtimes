@@ -35,7 +35,7 @@
 
   <properties>
     <!-- this version property is used in plugins but also in dependencies too -->
-    <version.io.quarkus>3.20.1</version.io.quarkus>
+    <version.io.quarkus>3.20.6.2</version.io.quarkus>
     <version.io.quarkus.quarkus-test>${version.io.quarkus}</version.io.quarkus.quarkus-test>
     <version.org.springframework.boot>3.4.7</version.org.springframework.boot>
     <version.org.apache.kafka>3.9.1</version.org.apache.kafka>
@@ -73,7 +73,7 @@
     <version.jakarta.validation-api>3.0.2</version.jakarta.validation-api>
     <version.jakarta.xml.bind-api>4.0.1</version.jakarta.xml.bind-api>
 
-    <version.io.netty>4.1.122.Final</version.io.netty>
+    <version.io.netty>4.1.132.Final</version.io.netty>
 
     <version.io.cloudevents>3.0.0</version.io.cloudevents>
     <!--
@@ -96,7 +96,7 @@
 
     <version.io.smallrye.reactive.mutiny-vertx-web-client>3.18.1</version.io.smallrye.reactive.mutiny-vertx-web-client>
 
-    <version.io.vertx>4.5.13</version.io.vertx>
+    <version.io.vertx>4.5.26</version.io.vertx>
     <version.io.grpc>1.69.1</version.io.grpc>
 
     <version.io.quarkus.camel>3.20.1</version.io.quarkus.camel>
@@ -109,7 +109,7 @@
 
     <version.org.graalvm.nativeimage>23.1.2</version.org.graalvm.nativeimage>
 
-    <version.org.infinispan>15.0.15.Final</version.org.infinispan>
+    <version.org.infinispan>15.0.19.Final</version.org.infinispan>
     <version.org.infinispan.protostream>5.0.13.Final</version.org.infinispan.protostream>
 
     <version.org.rocksdb>7.10.2</version.org.rocksdb>
