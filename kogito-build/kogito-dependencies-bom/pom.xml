@@ -96,7 +96,7 @@
 
     <version.io.smallrye.reactive.mutiny-vertx-web-client>3.18.1</version.io.smallrye.reactive.mutiny-vertx-web-client>
 
-    <version.io.vertx>4.5.13</version.io.vertx>
+    <version.io.vertx>4.5.25</version.io.vertx>
     <version.io.grpc>1.69.1</version.io.grpc>
 
     <version.io.quarkus.camel>3.20.1</version.io.quarkus.camel>
