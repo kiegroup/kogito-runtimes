@@ -41,7 +41,7 @@
 
     <!-- dependencies versions -->
     <version.com.networknt>2.0.7</version.com.networknt>
-    <version.com.fasterxml.jackson>2.21.6</version.com.fasterxml.jackson>
+    <version.com.fasterxml.jackson>2.21.7</version.com.fasterxml.jackson>
     <version.com.fasterxml.jackson.databind>2.21.7</version.com.fasterxml.jackson.databind>
     <version.com.fasterxml.jackson.annotations>2.21</version.com.fasterxml.jackson.annotations>
     <version.com.jayway.jsonpath>2.10.0</version.com.jayway.jsonpath>
