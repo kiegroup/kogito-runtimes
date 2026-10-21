@@ -35,14 +35,14 @@
 
   <properties>
     <!-- this version property is used in plugins but also in dependencies too -->
-    <version.io.quarkus>3.33.4</version.io.quarkus>
+    <version.io.quarkus>3.33.4.1</version.io.quarkus>
     <version.io.quarkus.quarkus-test>${version.io.quarkus}</version.io.quarkus.quarkus-test>
     <version.org.apache.kafka>4.1.2</version.org.apache.kafka>
 
     <!-- dependencies versions -->
     <version.com.networknt>2.0.7</version.com.networknt>
-    <version.com.fasterxml.jackson>2.21.7</version.com.fasterxml.jackson>
-    <version.com.fasterxml.jackson.databind>2.21.7</version.com.fasterxml.jackson.databind>
+    <version.com.fasterxml.jackson>2.21.8</version.com.fasterxml.jackson>
+    <version.com.fasterxml.jackson.databind>2.21.8</version.com.fasterxml.jackson.databind>
     <version.com.fasterxml.jackson.annotations>2.21</version.com.fasterxml.jackson.annotations>
     <version.com.jayway.jsonpath>2.10.0</version.com.jayway.jsonpath>
     <version.com.ongres.scram>3.3</version.com.ongres.scram>
