@@ -36,7 +36,8 @@
   <properties>
     <!-- this version property is used in plugins but also in dependencies too -->
     <version.io.quarkus>3.33.4.redhat-00004</version.io.quarkus>
-    <version.io.quarkus.quarkus-test>${version.io.quarkus}</version.io.quarkus.quarkus-test>
+    <!-- SRVLOGIC-1300 TEMP: quarkus-devtools-testing not published to redhat-ga, use community version -->
+    <version.io.quarkus.quarkus-test>3.33.4.1</version.io.quarkus.quarkus-test>
     <version.org.apache.kafka>4.1.2</version.org.apache.kafka>
 
     <!-- dependencies versions -->
