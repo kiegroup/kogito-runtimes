@@ -35,8 +35,7 @@
 
   <properties>
     <!-- this version property is used in plugins but also in dependencies too -->
-    <version.io.quarkus>3.33.4.1</version.io.quarkus>
-    <version.io.quarkus.quarkus-test>${version.io.quarkus}</version.io.quarkus.quarkus-test>
+    <version.io.quarkus>3.33.4.redhat-00004</version.io.quarkus>
     <version.org.apache.kafka>4.1.2</version.org.apache.kafka>
 
     <!-- dependencies versions -->
