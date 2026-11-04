@@ -56,16 +56,13 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- Provided because Quarkus and Spring Boot might use slightly different versions -->
     <dependency>
       <groupId>io.fabric8</groupId>
       <artifactId>kubernetes-client</artifactId>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>io.fabric8</groupId>
       <artifactId>knative-client</artifactId>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>

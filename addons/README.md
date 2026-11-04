@@ -34,10 +34,6 @@ The following table lists all the add-ons, independent of runtime implementation
 
 See the [Quarkus Add-Ons](../quarkus/addons) documentation.
 
-### Spring Boot Implementation
-
-See the [Spring Boot Add-Ons](../springboot/addons) documentation.
-
 ## Modules organization
 
 At the root of this project you will find:
@@ -46,12 +42,10 @@ At the root of this project you will find:
    but as main libraries for runtimes implementations
 2. `deprecated` - about to be deprecated modules in future versions
 
-The add-ons for Quarkus/Spring Boot you will find in their own modules in the root of this repository:
+The add-ons for Quarkus you will find in their own modules in the root of this repository:
 
 1. [`quarkus/addons`](../quarkus/addons) - contains the add-ons for Quarkus. If your Kogito project is built with
    Quarkus, use the dependencies listed in this sub-module
-2. [`springboot/addons`](../springboot/addons) - contains the add-ons for Spring Boot. These dependencies are meant to
-   use only with Kogito projects built with Spring Boot
 
 Inside each of these modules, you will find the add-ons organized by its capabilities.
 
@@ -86,7 +80,7 @@ Notice that **every** Kogito Add-on starts with `kogito-addons-` prefix. This fa
 
 In general, the add-on name is composed like `kogito-addons-{runtime}-{capability}-{implementation}`:
 
-- `{runtime}` - can be either `quarkus` or `springboot`.
+- `{runtime}` - is `quarkus`.
 - `{capability}` - the capability of the add-on such as `persistence`, `eventing`, `cloudevents` and so forth. It's ok
   if your capability have a composite name like `jobs-management`.
 - `{implementation}` - (optional) the specific implementation of the given capability. For example, `persistence` can
@@ -94,7 +88,7 @@ In general, the add-on name is composed like `kogito-addons-{runtime}-{capabilit
   the capability. It's more a way to differentiate the implementations.
 
 The core add-ons don't have a `runtime` prefix either because they are the bases for the implementation by a runtime, or
-they are a generic implementation that can work either on [Quarkus](../quarkus/addons) or [Spring Boot](../quarkus/addons).
+they are a generic implementation that can work on [Quarkus](../quarkus/addons).
 Check the [listing above](#addons-catalog) of the add-ons to find out more.
 
 ## Creating a new Kogito Add-on
@@ -108,10 +102,10 @@ knowledge of the Kogito engine internals. Then follow these steps:
 
 1. Create a new sub-module under `common` with a meaningful name. This module can be a parent module if you foresee a
    complex scenario for your new add-on. See [`messaging`](common/messaging) as an example.
-2. Do not use any dependencies from Quarkus or Spring Boot in `common` module. Your add-on must only have code to support
+2. Do not use any dependencies from Quarkus in `common` module. Your add-on must only have code to support
    your capability. New dependencies must be added to the [kogito-build](../kogito-build/kogito-build-parent) BOM.
 3. Create the same capability under the `addons` module in the runtime module you wish to add support (
-   [`quarkus`](../quarkus/addons) or [`springboot`](../springboot/addons)). You can give support to
+   [`quarkus`](../quarkus/addons)). You can give support to
    one add-on only. Make the reason for your decision clear and discuss this decision with the community.
 4. If your capability can have multiple implementations, add at least one flavor under `{runtime}/addons/{capability}`
    module. See [`monitoring`](../quarkus/addons/monitoring) as an example
@@ -127,8 +121,7 @@ the runtimes supported by Kogito:
 1. Start with the runtime you wish to add the implementation. Create a new sub-module
    under `{runtime}/addons/{capability}`
 2. Try to code with the runtime in mind and leverage their libraries. For Quarkus, see
-   the [Quarkus Guides](https://quarkus.io/guides/) page to figure how to interact with the given technology. Spring Boot
-   also has a comprehensive list of [guides](https://spring.io/guides)
+   the [Quarkus Guides](https://quarkus.io/guides/) page to figure how to interact with the given technology.
 3. Document the implementation with a `README.md` and make it clear how to use it
 4. Create an example of usage in the [`kogito-examples`](https://github.com/kiegroup/kogito-examples) repository
 

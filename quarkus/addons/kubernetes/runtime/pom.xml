@@ -90,6 +90,11 @@
       <artifactId>kogito-addons-quarkus-fabric8-kubernetes-service-catalog</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.kie</groupId>
+      <artifactId>kogito-addons-quarkus-fabric8-kubernetes-service-catalog-deployment</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <build>
     <plugins>

@@ -213,9 +213,6 @@ for kogito-codegen-modules/kogito-codegen-predictions/src/test/resources/predict
     drools/kogito-pmml/src/test/resources/org/kie/kogito/pmml/test_regression.pmml
     drools/kogito-scenario-simulation/src/test/resources/dmnPmml/test_tree.pmml
     drools/kogito-scenario-simulation/src/test/resources/dmnPmml/test_regression.pmml
-    springboot/integration-tests/integration-tests-springboot-decisions-it/src/main/resources/PMMLTree.pmml
-    springboot/integration-tests/integration-tests-springboot-decisions-it/src/main/resources/PMMLRegression.pmml
-    springboot/integration-tests/integration-tests-springboot-norest-it/src/main/resources/PMMLRegression.pmml
 
 Copyright (c) 2008-2016,  The Data Mining Group
 All rights reserved. 

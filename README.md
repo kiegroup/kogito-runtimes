@@ -39,7 +39,7 @@
 **GitHub Issues:** https://github.com/apache/incubator-kie-issues/issues
 
 ## Requirements
-- [Maven](https://maven.apache.org/) 3.9.11 or later
+- [Maven](https://maven.apache.org/) 3.9.16 or later
 - [Java](https://openjdk.java.net/install/) 17 or later (devel package)
 - optional: Docker installation for running integration tests
 
@@ -47,7 +47,7 @@
 The [Kogito Examples repository](https://github.com/apache/incubator-kie-kogito-examples) module contains a number of examples that you can take a look at and try out yourself. Please take a look at the readme of each individual example for more details on how the example works and how to run it yourself (either locally or on Kubernetes).
 
 ## Guides
-The official guides for Kogito can be found at our main website, these include guides for Quarkus and Spring Boot.
+The official guides for Kogito can be found at our main website, these include guides for Quarkus.
 
 - [Kogito Documentation](https://kie.apache.org/docs/documentation/).
 

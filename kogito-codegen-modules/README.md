@@ -52,7 +52,7 @@ The structure of the module is:
   of the contents of the file to be dumped to disk.
   
 - `KogitoBuildContext` contains all shared information about the build: it is 
-  platform specific (Quarkus/Spring/Java) and it is shared by all the Generators
+  platform specific (Quarkus/Java) and it is shared by all the Generators
 
 - `GeneratorFactory` is an interface a generator can implement and together with SPI 
   is used to automatically wire the generator (see `META-INF/services/org.kie.kogito.codegen.api.GeneratorFactory`)
@@ -80,7 +80,7 @@ The wiring of the generators can be done manually invoking the `setupGenerator` 
 Or it can be done via SPI using `ApplicationGeneratorDiscovery` utility class that
 automatically loads the main `ApplicationGenerator` and the generators for the available components.
 
-| NOTE: both Spring and Quarkus integration use SPI and `ApplicationGeneratorDiscovery` for automatic wiring |
+| NOTE: Quarkus integration use SPI and `ApplicationGeneratorDiscovery` for automatic wiring |
 | ---- |
 
 ## Sample generator
@@ -103,7 +103,7 @@ For this reason it is strongly suggested to also implement unit tests for each o
 You can check sample generator for a full example but in general the rules are:
 - Avoid/minimize assertions on number of files because hard to debug. If you need a similar assertion try to filter generated 
   resources by resource type before
-- Test the generation with all the build context (Spring/Quarkus/Java): you can use `@ParameterizedTest` to help with this:
+- Test the generation with all the build context (Quarkus/Java): you can use `@ParameterizedTest` to help with this:
   add following dependencies
   ```xml
   <dependency>
@@ -168,7 +168,7 @@ public class Application extends org.kie.kogito.StaticApplication {
 }
 ```
 
-This Application API is intended to be accessed directly from end users and in both Spring/Quarkus scenarios it is possible
+This Application API is intended to be accessed directly from end users and in Quarkus scenarios it is possible
 and preferable to directly inject each engine like  
 ```java
 package org.my.package;
