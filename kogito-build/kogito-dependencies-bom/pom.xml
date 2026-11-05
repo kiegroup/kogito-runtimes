@@ -149,7 +149,7 @@
     <!-- see: https://maven.apache.org/surefire/maven-surefire-plugin/examples/fork-options-and-parallel-execution.html#parallel-test-execution-and-single-thread-execution -->
     <version.com.github.stephenc.jcip>1.0-1</version.com.github.stephenc.jcip>
     <version.black.ninia>4.2.2</version.black.ninia>
-    <version.com.google.guava>33.5.0-jre</version.com.google.guava>
+    <version.com.google.guava>33.5.0.jre-redhat-00002</version.com.google.guava>
     <version.apache.commons.commons-compress>1.28.0</version.apache.commons.commons-compress>
 
     <version.org.hibernate>7.2.25.Final</version.org.hibernate>
