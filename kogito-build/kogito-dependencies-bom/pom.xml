@@ -40,7 +40,7 @@
     <!-- End of various transitive overrides. -->
 
     <!-- this version property is used in plugins but also in dependencies too -->
-    <version.io.quarkus>3.27.6.1</version.io.quarkus>
+    <version.io.quarkus>3.27.6.redhat-00006</version.io.quarkus>
     <version.io.quarkus.quarkus-test>${version.io.quarkus}</version.io.quarkus.quarkus-test>
     <version.org.springframework>6.2.19</version.org.springframework>
     <version.org.springframework.boot>3.5.12</version.org.springframework.boot>
